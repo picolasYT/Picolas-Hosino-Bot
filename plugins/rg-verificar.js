@@ -83,16 +83,14 @@ let handler = async function (m, { conn, text, usedPrefix, command }) {
 
   let about = (await conn.fetchStatus(m.sender).catch(() => ({}))).status || 'null'
 
-  await conn.sendMessage(canalJid, {
-    image: { url: pp },
-    caption: `📋 *NUEVO REGISTRO*
+ await conn.sendMessage(canalJid, {
+  image: { url: pp },
+  caption: `📋 *NUEVO REGISTRO*
 👤 *Nombre:* ${name}
 🎂 *Edad:* ${age}
-📞 *Número:* wa.me/${m.sender.split('@')[0]}
 📝 *Descripción:* ${about}`,
-*no pajearse con las fotos (opcional)*
-    contextInfo
-  })
+  contextInfo
+})
 }
 
 handler.help = ['reg']
