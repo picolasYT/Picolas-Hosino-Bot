@@ -27,7 +27,7 @@ var handler = async (m, { conn, args, usedPrefix, command }) => {
   if (!args[0]) {
     return conn.reply(
       m.chat,
-      `🌸 *Onii-chan... nani sagashitai no?* 〜 (≧◡≦)\n\n🔍 Escribe lo que deseas buscar o pega un enlace de YouTube~\n\n🌼 *Ejemplos:*\n\`${usedPrefix + command} Shinzou wo Sasageyo\`\n\`${usedPrefix + command} https://youtu.be/xxxx\``,
+      `🌸 *Onii-chan... nani sagashitai no?* 〜 (≧◡≦)\n\n🔍 Escribe lo que deseas buscar o pega un enlace de YouTube~\n\n🌼 *Ejemplos:*\n\`${usedPrefix + command} Shinzou wo Sasageyo\`\n\`${usedPrefix + command} https://youtu.be/cTsMylsTCWA?si=nzZykTkWYC0E3Fk3\``,
       m,
       { contextInfo, quoted: m }
     );
