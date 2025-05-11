@@ -1,67 +1,120 @@
-import { ogmp3 } from '../lib/youtubedl.js'
-import yts from 'yt-search'
+import fetch from 'node-fetch';
+import yts from 'yt-search';
 
-const handler = async (m, { conn, text, args, command }) => {
-  if (!text) return m.reply('🔎 Ingresa un nombre de video o un link de YouTube.')
+const newsletterJid  = '120363335626706839@newsletter';
+const newsletterName = '⏤͟͞ू⃪፝͜⁞⟡『 𝐓͢ᴇ𝙖፝ᴍ⃨ 𝘾𝒉꯭𝐚𝑛𝑛𝒆𝑙: 𝑹ᴜ⃜ɓ𝑦-𝑯ᴏ𝒔𝑯𝙞꯭𝑛𝒐 』࿐⟡';
+const packname       = '✿⃝𓂃 𝑹𝙪͜͡𝑏𝙮 𝙃𝒐𝘀𝙝𝑖𝙣𝙤 ❀';
+
+var handler = async (m, { conn, args, usedPrefix, command }) => {
+  const contextInfo = {
+    mentionedJid: [m.sender],
+    isForwarded: true,
+    forwardingScore: 999,
+    forwardedNewsletterMessageInfo: {
+      newsletterJid,
+      newsletterName,
+      serverMessageId: -1
+    },
+    externalAdReply: {
+      title: packname,
+      body: dev,
+      thumbnail: icons,
+      sourceUrl: redes,
+      mediaType: 1,
+      renderLargerThumbnail: false
+    }
+  };
+
+  if (!args[0]) {
+    return conn.reply(
+      m.chat,
+      `🌸 *Konnichiwa, onii-chan~!* Necesito que me digas qué video quieres buscar o pegar un enlace de YouTube.\n\n📦 Ejemplo:\n\`${usedPrefix + command} Goku Ultra Instinto\`\n\`${usedPrefix + command} https://www.youtube.com/watch?v=xxxx\``,
+      m,
+      { contextInfo, quoted: m }
+    );
+  }
 
   try {
-    const isYT = ogmp3.isUrl(text)
-    let video, result
+    const query = args.join(' ');
+    let video = null;
+    let url = '';
 
-    if (isYT) {
-      // Si es URL
-      const search = await yts({ videoId: ogmp3.youtube(text) })
-      video = search
+    // Detecta si es un enlace de YouTube
+    const ytUrlPattern = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$/;
+    const isUrl = ytUrlPattern.test(query);
+
+    if (isUrl) {
+      url = query;
     } else {
-      // Si es búsqueda
-      const busqueda = await yts(text)
-      if (!busqueda || !busqueda.videos.length) return m.reply('❌ No se encontró ningún resultado.')
-      video = busqueda.videos[0]
-    }
+      await conn.reply(m.chat, `🔍 *Buscando tu video en YouTube... espera un momento, onii-chan~*`, m, { contextInfo, quoted: m });
+      const search = await yts(query);
+      video = search.videos?.[0];
 
-    // Descargar video (por defecto a 720p)
-    result = await ogmp3.download(video.url, '720', 'video')
-    if (!result.status) return m.reply(`❌ Error: ${result.error}`)
+      if (!video) {
+        return conn.reply(m.chat, `🥺 *No encontré nada con ese nombre, onii-chan...*`, m, { contextInfo, quoted: m });
+      }
 
-    const { title, download, thumbnail, quality } = result.result
-    const info = `🎬 *Título:* ${video.title}
+      const durationSeconds = video.seconds || 0;
+      const maxSeconds = 30 * 60;
+
+      if (durationSeconds > maxSeconds) {
+        return conn.reply(m.chat, `⏳ *Ese video dura más de 30 minutos, onii-chan...*`, m, { contextInfo, quoted: m });
+      }
+
+      // Muestra los detalles del video kawaii antes de descargar
+      const caption = `
+🌸⸝⸝ ¡Tu video kawaii está listo! 🎥
+
+📌 *Título:* ${video.title}
 👤 *Autor:* ${video.author.name}
 ⏱️ *Duración:* ${video.timestamp}
-📆 *Publicado:* ${video.ago}
-📹 *Calidad:* ${quality}p
-🔗 *Link:* ${video.url}`
+📅 *Publicado:* ${video.ago}
+👁️ *Vistas:* ${video.views.toLocaleString()}
+🔗 *URL:* ${video.url}
+`.trim();
 
-    // Enviar miniatura + información
-    await conn.sendMessage(m.chat, {
-      image: { url: thumbnail },
-      caption: info,
-      contextInfo: {
-        externalAdReply: {
-          title: title,
-          body: 'Descarga MP4',
-          thumbnailUrl: thumbnail,
-          mediaType: 1,
-          mediaUrl: video.url,
-          sourceUrl: video.url
-        }
-      }
-    })
+      await conn.sendMessage(m.chat, { text: caption }, { quoted: m, contextInfo });
 
-    // Enviar el video
-    await conn.sendMessage(m.chat, {
-      video: { url: download },
-      mimetype: 'video/mp4',
-      fileName: `${title}.mp4`
-    }, { quoted: m })
+      url = video.url;
+    }
+
+    const apiUrl = `https://api.vreden.my.id/api/ytplaymp4?query=${encodeURIComponent(url)}`;
+    const res = await fetch(apiUrl);
+    const json = await res.json();
+
+    if (json.status !== 200 || !json.result?.download?.url) {
+      return conn.reply(m.chat, `😿 *No pude descargar ese video, onii-chan...*`, m, { contextInfo, quoted: m });
+    }
+
+    const videoRes = await fetch(json.result.download.url);
+    const videoBuffer = await videoRes.buffer();
+
+    if (!videoBuffer || videoBuffer.length === 0) {
+      throw new Error('Video vacío o inválido');
+    }
+
+    await conn.sendMessage(
+      m.chat,
+      {
+        video: videoBuffer,
+        mimetype: 'video/mp4',
+        fileName: json.result.download.filename || 'video.mp4',
+        caption: `🎬 *¡Aquí tienes tu video, onii-chan~!*`,
+      },
+      { contextInfo, quoted: m }
+    );
 
   } catch (e) {
-    console.error(e)
-    m.reply(`⚠️ Ocurrió un error: ${e.message}`)
+    console.error(e);
+    await conn.reply(m.chat, `😭 *Ocurrió un error, onii-chan...*\n\`\`\`${e.message}\`\`\``, m, { contextInfo, quoted: m });
   }
-}
+};
 
-handler.command = ['play2']
-handler.help = ['play2 <texto o link>']
-handler.tags = ['descargas']
+handler.help = ['play2', 'ytplay2'].map(v => v + ' <texto o url>');
+handler.tags = ['descargas'];
+handler.command = ['play2', 'ytplay2', 'playvideo'];
+handler.register = true;
+handler.limit = true;
+handler.coin = 2;
 
-export default handler
+export default handler;

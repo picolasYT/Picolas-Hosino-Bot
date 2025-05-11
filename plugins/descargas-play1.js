@@ -1,11 +1,11 @@
 import fetch from 'node-fetch';
+import yts from 'yt-search';
 
 const newsletterJid  = '120363335626706839@newsletter';
 const newsletterName = '⏤͟͞ू⃪፝͜⁞⟡『 𝐓͢ᴇ𝙖፝ᴍ⃨ 𝘾𝒉꯭𝐚𝑛𝑛𝒆𝑙: 𝑹ᴜ⃜ɓ𝑦-𝑯ᴏ𝒔𝑯𝙞꯭𝑛𝒐 』࿐⟡';
 const packname       = '✿⃝𓂃 𝑹𝙪͜͡𝑏𝙮 𝙃𝒐𝘀𝙝𝑖𝙣𝙤 ❀';
 
 var handler = async (m, { conn, args, usedPrefix, command }) => {
-  const emoji = '🔎';
   const contextInfo = {
     mentionedJid: [m.sender],
     isForwarded: true,
@@ -28,88 +28,89 @@ var handler = async (m, { conn, args, usedPrefix, command }) => {
   if (!args[0]) {
     return conn.reply(
       m.chat,
-      `🌸 *Konnichiwa, onii-chan~!* Necesito que me digas qué quieres buscar en YouTube, ¡te lo buscaré con amor uwu~!\n\n📦 Ejemplo:\n\`${usedPrefix + command} Goku conoce a Bills\``,
+      `🌸 *Konnichiwa, onii-chan~!* Necesito que me digas qué quieres buscar o pegar un enlace de YouTube.\n\n📦 Ejemplo:\n\`${usedPrefix + command} Goku conoce a Bills\`\n\`${usedPrefix + command} https://www.youtube.com/watch?v=xxxx\``,
       m,
       { contextInfo, quoted: m }
     );
   }
 
   try {
-    await conn.reply(
-      m.chat,
-      `🕊️ *Buscando tu deseo, onii-chan...*\nUn momento, ne~ 🎧✨`,
-      m,
-      { contextInfo, quoted: m }
-    );
+    const query = args.join(' ');
+    let video = null;
+    let url = '';
 
-    const query   = encodeURIComponent(args.join(' '));
-    const apiUrl  = `https://api.vreden.my.id/api/ytplaymp3?query=${query}`;
-    const res     = await fetch(apiUrl);
-    const json    = await res.json();
+    // Detecta si es un enlace de YouTube
+    const ytUrlPattern = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$/;
+    const isUrl = ytUrlPattern.test(query);
 
-    if (json.status !== 200 || !json.result?.download?.url) {
-      return conn.reply(
-        m.chat,
-        `😿 *Gomenasai... no pude encontrar ni descargar eso, onii-chan~.*`,
-        m,
-        { contextInfo, quoted: m }
-      );
+    if (isUrl) {
+      url = query;
+    } else {
+      await conn.reply(m.chat, `🔍 *Buscando tu deseo en YouTube... espera un momento, onii-chan~*`, m, { contextInfo, quoted: m });
+      const search = await yts(query);
+      video = search.videos?.[0];
+
+      if (!video) {
+        return conn.reply(m.chat, `🥺 *No encontré nada con ese nombre, onii-chan...*`, m, { contextInfo, quoted: m });
+      }
+
+      const durationSeconds = video.seconds || 0;
+      const maxSeconds = 30 * 60;
+
+      if (durationSeconds > maxSeconds) {
+        return conn.reply(m.chat, `⏳ *Ese video dura más de 30 minutos, onii-chan...*`, m, { contextInfo, quoted: m });
+      }
+
+      // Muestra los detalles del video kawaii antes de descargar
+      const caption = `
+🌸⸝⸝ ¡Tu música kawaii está lista! 🎶
+
+📌 *Título:* ${video.title}
+👤 *Autor:* ${video.author.name}
+⏱️ *Duración:* ${video.timestamp}
+📅 *Publicado:* ${video.ago}
+👁️ *Vistas:* ${video.views.toLocaleString()}
+🔗 *URL:* ${video.url}
+`.trim();
+
+      await conn.sendMessage(m.chat, { text: caption }, { quoted: m, contextInfo });
+
+      url = video.url;
     }
 
-    // Metadata
-    const meta = json.result.metadata;
-    const title       = meta.title;
-    const description = meta.description;
-    const timestamp   = meta.timestamp;
-    const views       = meta.views.toLocaleString();
-    const ago         = meta.ago;
-    const authorName  = meta.author?.name || 'Desconocido';
-    const downloadURL = json.result.download.url;
-    const quality     = json.result.download.quality;
-    const filename    = json.result.download.filename;
+    const apiUrl = `https://api.vreden.my.id/api/ytplaymp3?query=${encodeURIComponent(url)}`;
+    const res = await fetch(apiUrl);
+    const json = await res.json();
 
-    const audioRes    = await fetch(downloadURL);
+    if (json.status !== 200 || !json.result?.download?.url) {
+      return conn.reply(m.chat, `😿 *No pude descargar ese audio, onii-chan...*`, m, { contextInfo, quoted: m });
+    }
+
+    const audioRes = await fetch(json.result.download.url);
     const audioBuffer = await audioRes.buffer();
 
-    const caption = `
-🌸⸝⸝ Konbanwa onii-chan~ ¡Aquí tienes tu música kawaii! 🎶
-
-📌 *Título:* ${title}
-👤 *Autor:* ${authorName}
-⏱️ *Duración:* ${timestamp}
-📅 *Publicado:* ${ago}
-👁️ *Vistas:* ${views}
-🎧 *Calidad:* ${quality}
-📝 *Descripción:*
-${description}
-
-Arigatou por usarme, onii-chan~ 💖
-`.trim();
+    if (!audioBuffer || audioBuffer.length === 0) {
+      throw new Error('Audio vacío o inválido');
+    }
 
     await conn.sendMessage(
       m.chat,
       {
         audio: audioBuffer,
         mimetype: 'audio/mpeg',
-        fileName: filename,
-        ptt: false,
-        caption
+        fileName: json.result.download.filename || 'audio.mp3',
+        ptt: false
       },
       { contextInfo, quoted: m }
     );
 
   } catch (e) {
     console.error(e);
-    await conn.reply(
-      m.chat,
-      `😭 *Nyaa~ ocurrió un error muy feo, onii-chan...*\n\`\`\`${e.message}\`\`\``,
-      m,
-      { contextInfo, quoted: m }
-    );
+    await conn.reply(m.chat, `😭 *Ocurrió un error, onii-chan...*\n\`\`\`${e.message}\`\`\``, m, { contextInfo, quoted: m });
   }
 };
 
-handler.help = ['play', 'ytplay'].map(v => v + ' <texto>');
+handler.help = ['play', 'ytplay'].map(v => v + ' <texto o url>');
 handler.tags = ['descargas'];
 handler.command = ['play', 'ytplay', 'playaudio'];
 handler.register = true;
