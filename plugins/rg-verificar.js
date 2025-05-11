@@ -1,44 +1,49 @@
-import db from '../lib/database.js'
-import fs from 'fs'
-import PhoneNumber from 'awesome-phonenumber'
+import axios from 'axios'
 import { createHash } from 'crypto'
-import fetch from 'node-fetch'
-
-const canalJid = '120363397177582655@newsletter' // Canal donde se mandan los registros
-const newsletterJid = '120363335626706839@newsletter' // Se usa para el contextInfo
-const newsletterName = '⏤͟͞ू⃪፝͜⁞⟡『 𝐓͢ᴇ𝙖፝ᴍ⃨ 𝘾𝒉꯭𝐚𝑛𝑛𝒆𝑙: 𝑹ᴜ⃜ɓ𝑦-𝑯ᴏ𝒔𝑯𝙞꯭𝑛𝒐 』࿐⟡'
-const packname = '✿⃝𓂃 𝑹𝙪͜͡𝑏𝙮 𝙃𝒐𝘀𝙝𝑖𝙣𝙤 ❀'
+import PhoneNumber from 'awesome-phonenumber'
+import moment from 'moment-timezone'
 
 let Reg = /\|?(.*)([.|] *?)([0-9]*)$/i
+let handler = async function (m, { conn, text, args, usedPrefix, command }) {
+    let user = global.db.data.users[m.sender]
+    let name2 = conn.getName(m.sender)
+    let whe = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : m.sender
+    let perfil = await conn.profilePictureUrl(whe, 'image').catch(_ => 'https://qu.ax/FGSG.jpg')
 
-let handler = async function (m, { conn, text, usedPrefix, command }) {
-  let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender
-  let mentionedJid = [who]
-  let pp = await conn.profilePictureUrl(who, 'image').catch(_ => 'https://files.catbox.moe/xr2m6u.jpg')
-  let user = global.db.data.users[m.sender]
-  let name2 = await conn.getName(m.sender)
+    if (user.registered === true) {
+        return m.reply(`*『✦』Ya estás registrado, para volver a registrarte, usa el comando: #unreg*`)
+    }
 
-  if (user.registered === true) return m.reply(`『✦』Ya estás registrado.\n\n*¿Quiere volver a registrarse?*\n\nUse este comando para eliminar su registro.\n*${usedPrefix}unreg*`)
+    if (!Reg.test(text)) return m.reply(`*『✦』El comando ingresado es incorrecto, uselo de la siguiente manera:*\n\n#reg *Nombre.edad*\n\n\`\`\`Ejemplo:\`\`\`\n#reg *${name2}.18*`)
 
-  if (!Reg.test(text)) return m.reply(`『✦』Formato incorrecto.\n\nUso del comando: *${usedPrefix + command} nombre.edad*\nEjemplo : *${usedPrefix + command} ${name2}.18*`)
+    let [_, name, splitter, age] = text.match(Reg)
+    if (!name) return m.reply('*『✦』No puedes registrarte sin nombre, el nombre es obligatorio. Inténtelo de nuevo.*')
+    if (!age) return m.reply('*『✦』No puedes registrarte sin la edad, la edad es opcional. Inténtelo de nuevo.*')
+    if (name.length >= 100) return m.reply('*『✦』El nombre no debe tener más de 30 caracteres.*')
 
-  let [_, name, splitter, age] = text.match(Reg)
-  if (!name) return m.reply(`『✦』El nombre no puede estar vacío.`)
-  if (!age) return m.reply(`『✦』La edad no puede estar vacía.`)
-  if (name.length >= 100) return m.reply(`『✦』El nombre es demasiado largo.`)
-  age = parseInt(age)
-  if (age > 1000) return m.reply(`『✦』Wow el abuelo quiere jugar al bot.`)
-  if (age < 5) return m.reply(`『✦』hay un abuelo bebé jsjsj.`)
+    age = parseInt(age)
+    if (age > 1000) return m.reply('⏤͟͟͞͞𝑳𝒂 𝑬𝒅𝒂𝒅 𝒊𝒏𝒈𝒓𝒆𝒔𝒂𝒅𝒂 𝑬𝒔 𝒊𝒏𝒄𝒐𝒓𝒓𝒆𝒄𝒕𝒂⏤͟͟͞͞')
+    if (age < 5) return m.reply('⏤͟͟͞͞𝑳𝒂 𝑬𝒅𝒂𝒅 𝒊𝒏𝒈𝒓𝒆𝒔𝒂𝒅𝒂 𝑬𝒔 𝒊𝒏𝒄𝒐𝒓𝒓𝒆𝒄𝒕𝒂⏤͟͟͞͞')
 
-  user.name = name + '✓'.trim()
-  user.age = age
-  user.regTime = +new Date
-  user.registered = true
-  user.coin += 40
-  user.exp += 300
-  user.joincount += 20
+    user.name = name.trim()
+    user.age = age
+    user.regTime = +new Date
+    user.registered = true
+    global.db.data.users[m.sender].money += 600
+    global.db.data.users[m.sender].estrellas += 10
+    global.db.data.users[m.sender].exp += 245
+    global.db.data.users[m.sender].joincount += 5    
 
-  let regbot = `╭══• ೋ•✧๑♡๑✧•ೋ •══╮
+    let who;
+    if (m.quoted && m.quoted.sender) {
+        who = m.quoted.sender;
+    } else {
+        who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender;
+    }
+
+let sn = createHash('md5').update(m.sender).digest('hex');
+let regbot = `
+╭══• ೋ•✧๑♡๑✧•ೋ •══╮
 *¡𝚁𝙴𝙶𝙸𝚂𝚃𝚁𝙾 𝙲𝙾𝙼𝙿𝙻𝙴𝚃𝙾 𝙴𝚇𝙸𝚃𝙾𝚂𝙾!*
 ╰══• ೋ•✧๑♡๑✧•ೋ •══╯
 ║_-~-__-~-__-~-__-~-__-~-__-~-__-~-__-~-__-~-__-~-__
@@ -46,52 +51,72 @@ let handler = async function (m, { conn, text, usedPrefix, command }) {
 ║ ֪ ׂ⛓️ ̶ ׁ ֪ 𝐍𝐨𝐦𝐛𝐫𝐞: ${name}
 ║ ֪ ׁ🌫️  𝇌 𝐄𝐝𝐚𝐝: ${age} *Años*
 ║
-║ *𝙶𝚛𝚊𝚌𝚒𝚊𝚜 𝚙𝚘𝚛 𝚛𝚎𝚐𝚒𝚜𝚝𝚛𝚊𝚛𝚝𝚎* 
-║📝 *𝚄𝚝𝚒𝚕𝚒𝚣𝚊* *.menu* *𝚙𝚊𝚛𝚊* *𝚟𝚎𝚛* *𝚎𝚕* *𝚖𝚎𝚗ú* *𝚍𝚎* *𝚌𝚘𝚖𝚊𝚗𝚍𝚘𝚜.* 
+║ *𝙶𝚛𝚊𝚌𝚒𝚜 𝚙𝚘𝚛 𝚛𝚎𝚐𝚒𝚜𝚝𝚛𝚊𝚛𝚝𝚎* 
+║📝 *𝚄𝚝𝚒𝚕𝚒𝚣𝚊* *.menu* *𝚙𝚊𝚛𝚊* *𝚟𝚎𝚛* *𝚎𝚕* *𝚖𝚎𝚗ú* *𝚍𝚎* *𝚌𝚘𝚖𝚊𝚗𝚍𝚘𝚜.*
+║
 ║
 ║ ✨ 𝗥𝗲𝗰𝗼𝗺𝗽𝗲𝗻𝘀𝗮𝘀:
-║• 🪙 Monedas: 40
-║• 🧪 Exp: 300
-║• 💸 Tokens: 20
+║• *${moneda}* » 40
+║•  *Experiencia* » 300 🪙
+║• *Tokens* » 20 💸
 ╚══✦「꧙꧙꧙꧙꧙꧙꧙꧙꧙꧙꧙꧙」
-> 🎈 ¡Gracias por usar Ruby-Hoshino-Bot!
-> Sígueme en el canal para novedades.`
+> 🎈 ¡Muchísimas gracias por usar a Ruby-Hoshino-Bot!
+> Recuerda seguirme en mi canal para que no te pierdas nada de las novedades del bot. ¡Diviértete!`
 
-  const contextInfo = {
-    mentionedJid: [m.sender],
-    isForwarded: true,
-    forwardingScore: 999,
-    forwardedNewsletterMessageInfo: {
-      newsletterJid,
-      newsletterName,
-      serverMessageId: -1
-    },
-    externalAdReply: {
-      title: packname,
-      body: typeof global.dev === 'string' ? global.dev : 'Bot oficial',
-      thumbnailUrl: typeof global.icons === 'string' ? global.icons : pp,
-      sourceUrl: typeof global.redes === 'string' ? global.redes : null,
-      mediaType: 1,
-      renderLargerThumbnail: false
-    }
-  }
 
-  await conn.sendMessage(m.chat, {
+await conn.sendMessage(m.chat, {
     text: regbot,
-    contextInfo
-  }, { quoted: m })
+    contextInfo: {
+        externalAdReply: {
+            title: '⊱『✅𝆺𝅥 𝗥𝗘𝗚𝗜𝗦𝗧𝗥𝗔𝗗𝗢(𝗔) 𝆹𝅥✅』⊰',
+            thumbnailUrl: 'https://qu.ax/FGSG.jpg',
+            mediaType: 1,
+            body: wm,
+        }
+    }
+}, { quoted: m });
 
-  let about = (await conn.fetchStatus(m.sender).catch(() => ({}))).status || 'null'
 
- await conn.sendMessage(canalJid, {
-  image: { url: pp },
-  caption: `📋 *NUEVO REGISTRO*
-👤 *Nombre:* ${name}
-🎂 *Edad:* ${age}
-📝 *Descripción:* ${about}`,
-  contextInfo
-})
-}
+
+/*    await m.react('📪')
+  await conn.sendMessage(m.chat, {
+           text: regbot, 
+        contextInfo: {
+            externalAdReply: {
+                showAdAttribution: true,                      
+                containsAutoReply: true,
+                title: '⊱『✅𝆺𝅥 𝗥𝗘𝗚𝗜𝗦𝗧𝗥𝗔𝗗𝗢(𝗔) 𝆹𝅥✅』⊰',  
+                body: dev,  
+                containsAutoReply: true,
+                showAdAttribution: true,
+                mediaType: 1, 
+                thumbnailUrl: 'https://qu.ax/FGSG.jpg' }}}, {quoted: m})
+*/
+
+let chtxt = `🩰 ɴᥱ𝒘 𝙍𝙐𝘽𝙔 𝙃𝙊𝙎𝙃𝙄𝙉𝙊 𝙐𝙎𝙀𝙍 ꜜ
+˚₊· ͟͟͞͞➳💎 *𝗨𝘀𝘂𝗮𝗿𝗶𝗼:* 𖦹 ${m.pushName || 'Anónimo'}    
+˚₊· ͟͟͞͞➳📂 *𝗩𝗲𝗿𝗶𝗳𝗶𝗰𝗮𝗰𝗶𝗼́𝗻:* 𖦹 ${user.name}    
+˚₊· ͟͟͞͞➳🍰 *𝗘𝗱𝗮𝗱:* ${user.age} años    
+˚₊· ͟͟͞͞➳⌨️ *𝗗𝗲𝘀𝗰𝗿𝗶𝗽𝗰𝗶𝗼́𝗻:* ${user.descripcion}  
+˚₊· ͟͟͞͞➳🍬 *𝗥𝗲𝗴𝗶𝘀𝘁𝗿𝗼 𝗜𝗗:*  
+⤷ ${sn}`;
+
+    let channelID = '120363397177582655@newsletter';
+        await conn.sendMessage(channelID, {
+        text: chtxt,
+        contextInfo: {
+            externalAdReply: {
+                title: "꒰🎀꒱ ʀᴇɢɪsᴛʀᴏ ᴄᴏᴍᴘʟᴇᴛᴀᴅᴏ ꒰🌸꒱",
+                body: '✦⃟ 𝑬𝒏𝒄𝒐𝒏𝒕𝒓𝒂𝒅𝒐… 𝒕𝒆 𝒕𝒆𝒏𝒈𝒐 𝒆𝒏 𝒎𝒊 𝒗𝒊𝒔𝒕𝒂 🌸',
+                thumbnailUrl: perfil,
+                sourceUrl: redes,
+                mediaType: 1,
+                showAdAttribution: false,
+                renderLargerThumbnail: false
+            }
+        }
+    }, { quoted: null });
+};
 
 handler.help = ['reg']
 handler.tags = ['rg']
