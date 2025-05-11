@@ -58,7 +58,7 @@ var handler = async (m, { conn, args, usedPrefix, command }) => {
       const maxSeconds = 30 * 60;
 
       if (durationSeconds > maxSeconds) {
-        return conn.reply(m.chat, `⏳ *Ese video dura más de 30 minutos, onii-chan...*`, m, { contextInfo, quoted: m });
+        return conn.reply(m.chat, `*lo siento &{name}-chan ~.. ese vídeo supera los 30 minutos..*`, m, { contextInfo, quoted: m });
       }
 
       // Muestra los detalles del video kawaii antes de descargar
