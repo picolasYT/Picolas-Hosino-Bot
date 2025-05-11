@@ -28,7 +28,7 @@ var handler = async (m, { conn, args, usedPrefix, command }) => {
   if (!args[0]) {
     return conn.reply(
       m.chat,
-      `🌸 *Konnichiwa, onii-chan~!* Necesito que me digas qué quieres buscar o pegar un enlace de YouTube.\n\n📦 Ejemplo:\n\`${usedPrefix + command} Goku conoce a Bills\`\n\`${usedPrefix + command} https://www.youtube.com/watch?v=xxxx\``,
+      `🌸 *Onii-chan... nani sagashitai no?* 〜 (≧◡≦)\n\n🔍 Escribe lo que deseas buscar o pega un enlace de YouTube~\n\n🌼 *Ejemplos:*\n\`${usedPrefix + command} Shinzou wo Sasageyo\`\n\`${usedPrefix + command} https://youtu.be/xxxx\``,
       m,
       { contextInfo, quoted: m }
     );
