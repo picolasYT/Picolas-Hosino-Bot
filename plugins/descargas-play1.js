@@ -3,7 +3,6 @@ import yts from 'yt-search';
 
 const newsletterJid  = '120363335626706839@newsletter';
 const newsletterName = '⏤͟͞ू⃪፝͜⁞⟡『 𝐓͢ᴇ𝙖፝ᴍ⃨ 𝘾𝒉꯭𝐚𝑛𝑛𝒆𝑙: 𝑹ᴜ⃜ɓ𝑦-𝑯ᴏ𝒔𝑯𝙞꯭𝑛𝒐 』࿐⟡';
-const packname       = '✿⃝𓂃 𝑹𝙪͜͡𝑏𝙮 𝙃𝒐𝘀𝙝𝑖𝙣𝙤 ❀';
 
 var handler = async (m, { conn, args, usedPrefix, command }) => {
   const contextInfo = {
@@ -16,8 +15,8 @@ var handler = async (m, { conn, args, usedPrefix, command }) => {
       serverMessageId: -1
     },
     externalAdReply: {
-      title: packname,
-      body: dev,
+      title: botname,
+      body: wm,
       thumbnail: icons,
       sourceUrl: redes,
       mediaType: 1,
