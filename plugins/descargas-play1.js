@@ -46,7 +46,7 @@ var handler = async (m, { conn, args, usedPrefix, command }) => {
     if (isUrl) {
       url = query;
     } else {
-      await conn.reply(m.chat, `🔍 *Buscando tu deseo en YouTube... espera un momento, onii-chan~*`, m, { contextInfo, quoted: m });
+      await conn.reply(m.chat, `🔎 *Yatta~! estoy buscando tu deseo ${name}-chan.. espera un poco porfi* 🧸`, m, { contextInfo, quoted: m });
       const search = await yts(query);
       video = search.videos?.[0];
 
