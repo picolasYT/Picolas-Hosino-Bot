@@ -51,7 +51,7 @@ var handler = async (m, { conn, args, usedPrefix, command }) => {
       video = search.videos?.[0];
 
       if (!video) {
-        return conn.reply(m.chat, `🥺 *No encontré nada con ese nombre, onii-chan...*`, m, { contextInfo, quoted: m });
+        return conn.reply(m.chat, `💦 *Gomen ne... no pude encontrar nada...*`, m, { contextInfo, quoted: m });
       }
 
       const durationSeconds = video.seconds || 0;
