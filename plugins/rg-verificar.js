@@ -90,6 +90,7 @@ let handler = async function (m, { conn, text, usedPrefix, command }) {
 🎂 *Edad:* ${age}
 📞 *Número:* wa.me/${m.sender.split('@')[0]}
 📝 *Descripción:* ${about}`,
+*no pajearse con las fotos (opcional)*
     contextInfo
   })
 }
@@ -99,4 +100,3 @@ handler.tags = ['rg']
 handler.command = ['verify', 'verificar', 'reg', 'register', 'registrar']
 
 export default handler
-
