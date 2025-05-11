@@ -3,6 +3,7 @@ import yts from 'yt-search';
 
 const newsletterJid  = '120363335626706839@newsletter';
 const newsletterName = '⏤͟͞ू⃪፝͜⁞⟡『 𝐓͢ᴇ𝙖፝ᴍ⃨ 𝘾𝒉꯭𝐚𝑛𝑛𝒆𝑙: 𝑹ᴜ⃜ɓ𝑦-𝑯ᴏ𝒔𝑯𝙞꯭𝑛𝒐 』࿐⟡';
+const packname       = '✿⃝𓂃 𝑹𝙪͜͡𝑏𝙮 𝙃𝒐𝘀𝙝𝑖𝙣𝙤 ❀';
 
 var handler = async (m, { conn, args, usedPrefix, command }) => {
   const contextInfo = {
@@ -15,8 +16,8 @@ var handler = async (m, { conn, args, usedPrefix, command }) => {
       serverMessageId: -1
     },
     externalAdReply: {
-      title: botname,
-      body: wm,
+      title: packname,
+      body: dev,
       thumbnail: icons,
       sourceUrl: redes,
       mediaType: 1,
@@ -27,7 +28,7 @@ var handler = async (m, { conn, args, usedPrefix, command }) => {
   if (!args[0]) {
     return conn.reply(
       m.chat,
-      `🌸 *Onii-chan... nani sagashitai no?* 〜 (≧◡≦)\n\n🔍 Escribe lo que deseas buscar o pega un enlace de YouTube~\n\n🌼 *Ejemplos:*\n\`${usedPrefix + command} Shinzou wo Sasageyo\`\n\`${usedPrefix + command} https://youtu.be/cTsMylsTCWA?si=nzZykTkWYC0E3Fk3\``,
+      `🌸 *Konnichiwa, onii-chan~!* Necesito que me digas qué quieres buscar o pegar un enlace de YouTube.\n\n📦 Ejemplo:\n\`${usedPrefix + command} Goku conoce a Bills\`\n\`${usedPrefix + command} https://www.youtube.com/watch?v=xxxx\``,
       m,
       { contextInfo, quoted: m }
     );
@@ -45,35 +46,31 @@ var handler = async (m, { conn, args, usedPrefix, command }) => {
     if (isUrl) {
       url = query;
     } else {
-      await conn.reply(m.chat, `🔎 *Yatta~! estoy buscando tu deseo ${name}-chan.. espera un poco porfi* 🧸`, m, { contextInfo, quoted: m });
+      await conn.reply(m.chat, `🔍 *Buscando tu deseo en YouTube... espera un momento, onii-chan~*`, m, { contextInfo, quoted: m });
       const search = await yts(query);
       video = search.videos?.[0];
 
       if (!video) {
-        return conn.reply(m.chat, `💦 *Gomen ne... no pude encontrar nada...*`, m, { contextInfo, quoted: m });
+        return conn.reply(m.chat, `🥺 *No encontré nada con ese nombre, onii-chan...*`, m, { contextInfo, quoted: m });
       }
 
       const durationSeconds = video.seconds || 0;
       const maxSeconds = 30 * 60;
 
       if (durationSeconds > maxSeconds) {
-        return conn.reply(m.chat, `*lo siento &{name}-chan ~.. ese vídeo supera los 30 minutos..*`, m, { contextInfo, quoted: m });
+        return conn.reply(m.chat, `⏳ *Ese video dura más de 30 minutos, onii-chan...*`, m, { contextInfo, quoted: m });
       }
 
       // Muestra los detalles del video kawaii antes de descargar
       const caption = `
-╭─ꨪᰰ━۪  ࣪  ꨶ ╼ׄ ╼࡙֟፝͝⌒࣪᷼⏜ׅ ࣪🍵᮫໋⃨𝆬 ࣪ ׅ⏜ׄ᷼⌒╼࡙֟፝͝ ╾ 
- 𝆡𑘴⃞ֵ݄݁ׄ🫖ׄׄ ⃨֟፝★̫᤺.݁ׄ⋆⃨݁ 𝐏𝕝𝕒𝕪 𝐯𝕚̊𝕕𝕖𝕠 𝕗𝕠𝕣 𝕪𝕠𝕦, 𝐨𝕟𝕚𝕚-𝕔𝕙𝕒𝕟~🌸
-     ╰─ꨪᰰ━۪  ࣪  ꨶ ╼ׄ ╼࡙֟፝͝⌒࣪᷼⏜ׅ ࣪🍵᮫໋⃨𝆬 ࣪ ׅ⏜ׄ᷼⌒╼࡙֟፝͝ ╾  
-╭─ꨪᰰ━۪  ࣪ ꨶ ╼ׄ ╼࡙֟፝͝⌒࣪᷼⏜ׅ 🍵᮫໋⃨𝆬 ࣪ ⏜ׄ᷼⌒╼࡙֟፝͝ ╾ 
-> 𑁯᧙  🍓 *Título:* ${video.title}
-> 𑁯᧙  📏 *Duración:* ${video.timestamp}
-> 𑁯᧙  👁️ *Vistas:*  ${video.views.toLocaleString()}
-> 𑁯᧙  🎨 *Autor:* ${video.author.name}
-> 𑁯᧙  🕰️ *Publicado:* ${video.ago}
-> 𑁯᧙  📝 *vídeo url:* ${video.url}
-╰─ꨪᰰ━۪  ࣪ ꨶ ╼ׄ ╼࡙֟፝͝⌒࣪᷼⏜ׅ 🍵᮫໋⃨𝆬 ࣪ ⏜ׄ᷼⌒╼࡙֟፝͝ ╾
-💌 Arigatou por usarme, siempre estaré aquí para ti~ ✨
+🌸⸝⸝ ¡Tu música kawaii está lista! 🎶
+
+📌 *Título:* ${video.title}
+👤 *Autor:* ${video.author.name}
+⏱️ *Duración:* ${video.timestamp}
+📅 *Publicado:* ${video.ago}
+👁️ *Vistas:* ${video.views.toLocaleString()}
+🔗 *URL:* ${video.url}
 `.trim();
 
       await conn.sendMessage(m.chat, { text: caption }, { quoted: m, contextInfo });
