@@ -604,7 +604,7 @@ private: '「🍭」 *Nya~ Este comando solo funciona en mi rincón privado cont
 admin: '「👑」 *¡Hauu~! Solo los admin-senpai pueden usar este comando...* 📛',
 botAdmin: '「🚩」 *¡Espérame~! Necesito ser admin primero para ayudarte~!* 🛡️',
 unreg: '*Hyaa~! No estás en mi lista secreta, onii-chan...* 😿\n\n📝 *Regístrate con:*\n*/reg nombre.edad*\n\n🌸 *_Ejemplo:_* */reg Dioneibi.20*',
-restrict: '「💫」 *Umm... Esta función mágica está desactivada por ahora~* 🔒'
+restrict: '「📵」 *¡Ouh~! Esta función está dormida por ahora, espera un poco~* 💤'
 
 }[type];
 if (msg) return m.reply(msg).then(_ => m.react('✖️'))}
