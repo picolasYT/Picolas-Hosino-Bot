@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 
 var handler = async (m, { conn, args, usedPrefix, command }) => {
     if (!args[0]) {
-        return conn.reply(m.chat, `${emoji} Por favor, ingresa un enlace de TikTok.`, m);
+        return conn.reply(m.chat, `${emoji} Por favor, ingresa un enlace de TikTok.`, m, rcanal);
     }
 
     try {
