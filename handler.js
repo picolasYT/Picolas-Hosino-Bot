@@ -603,17 +603,15 @@ group: '「🐢」 *Uguu~ Este comando solo puede usarse en grupos, onii-chan~!*
 private: '「🍭」 *Nya~ Este comando solo funciona en mi rincón privado contigo~* 💌',
 admin: '「👑」 *¡Hauu~! Solo los admin-senpai pueden usar este comando...* 📛',
 botAdmin: '「🚩」 *¡Espérame~! Necesito ser admin primero para ayudarte~!* 🛡️',
-unreg: '*Hyaa~! No estás en mi lista secreta, onii-chan...* 😿\n\n📝 *Regístrate con:*\n*/reg nombre.edad*\n\n🌸 *_Ejemplo:_* */reg Dioneibi.20*',
-restrict: '「📵」 *¡Ouh~! Esta función está dormida por ahora, espera un poco~* 💤'
+unreg: `『✦』El comando *${comando}* solo puede ser usado por los usuarios registrado, registrate usando:\n> » #${verifyaleatorio} ${user2}.${edadaleatoria}`,
+restrict: `『✦』Esta caracteristica está desactivada.`
 }[type];
-if (msg) return conn.reply(m.chat, msg, m, rcanal).then(_ => m.react('✖️'))}
-const file = global.__filename(import.meta.url, true);
+if (msg) return m.reply(msg).then(_ => m.react('✖️'))}
 
-// NO TOCAR
+let file = global.__filename(import.meta.url, true)
 watchFile(file, async () => {
 unwatchFile(file)
 console.log(chalk.magenta("Se actualizo 'handler.js'"))
-//if (global.reloadHandler) console.log(await global.reloadHandler())
 
 if (global.conns && global.conns.length > 0 ) {
 const users = [...new Set([...global.conns.filter((conn) => conn.user && conn.ws.socket && conn.ws.socket.readyState !== ws.CLOSED).map((conn) => conn)])];
