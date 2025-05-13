@@ -114,7 +114,31 @@ global.icono = [
 'https://tinyurl.com/285a5ejf',
 ].getRandom()
 
-global.rcanal = { contextInfo: { isForwarded: true, forwardedNewsletterMessageInfo: { newsletterJid: channelRD.id, serverMessageId: 100, newsletterName: channelRD.name, }, externalAdReply: { showAdAttribution: true, title: packname, body: dev, mediaUrl: null, description: null, previewType: "PHOTO", thumbnailUrl: icons, sourceUrl: redes, mediaType: 1, renderLargerThumbnail: false }, }, }}
+import fetch from 'node-fetch' // si estás en un entorno Node
+
+global.rcanal = {
+  contextInfo: {
+    isForwarded: true,
+    forwardedNewsletterMessageInfo: {
+      newsletterJid: channelRD.id,
+      serverMessageId: 100,
+      newsletterName: channelRD.name,
+    },
+    externalAdReply: {
+      showAdAttribution: true,
+      title: packname,
+      body: dev,
+      mediaUrl: null,
+      description: null,
+      previewType: "PHOTO",
+      thumbnail: await (await fetch(icons)).buffer(), // <- Este es el cambio
+      sourceUrl: redes,
+      mediaType: 1,
+      renderLargerThumbnail: false
+    }
+  }
+}
+
 
 export default handler
 
