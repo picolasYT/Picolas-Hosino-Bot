@@ -605,9 +605,9 @@ admin: '「👑」 *¡Hauu~! Solo los admin-senpai pueden usar este comando...* 
 botAdmin: '「🚩」 *¡Espérame~! Necesito ser admin primero para ayudarte~!* 🛡️',
 unreg: '*Hyaa~! No estás en mi lista secreta, onii-chan...* 😿\n\n📝 *Regístrate con:*\n*/reg nombre.edad*\n\n🌸 *_Ejemplo:_* */reg Dioneibi.20*',
 restrict: '「📵」 *¡Ouh~! Esta función está dormida por ahora, espera un poco~* 💤'
-
 }[type];
-if (msg) return m.reply(msg).then(_ => m.react('✖️'))}
+if (msg) return conn.reply(m.chat, msg, m, rcanal).then(_ => m.react('✖️'))}
+const file = global.__filename(import.meta.url, true);
 
 let file = global.__filename(import.meta.url, true)
 watchFile(file, async () => {
