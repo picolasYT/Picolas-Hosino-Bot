@@ -609,7 +609,7 @@ restrict: '「📵」 *¡Ouh~! Esta función está dormida por ahora, espera un 
 if (msg) return conn.reply(m.chat, msg, m, rcanal).then(_ => m.react('✖️'))}
 const file = global.__filename(import.meta.url, true);
 
-let file = global.__filename(import.meta.url, true)
+// NO TOCAR
 watchFile(file, async () => {
 unwatchFile(file)
 console.log(chalk.magenta("Se actualizo 'handler.js'"))
