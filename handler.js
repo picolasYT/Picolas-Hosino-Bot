@@ -595,14 +595,14 @@ let user2 = m.pushName || 'Anónimo'
 let verifyaleatorio = ['registrar', 'reg', 'verificar', 'verify', 'register'].getRandom()
 
 const msg = {
-rowner: '「👑」 *Lo siento, onii-chan~! Esta función solo puede ser usada por mi creador supremo...* ✨\n\n> *Dioneibi-sama.*',
-owner: '「👑」 *Nyaa~ Esta función es muy especial y solo puede usarla mi desarrollador...* 💻💖',
-mods: '「🤴🏻」 *Owo~ Esta función está reservada para mis desarrolladores mágicos...* 🪄',
-premium: '「🍧」 *Eeeh~? Esta función es solo para usuarios Premium-nya!* 🌟\n\n> ejemplo: comprarpremium 1 dias',
-group: '「🐢」 *Uguu~ Este comando solo puede usarse en grupos, onii-chan~!* 🫂',
-private: '「🍭」 *Nya~ Este comando solo funciona en mi rincón privado contigo~* 💌',
-admin: '「👑」 *¡Hauu~! Solo los admin-senpai pueden usar este comando...* 📛',
-botAdmin: '「🚩」 *¡Espérame~! Necesito ser admin primero para ayudarte~!* 🛡️',
+rowner: `『✦』El comando *${comando}* solo puede ser usado por los creadores del bot.`, 
+owner: `『✦』El comando *${comando}* solo puede ser usado por los desarrolladores del bot.`, 
+mods: `『✦』El comando *${comando}* solo puede ser usado por los moderadores del bot.`, 
+premium: `『✦』El comando *${comando}* solo puede ser usado por los usuarios premium.`, 
+group: `『✦』El comando *${comando}* solo puede ser usado en grupos.`,
+private: `『✦』El comando *${comando}* solo puede ser usado al chat privado del bot.`,
+admin: `『✦』El comando *${comando}* solo puede ser usado por los administradores del grupo.`, 
+botAdmin: `『✦』Para ejecutar el comando *${comando}* debo ser administrador del grupo.`,
 unreg: `『✦』El comando *${comando}* solo puede ser usado por los usuarios registrado, registrate usando:\n> » #${verifyaleatorio} ${user2}.${edadaleatoria}`,
 restrict: `『✦』Esta caracteristica está desactivada.`
 }[type];
