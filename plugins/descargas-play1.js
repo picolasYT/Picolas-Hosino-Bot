@@ -63,14 +63,18 @@ var handler = async (m, { conn, args, usedPrefix, command }) => {
 
       // Muestra los detalles del video kawaii antes de descargar
       const caption = `
-🌸⸝⸝ ¡Tu música kawaii está lista! 🎶
-
-📌 *Título:* ${video.title}
-👤 *Autor:* ${video.author.name}
-⏱️ *Duración:* ${video.timestamp}
-📅 *Publicado:* ${video.ago}
-👁️ *Vistas:* ${video.views.toLocaleString()}
-🔗 *URL:* ${video.url}
+╭─ꨪᰰ━۪  ࣪  ꨶ ╼ׄ ╼࡙֟፝͝⌒࣪᷼⏜ׅ ࣪🍵᮫໋⃨𝆬 ࣪ ׅ⏜ׄ᷼⌒╼࡙֟፝͝ ╾ 
+ 𝆡𑘴⃞ֵ݄݁ׄ🫖ׄׄ ⃨֟፝★̫᤺.݁ׄ⋆⃨݁ 𝐏𝕝𝕒𝕪 𝐯𝕚̊𝕕𝕖𝕠 𝕗𝕠𝕣 𝕪𝕠𝕦, 𝐨𝕟𝕚𝕚-𝕔𝕙𝕒𝕟~🌸
+     ╰─ꨪᰰ━۪  ࣪  ꨶ ╼ׄ ╼࡙֟፝͝⌒࣪᷼⏜ׅ ࣪🍵᮫໋⃨𝆬 ࣪ ׅ⏜ׄ᷼⌒╼࡙֟፝͝ ╾  
+╭─ꨪᰰ━۪  ࣪ ꨶ ╼ׄ ╼࡙֟፝͝⌒࣪᷼⏜ׅ 🍵᮫໋⃨𝆬 ࣪ ⏜ׄ᷼⌒╼࡙֟፝͝ ╾ 
+> 𑁯᧙  🍓 *Título:* ${video.title}
+> 𑁯᧙  📏 *Duración:* ${video.timestamp}
+> 𑁯᧙  👁️ *Vistas:*  ${video.views.toLocaleString()}
+> 𑁯᧙  🎨 *Autor:* ${video.author.name}
+> 𑁯᧙  🕰️ *Publicado:* ${video.ago}
+> 𑁯᧙  📝 *vídeo url:* ${video.url}
+╰─ꨪᰰ━۪  ࣪ ꨶ ╼ׄ ╼࡙֟፝͝⌒࣪᷼⏜ׅ 🍵᮫໋⃨𝆬 ࣪ ⏜ׄ᷼⌒╼࡙֟፝͝ ╾
+💌 Arigatou por usarme, siempre estaré aquí para ti~ ✨
 `.trim();
 
       await conn.sendMessage(m.chat, { text: caption }, { quoted: m, contextInfo });
