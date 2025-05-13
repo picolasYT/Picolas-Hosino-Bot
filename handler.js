@@ -590,28 +590,25 @@ console.error(e)
 
 global.dfail = (type, m, usedPrefix, command, conn) => {
 
-global.dfail = (type, m, usedPrefix, command, conn) => {
-  let edadaleatoria = ['10', '28', '20', '40', '18', '21', '15', '11', '9', '17', '25'].getRandom()
-  let user2 = m.pushName || 'Anónimo'
-  let verifyaleatorio = ['registrar', 'reg', 'verificar', 'verify', 'register'].getRandom()
+let edadaleatoria = ['10', '28', '20', '40', '18', '21', '15', '11', '9', '17', '25'].getRandom()
+let user2 = m.pushName || 'Anónimo'
+let verifyaleatorio = ['registrar', 'reg', 'verificar', 'verify', 'register'].getRandom()
 
-  const msg = {
-    rowner: `🌺 *Gomenasai~!* El comando *${command}* solo puede ser usado por mis *creadores divinos~* ✨`,
-    owner: `🌸 *Nya~* Este comando *${command}* es sagrado, reservado solo para *mi desarrollador~* 💻💖`,
-    mods: `🌟 *Ouh!* Solo los *moderadores mágicos* pueden usar el comando *${command}* 🔮`,
-    premium: `🍡 *Ehh~?* El comando *${command}* es solo para *usuarios Premium-desu~* 💎`,
-    group: `🐾 *Uguu~* El comando *${command}* solo puede usarse en *grupos grupales~* 👥`,
-    private: `🎀 *Shh~* El comando *${command}* es solo para *chat privado, onee-san~* 💌`,
-    admin: `🧸 *Kyah~!* Solo *admins-senpai* pueden usar *${command}* 🛡️`,
-    botAdmin: `🔧 *Wahh~!* ¡Necesito ser admin primero para usar *${command}*, onii-chan~! ⚙️`,
-    unreg: `📋 *Nyaa~!* No estás en mi base de datos mágica~\n\n📝 *Regístrate así~:*\n> » *#${verifyaleatorio} ${user2}.${edadaleatoria}*`,
-    restrict: `📵 *Uwahh~!* Esta función está *desactivada temporalmente*, espera un poco~ 💤`
-  }[type]
+const msg = {
+rowner: `『✦』El comando *${comando}* solo puede ser usado por los creadores del bot.`, 
+owner: `『✦』El comando *${comando}* solo puede ser usado por los desarrolladores del bot.`, 
+mods: `『✦』El comando *${comando}* solo puede ser usado por los moderadores del bot.`, 
+premium: `『✦』El comando *${comando}* solo puede ser usado por los usuarios premium.`, 
+group: `『✦』El comando *${comando}* solo puede ser usado en grupos.`,
+private: `『✦』El comando *${comando}* solo puede ser usado al chat privado del bot.`,
+admin: `『✦』El comando *${comando}* solo puede ser usado por los administradores del grupo.`, 
+botAdmin: `『✦』Para ejecutar el comando *${comando}* debo ser administrador del grupo.`,
+unreg: `『✦』El comando *${comando}* solo puede ser usado por los usuarios registrado, registrate usando:\n> » #${verifyaleatorio} ${user2}.${edadaleatoria}`,
+restrict: `『✦』Esta caracteristica está desactivada.`
+}[type];
+if (msg) return m.reply(msg).then(_ => m.react('✖️'))}
 
-  if (msg) return conn.reply(m.chat, msg, m, { mentions: [m.sender], ...rcanal }).then(_ => m.react('✖️'))}
-const file = global.__filename(import.meta.url, true);
-
-// NO TOCAR
+let file = global.__filename(import.meta.url, true)
 watchFile(file, async () => {
 unwatchFile(file)
 console.log(chalk.magenta("Se actualizo 'handler.js'"))
