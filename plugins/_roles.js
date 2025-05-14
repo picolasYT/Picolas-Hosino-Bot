@@ -55,7 +55,7 @@ const roles = {
   '*Yandere Supremo/a IV*🩸🔪': 160,
   '*Yandere Supremo/a III*🩸🔪': 170,
   '*Yandere Supremo/a II*🩸🔪': 180,
-  '*Yandere Supremo/a I*'🩸🔪: 199,
+  '*Yandere Supremo/a I*🩸🔪': 199,
   '*Kami-sama del Waifuverso V*🏵️': 200,
   '*Kami-sama del Waifuverso IV*🏵️': 225,
   '*Kami-sama del Waifuverso III*🏵️': 250,
@@ -106,11 +106,10 @@ const roles = {
 
 let handler = m => m
 handler.before = async function (m, { conn }) {
-        let user = db.data.users[m.sender]
-        let level = user.level
-        let role = (Object.entries(roles).sort((a, b) => b[1] - a[1]).find(([, minLevel]) => level >= minLevel) || Object.entries(roles)[0])[0]
-        user.role = role
-        return !0
-
+  let user = db.data.users[m.sender]
+  let level = user.level
+  let role = (Object.entries(roles).sort((a, b) => b[1] - a[1]).find(([, minLevel]) => level >= minLevel) || Object.entries(roles)[0])[0]
+  user.role = role
+  return !0
 }
 export default handler
