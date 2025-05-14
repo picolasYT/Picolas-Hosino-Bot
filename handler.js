@@ -570,7 +570,7 @@ botAdmin: `『✦』Para ejecutar el comando *${comando}* debo ser administrador
 unreg: `『✦』El comando *${comando}* solo puede ser usado por los usuarios registrado, registrate usando:\n> » #${verifyaleatorio} ${user2}.${edadaleatoria}`,
 restrict: `『✦』Esta caracteristica está desactivada.`
 }[type];
-if (msg) return conn.reply(m.chat, msg, m, rcanal).then(_ => m.react('✖️'))}
+if (msg) return m.reply(msg).then(_ => m.react('✖️'))}
 
 let file = global.__filename(import.meta.url, true)
 watchFile(file, async () => {
