@@ -52,7 +52,8 @@ let handler = async (m, { conn, usedPrefix, command }) => {
              `┃Tu salud ${evento.health < 0 ? 'bajó en: ' + Math.abs(evento.health) : 'se mantuvo igual.'}\n` +
              `╰━━━━━━━━━━━━⬣`;
 
- await conn.sendFile(m.chat, banner, 'mazmorras.jpg', info);
+ await conn.sendFile(m.chat, banner, 'mazmorras.jpg', { quoted: m, mention: [m.sender] });
+
 
   global.db.write();
 };
