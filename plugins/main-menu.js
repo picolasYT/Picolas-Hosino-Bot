@@ -45,7 +45,7 @@ let handler = async (m, { conn, args }) => {
 
 "¡Hola, ${name}! Mi nombre es *Ruby Hoshino* (≧◡≦)"
 
-Aquí tienes mi lista de comandos 🌸
+Aquí tienes mi lista de comandos
 ╔═══════⩽✦✰✦⩾═══════╗
        「 𝙄𝙉𝙁𝙊 𝘿𝙀 𝙇𝘼 𝘽𝙊𝙏 」
 ╚═══════⩽✦✰✦⩾═══════╝
