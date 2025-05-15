@@ -104,7 +104,7 @@ contextInfo: {
 externalAdReply: {
 title: packname,
 body: dev,
-thumbnailUrl: icono,
+thumbnailUrl: banner,
 mediaType: 1,
 showAdAttribution: true,
 renderLargerThumbnail: true
