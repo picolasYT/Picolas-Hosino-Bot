@@ -43,7 +43,7 @@ let handler = async (m, { conn, args }) => {
 ｡☆✼★━━━━━━━━━━━━━━━━━★✼☆｡
 
 
-"¡Hola, ${name}! Mi nombre es *Ruby Hoshino* (≧◡≦)"
+¡Hola, ${name}! Mi nombre es *Ruby Hoshino* (≧◡≦)
 
 Aquí tienes mi lista de comandos
 ╔═══════⩽✦✰✦⩾═══════╗
