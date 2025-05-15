@@ -1,13 +1,13 @@
 import { exec } from 'child_process';
 
 let handler = async (m, { conn }) => {
-  m.reply(`🔄 Actualizando el bot...`);
+  m.reply(`🌷 Actualizando la bot...`);
 
   const comando = 'find src -type f | xargs git update-index --assume-unchanged && git pull';
 
   exec(comando, (err, stdout, stderr) => {
     if (err) {
-      conn.reply(m.chat, `⚠️ Error: No se pudo realizar la actualización.\nRazón: ${err.message}`, m);
+      conn.reply(m.chat, `🍭 Error: No se pudo realizar la actualización.\nRazón: ${err.message}`, m);
       return;
     }
 
@@ -16,9 +16,9 @@ let handler = async (m, { conn }) => {
     }
 
     if (stdout.includes('Already up to date.')) {
-      conn.reply(m.chat, `✅ El bot ya está actualizado.`, m);
+      conn.reply(m.chat, `🌷 La bot ya está actualizada.`, m);
     } else {
-      conn.reply(m.chat, `✅ Actualización realizada con éxito.\n\n${stdout}`, m);
+      conn.reply(m.chat, `🍭 Actualización realizada con éxito.\n\n${stdout}`, m);
     }
   });
 };
