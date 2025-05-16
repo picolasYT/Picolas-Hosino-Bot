@@ -27,5 +27,6 @@ handler.help = ['speedtest'];
 handler.tags = ['info'];
 handler.command = ['speedtest', 'stest', 'test'];
 handler.register = true;
+handler.rowner = true;
 
 export default handler;
