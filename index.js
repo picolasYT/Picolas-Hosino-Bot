@@ -506,7 +506,7 @@ console.log(chalk.bold.cyanBright(`\n╭» ❍ ${global.Rubysessions} ❍\n│�
 
 setInterval(async () => {
 if (stopped === 'close' || !conn || !conn.user) return
-await purgeRubysessionsSB()}, 1000 * 60 * 10) 
+await purgeRubySessionSB()}, 1000 * 60 * 10)  
 
 setInterval(async () => {
 if (stopped === 'close' || !conn || !conn.user) return
