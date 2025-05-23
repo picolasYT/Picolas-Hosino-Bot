@@ -679,7 +679,7 @@ Aquí tienes mi lista de comandos
   `.trim();
 
     // Mensaje de inicio de envío del menú
-    await conn.reply(m.chat, '*ꪹ͜𓂃⌛͡𝗘𝗻𝘃𝗶𝗮𝗻𝗱𝗼 𝗠𝗲𝗻𝘂 𝗱𝗲𝗹 𝗕𝗼𝘁....𓏲੭*', fkontak, { 
+    await conn.reply(m.chat, '*ꪹ͜𓂃⌛͡𝗘𝗻𝘃𝗶𝗮𝗻𝗱𝗼 𝗠𝗲𝗻𝘂 𝗱𝗲𝗹 𝗕𝗼𝘁....𓏲੭*', m, { 
         contextInfo: { 
             forwardingScore: 2022, 
             isForwarded: true, 
