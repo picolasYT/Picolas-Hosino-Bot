@@ -48,7 +48,7 @@ global.botname = '🕊️⃟⋆≛⃝  𝐑᪶𝐮𝐛𝐲 𝐇⃨𝐨𝐬𝐡�
 global.wm = '‧˚꒰🍷꒱ ፝͜⁞R͢ᴜʙʏ-H͢ᴼ꯭s፝֟ʜɪɴᴏ-𝘉𝘰𝘵-𝑴𝑫✰⃔⃝🦋'
 global.author = 'Made By 𐔌Dioneibi-rip ͡꒱ ۫'
 global.dev = '⌬ Modified by: Dioneibi-rip ⚙️💻 '
-global.textbot = '⏤͟͞ू⃪ 𝑹𝒖𝒃𝒚-𝐻𝒐𝒔𝒉𝒊𝒏𝒐🌸⃝𖤐 • 𝗣𝗼𝘄𝗲𝗿𝗲𝗱 𝗕𝘆 ᴰⁱᵒⁿᵉⁱᵇⁱ⁻ʳⁱᵖ'
+global.textbot = '⏤͟͞ू⃪ ፝͜⁞ 𝐑𝐮𝐛𝐲-𝐇𝐨𝐬𝐡𝐢𝐧𝐨-𝐁𝐨𝐭 ✰⃔࿐\n    𝙋𝙤𝙬𝙚𝙧𝙚𝙙 𝙗𝙮 ⁱᵃᵐDioneibi'
 global.etiqueta = 'ˑ 𓈒 𐔌 D͙i͙o͙n͙e͙i͙b͙i͙-r͙i͙p͙ ͡꒱ ۫'
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
