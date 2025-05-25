@@ -28,7 +28,7 @@ var handler = async (m, { conn, args, usedPrefix, command }) => {
   if (!args[0]) {
     return conn.reply(
       m.chat,
-      `🌸 *Konnichiwa, onii-chan~!* Necesito que me digas qué quieres buscar o pegar un enlace de YouTube.\n\n📦 Ejemplo:\n\`${usedPrefix + command} Goku conoce a Bills\`\n\`${usedPrefix + command} https://youtu.be/dQw4w9WgXcQ\`\n`,
+      `🌸 *Konnichiwa, onii-chan~!* Necesito que me digas qué quieres buscar o pegar un enlace de YouTube.\n\n📦 Ejemplo:\n\`${usedPrefix + command} Goku conoce a Bills\`\n\`${usedPrefix + command} https://www.youtube.com/watch?v=xxxx\``,
       m,
       { contextInfo, quoted: m }
     );
@@ -64,7 +64,7 @@ var handler = async (m, { conn, args, usedPrefix, command }) => {
       // Muestra los detalles del video kawaii antes de descargar
       const caption = `
 ╭─ꨪᰰ━۪  ࣪  ꨶ ╼ׄ ╼࡙֟፝͝⌒࣪᷼⏜ׅ ࣪🍵᮫໋⃨𝆬 ࣪ ׅ⏜ׄ᷼⌒╼࡙֟፝͝ ╾ 
-  𝆡𑘴⃞ֵ݄݁ׄ🫖ׄׄ ⃨֟፝★̫᤺.݁ׄ⋆⃨݁ 𝐏𝕝𝕒𝕪 𝐯𝕚̊𝕕𝕖𝕠 𝕗𝕠𝕣 𝕪𝕠𝕦, 𝐨𝕟𝕚𝕚-𝕔𝕙𝕒𝕟~🌸
+ 𝆡𑘴⃞ֵ݄݁ׄ🫖ׄׄ ⃨֟፝★̫᤺.݁ׄ⋆⃨݁ 𝐏𝕝𝕒𝕪 𝐯𝕚̊𝕕𝕖𝕠 𝕗𝕠𝕣 𝕪𝕠𝕦, 𝐨𝕟𝕚𝕚-𝕔𝕙𝕒𝕟~🌸
      ╰─ꨪᰰ━۪  ࣪  ꨶ ╼ׄ ╼࡙֟፝͝⌒࣪᷼⏜ׅ ࣪🍵᮫໋⃨𝆬 ࣪ ׅ⏜ׄ᷼⌒╼࡙֟፝͝ ╾  
 ╭─ꨪᰰ━۪  ࣪ ꨶ ╼ׄ ╼࡙֟፝͝⌒࣪᷼⏜ׅ 🍵᮫໋⃨𝆬 ࣪ ⏜ׄ᷼⌒╼࡙֟፝͝ ╾ 
 > 𑁯᧙  🍓 *Título:* ${video.title}
@@ -84,11 +84,6 @@ var handler = async (m, { conn, args, usedPrefix, command }) => {
 
     const apiUrl = `https://api.vreden.my.id/api/ytplaymp3?query=${encodeURIComponent(url)}`;
     const res = await fetch(apiUrl);
-    const contentType = res.headers.get('content-type') || '';
-    if (!res.ok || !contentType.includes('application/json')) {
-      const text = await res.text();
-      throw new Error(`Respuesta inesperada de la API: ${text.slice(0, 100)}...`);
-    }
     const json = await res.json();
 
     if (json.status !== 200 || !json.result?.download?.url) {
