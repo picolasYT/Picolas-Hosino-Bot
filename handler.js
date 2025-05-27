@@ -274,7 +274,6 @@ const normalizeJid = jid => jid?.replace(/[^0-9]/g, '')
 const cleanJid = jid => jid?.split(':')[0] || ''
 const senderNum = normalizeJid(m.sender)
 const botNums = [this.user.jid, this.user.lid].map(j => normalizeJid(cleanJid(j)))
-const botNums = [this.user.jid, this.user.lid].map(j => normalizeJid(cleanJid(j)))
 const user = m.isGroup 
   ? participants.find(u => normalizeJid(u.id) === senderNum) 
     : {}
