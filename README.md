@@ -1,8 +1,9 @@
-<h1 align="center">✦ RUBY HOSHINO BOT MD ✦</h1>
+<h1 align="center">✦ RUBY HOSHINO BOT MD✦</h1>
 
 <p align="center">
-  <img src="https://files.catbox.moe/your-converted-gif.gif" />
+  <img src="https://files.catbox.moe/x8hnzo.gif" alt="Ruby Hoshino Bot" />
 </p>
+
 
 
 ---
