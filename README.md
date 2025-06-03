@@ -1,6 +1,6 @@
 <h1 align="center">✦ RUBY HOSHINO BOT MD✦</h1>
 
- <img src= "https://files.catbox.moe/yenx0h.png">
+ <img src= "https://files.catbox.moe/tu2grm.mp4">
     </p>
 
 ---
