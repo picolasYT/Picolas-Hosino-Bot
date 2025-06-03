@@ -1,7 +1,9 @@
-<h1 align="center">✦ RUBY HOSHINO BOT MD✦</h1>
+<h1 align="center">✦ RUBY HOSHINO BOT MD ✦</h1>
 
- <img src= "https://files.catbox.moe/tu2grm.mp4">
-    </p>
+<p align="center">
+  <img src="https://files.catbox.moe/your-converted-gif.gif" />
+</p>
+
 
 ---
 
