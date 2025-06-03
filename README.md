@@ -3,7 +3,7 @@
 <h1 align="center">🌸 𝓡𝓤𝓑𝓨 𝓗𝓞𝓢𝓗𝓘𝓝𝓞 𝓑𝓞𝓣 𝓜𝓓 🌸</h1>
 
 <p align="center">
-  <img src="https://files.catbox.moe/x8hnzo.gif" alt="Ruby Hoshino Bot Preview" />
+  <img src="https://files.catbox.moe/atnv7f.gif" alt="Ruby Hoshino Bot Preview" />
 </p>
 
 <h1 align="center">𖤐・★・✦・✧・✦・★・𖤐</h1>
