@@ -162,3 +162,13 @@ nano settings.js
 <a href="https://github.com/Dioneibi-rip"><img src="https://github.com/Dioneibi-rip.png" width="250" height="250" alt="Dioneibi"/></a>
 
 ---
+
+### **🌺` Colaboradores Especiales 🌟`**
+<a href="https://github.com/nevi-dev" style="display:inline-block; text-decoration: none;">
+    <img src="https://github.com/nevi-dev.png" width="130" height="130" alt="legna Mini-dev" style="border-radius: 50%;"/>
+</a>
+<a href="https://github.com/Legna-chan" style="display:inline-block; margin-right: 10px; text-decoration: none;">
+    <img src="https://github.com/Legna-chan.png" width="130" height="130" alt="nevi developer" style="border-radius: 50%;"/>
+</a>
+
+---
