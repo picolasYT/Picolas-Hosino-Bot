@@ -159,10 +159,6 @@ nano settings.js
 
 **🔧 personalizado por:** [Dioneibi‑rip](https://github.com/Dioneibi-rip)
 
-<div align="center">
-  <a href="https://github.com/Dioneibi-rip">
-    <img src="https://github.com/Dioneibi-rip.png" width="150" height="150" alt="Dioneibi‑rip"/>
-  </a>
-</div>
+<a href="https://github.com/Dioneibi-rip"><img src="https://github.com/Dioneibi-rip.png" width="250" height="250" alt="Dioneibi"/></a>
 
 ---
