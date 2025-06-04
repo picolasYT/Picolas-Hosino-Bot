@@ -135,6 +135,23 @@ nano settings.js
 
 ---
 
+### **`✦ AKIRAX ✦`**
+
+<a
+href="https://home.akirax.net"><img src="https://raw.githubusercontent.com/The-King-Destroy/Adiciones/main/Contenido/1748713078525.jpeg" height="125px"></a>
+
+<details>
+ <summary><b> ❒ Servidor Akirax</b></summary>
+
+* Dashboard : [`Dash`](https://home.akirax.net)
+* Panel : [`Panel`](https://console.akirax.net)
+* Canal de WhatsApp : [`Aqui`](https://whatsapp.com/channel/0029VbBCchVDJ6H6prNYfz2z)
+* Grupo Oficial : [`Aquí`](https://chat.whatsapp.com/JxSZTFJN9J20TnsH7KsKTA)
+
+</details>
+
+---
+
 ## 🌐 𝐄𝐧𝐥𝐚𝐜𝐞𝐬 u𝐭𝐢𝐥𝐞𝐬
 
 <details>
