@@ -12,27 +12,27 @@ let handler = async (m, { conn }) => {
 > ✦ Sube el valor de tu personaje favorito. 
 
 ㅤۚ𑁯ׂᰍ ☕ ᳴ ׅ ׄʚ ̶ *#addrw*
-> ✦ Has una peticion para que añadan el personaje que quieras.
+> ✦ Has una petición para que añadan el personaje que quieras.
 
 ㅤۚ𑁯ׂᰍ ☕ ᳴ ׅ ׄʚ ̶ *#harem*
-> ✦ Verifica cuantos personajes reclamaste, y cuales tienes en tu harem.
+> ✦ Verifica cuántos personajes reclamaste, y cuáles tienes en tu harem.
 
 ㅤۚ𑁯ׂᰍ ☕ ᳴ ׅ ׄʚ ̶ *#wimage • #charimage*
-> ✦ Ve una foto aleatoria de algun personaje.
+> ✦ Ve una foto aleatoria de algún personaje.
 
 ㅤۚ𑁯ׂᰍ ☕ ᳴ ׅ ׄʚ ̶ *#topwaifus*
 > ✦ Tabla de personajes que tienen alto valor.
 
 ㅤۚ𑁯ׂᰍ ☕ ᳴ ׅ ׄʚ ̶ *#winfo*
-> ✦ Ve informacion sobre algun personaje. 
+> ✦ Ve información sobre algún personaje. 
 
-ㅤۚ𑁯ׂᰍ ☕ ᳴ ׅ ׄʚ ̶ *#regalar • #givewaifu
+ㅤۚ𑁯ׂᰍ ☕ ᳴ ׅ ׄʚ ̶ *#regalar • #givewaifu*
 > ✦ Regala un personaje de tu harem a otro usuario.
+`.trim();
 
-╰──── ੈ₊˚༅༴╰────︶.︶ ⸙ ͛ ͎ ͛ ︶.︶ ੈ₊˚༅
-  `.trim();
-
-  conn.sendFile(m.chat, 'https://files.catbox.moe/tfxlnk.png', texto, m, false, {
+  await conn.sendMessage(m.chat, {
+    image: { url: 'https://files.catbox.moe/tfxlnk.png' },
+    caption: texto,
     contextInfo: {
       mentionedJid: [m.sender],
       externalAdReply: {
@@ -48,7 +48,7 @@ let handler = async (m, { conn }) => {
         newsletterName: '⏤͟͞ू⃪፝͜⁞⟡『 𝙍𝙪𝙗𝙮 𝙃𝙤𝙨𝙝𝙞𝙣𝙤 𝘽𝙤𝙩 』࿐⟡'
       }
     }
-  });
+  }, { quoted: m });
 };
 
 handler.command = ['menugacha', 'gachamenu', 'gacha'];
