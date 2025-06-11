@@ -2,31 +2,31 @@ let handler = async (m, { conn }) => {
   const texto = `
 ⊹💞️ 𝐂𝐨𝐦𝐚𝐧𝐝𝐨𝐬 𝐠𝐚𝐜𝐡𝐚 𝐩𝐚𝐫𝐚 𝐜𝐨𝐥𝐞𝐜𝐜𝐢𝐨𝐧𝐚𝐫 𝐭𝐮𝐬 𝐩𝐞𝐫𝐬𝐨𝐧𝐚𝐣𝐞𝐬 𝐟𝐚𝐯𝐨𝐫𝐢𝐭𝐨𝐬 💞️⊹
 
-ㅤۚ𑁯ׂᰍ  ☕ ᳴   ׅ  ׄʚ   ̶ *#rw • #rollwaifu*
+ㅤۚ𑁯ׂᰍ  🌈 ᳴   ׅ  ׄʚ   ̶ *#rw • #rollwaifu*
 > ✦ Invoca a un personaje aleatorio.
 
-ㅤۚ𑁯ׂᰍ  ☕ ᳴   ׅ  ׄʚ   ̶ *#c • #claim*
+ㅤۚ𑁯ׂᰍ  🌈 ᳴   ׅ  ׄʚ   ̶ *#c • #claim*
 > ✦ Reclama a tu personaje invocado.
 
-ㅤۚ𑁯ׂᰍ ☕ ᳴ ׅ ׄʚ ̶ *#vote*
+ㅤۚ𑁯ׂᰍ 🌈 ᳴ ׅ ׄʚ ̶ *#vote*
 > ✦ Sube el valor de tu personaje favorito. 
 
-ㅤۚ𑁯ׂᰍ ☕ ᳴ ׅ ׄʚ ̶ *#addrw*
+ㅤۚ𑁯ׂᰍ 🌈 ᳴ ׅ ׄʚ ̶ *#addrw*
 > ✦ Has una petición para que añadan el personaje que quieras.
 
-ㅤۚ𑁯ׂᰍ ☕ ᳴ ׅ ׄʚ ̶ *#harem*
+ㅤۚ𑁯ׂᰍ 🌈 ᳴ ׅ ׄʚ ̶ *#harem*
 > ✦ Verifica cuántos personajes reclamaste, y cuáles tienes en tu harem.
 
-ㅤۚ𑁯ׂᰍ ☕ ᳴ ׅ ׄʚ ̶ *#wimage • #charimage*
+ㅤۚ𑁯ׂᰍ 🌈 ᳴ ׅ ׄʚ ̶ *#wimage • #charimage*
 > ✦ Ve una foto aleatoria de algún personaje.
 
-ㅤۚ𑁯ׂᰍ ☕ ᳴ ׅ ׄʚ ̶ *#topwaifus*
+ㅤۚ𑁯ׂᰍ 🌈 ᳴ ׅ ׄʚ ̶ *#topwaifus*
 > ✦ Tabla de personajes que tienen alto valor.
 
-ㅤۚ𑁯ׂᰍ ☕ ᳴ ׅ ׄʚ ̶ *#winfo*
+ㅤۚ𑁯ׂᰍ 🌈 ᳴ ׅ ׄʚ ̶ *#winfo*
 > ✦ Ve información sobre algún personaje. 
 
-ㅤۚ𑁯ׂᰍ ☕ ᳴ ׅ ׄʚ ̶ *#regalar • #givewaifu*
+ㅤۚ𑁯ׂᰍ 🌈 ᳴ ׅ ׄʚ ̶ *#regalar • #givewaifu*
 > ✦ Regala un personaje de tu harem a otro usuario.
 `.trim();
 
