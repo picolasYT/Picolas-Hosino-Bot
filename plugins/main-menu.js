@@ -8,10 +8,10 @@ import moment from 'moment-timezone';
 const defaultMenu = {
   before: `Hola %name ${ucapan()} , soy Ruby Hoshino bot
 
-*\`乂  I N F O  -  B O T\`*
+*\`☄︎  I N F O  -  B O T ☄︎\`*
 
 ┌  ◦ *Creador:* Dioneibi
-│  ◦ *Modo:* Público
+│  ◦ *Modo:* Pública
 │  ◦ *Baileys:* Multi Device
 │  ◦ *Tiempo Activa:* %uptime
 └  ◦ *Usuarios:* %totalreg`.trim(),
@@ -108,7 +108,7 @@ id: `${_p}menubusquedas`
       ]
     }];
 
-    let bodyText = "*\`乂  I N F O  -  U S U A R I O\`*\n\n" +
+    let bodyText = "*\`☄︎  I N F O  -  U S U A R I O ☄︎\`*\n\n" +
                    "┌  ◦ *Usuario:* %name\n" +
                    "│  ◦ *Exp:* %exp\n" +
                    "│  ◦ *Nivel:* %level\n" +
