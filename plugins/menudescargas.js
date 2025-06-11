@@ -68,7 +68,7 @@ let handler = async (m, { conn }) => {
 ╰──── ੈ₊˚༅༴╰────︶.︶ ⸙ ͛ ͎ ͛ ︶.︶ ੈ₊˚༅
   `.trim();
 
-  conn.sendFile(m.chat, 'https://files.catbox.moe/3pw7bx.jpg', 'descargas.jpg', texto, m, false, {
+  conn.sendFile(m.chat, 'https://files.catbox.moe/tw0g5u.png', 'descargas.jpg', texto, m, false, {
     contextInfo: {
       mentionedJid: [m.sender],
       externalAdReply: {
