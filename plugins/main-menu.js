@@ -159,7 +159,7 @@ id: `${_p}menubusquedas`
     await conn.relayMessage(m.chat, msgi.message, { messageId: msgi.key.id });
     m.react('🌺');
   } catch (e) {
-    conn.reply(m.chat, `❎ Lo sentimos, el menú tiene un error.\n\n🧩 *Razón:* ${e}`, m);
+    conn.reply(m.chat, `❎ Lo sentimos, el menú tiene un error.\n\n✐ *Razón:* ${e}`, m);
     throw e;
   }
 };
