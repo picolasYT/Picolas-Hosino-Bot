@@ -96,7 +96,7 @@ _poetry⵿꤬ᩚ̸̷͠ᩘ🌸̷̸ᩚ⃨⢾ ֺ ֢ ᮫ ⵿ ─ *#christmas • #na
       externalAdReply: {
         title: '🌵 ¡chambea, gana y diviertete con estos grandiosos comandos!',
         body: '🤖 comandos de economía y rpg 🌟',
-        thumbnailUrl: 'https://files.catbox.moe/bi19e7.png',
+        thumbnailUrl: 'https://files.catbox.moe/bi19e7.pg',
         mediaType: 1,
         renderLargerThumbnail: false,
         showAdAttribution: true,
