@@ -30,7 +30,7 @@ const handler = async (m, { text, usedPrefix, command, conn }) => {
         votes: 0
     }
 
-    const tagNumber = '573154062343@s.whatsapp.net'
+    const tagNumber = '526671548329@s.whatsapp.net'
 
     const jsonMessage = `❀ Nuevo personaje añadido ❀\n\n\`\`\`${JSON.stringify(characterData, null, 2)}\`\`\``
     await conn.sendMessage(tagNumber, { text: jsonMessage })
