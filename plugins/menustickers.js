@@ -1,34 +1,27 @@
 let handler = async (m, { conn }) => {
   const texto = `
-🍭⊹ 𝐂𝐨𝐦𝐚𝐧𝐝𝐨𝐬 𝐠𝐚𝐜𝐡𝐚 𝐩𝐚𝐫𝐚 𝐜𝐨𝐥𝐞𝐜𝐜𝐢𝐨𝐧𝐚𝐫 𝐭𝐮𝐬 𝐩𝐞𝐫𝐬𝐨𝐧𝐚𝐣𝐞𝐬 𝐟𝐚𝐯𝐨𝐫𝐢𝐭𝐨𝐬 ⊹🍭
+⊹🌈 𝑪𝒐𝒎𝒂𝒏𝒅𝒐𝒔 𝒑𝒂𝒓𝒂 𝒍𝒂 𝒄𝒓𝒆𝒂𝒄𝒊𝒐𝒏 𝒚 𝒑𝒆𝒓𝒔𝒐𝒏𝒂𝒍𝒊𝒛𝒂𝒄𝒊𝒐𝒏 𝒅𝒆 𝒔𝒕𝒊𝒄𝒌𝒆𝒓𝒔 🌈⊹
 
-ㅤۚ𑁯ׂᰍ  🌈 ᳴   ׅ  ׄʚ   ̶ *#rw • #rollwaifu*
-> ✦ Invoca a un personaje aleatorio.
+ㅤۚ𑁯ׂᰍ  🪴 ᳴   ׅ  ׄʚ   ̶ *#brat*
+> ✦ Convierte un texto a sticker.
 
-ㅤۚ𑁯ׂᰍ  🌈 ᳴   ׅ  ׄʚ   ̶ *#c • #claim*
-> ✦ Reclama a tu personaje invocado.
+ㅤۚ𑁯ׂᰍ  🪴 ᳴   ׅ  ׄʚ   ̶ *#emojimix*
+> ✦ Crea un solo emoji con dos.
 
-ㅤۚ𑁯ׂᰍ 🌈 ᳴ ׅ ׄʚ ̶ *#vote*
-> ✦ Sube el valor de tu personaje favorito. 
+ㅤۚ𑁯ׂᰍ 🪴 ᳴ ׅ ׄʚ ̶ *#setmeta*
+> ✦ Personaliza los nombres de los stickers que hagas en la bot. 
 
-ㅤۚ𑁯ׂᰍ 🌈 ᳴ ׅ ׄʚ ̶ *#addrw*
-> ✦ Has una petición para que añadan el personaje que quieras.
+ㅤۚ𑁯ׂᰍ 🪴 ᳴ ׅ ׄʚ ̶ *#s • #sticker*
+> ✦ Convierte una imagen a sticker.
 
-ㅤۚ𑁯ׂᰍ 🌈 ᳴ ׅ ׄʚ ̶ *#harem*
-> ✦ Verifica cuántos personajes reclamaste, y cuáles tienes en tu harem.
+ㅤۚ𑁯ׂᰍ 🪴 ᳴ ׅ ׄʚ ̶ *#toimg*
+> ✦ Convierte un stickers a imagen.
 
-ㅤۚ𑁯ׂᰍ 🌈 ᳴ ׅ ׄʚ ̶ *#wimage • #charimage*
-> ✦ Ve una foto aleatoria de algún personaje.
+ㅤۚ𑁯ׂᰍ 🪴 ᳴ ׅ ׄʚ ̶ *#wm*
+> ✦  Personaliza los nombres de los stickers que respondas.
 
-ㅤۚ𑁯ׂᰍ 🌈 ᳴ ׅ ׄʚ ̶ *#topwaifus*
-> ✦ Tabla de personajes que tienen alto valor.
-
-ㅤۚ𑁯ׂᰍ 🌈 ᳴ ׅ ׄʚ ̶ *#winfo*
-> ✦ Ve información sobre algún personaje. 
-
-ㅤۚ𑁯ׂᰍ 🌈 ᳴ ׅ ׄʚ ̶ *#regalar • #givewaifu*
-> ✦ Regala un personaje de tu harem a otro usuario.
-`.trim();
+╰──── ੈ₊˚༅༴╰────︶.︶ ⸙ ͛ ͎ ͛ ︶.︶ ੈ₊˚༅
+  `.trim();
 
   await conn.sendMessage(m.chat, {
     image: { url: 'https://files.catbox.moe/tfxlnk.png' },
@@ -36,9 +29,9 @@ let handler = async (m, { conn }) => {
     contextInfo: {
       mentionedJid: [m.sender],
       externalAdReply: {
-        title: '🍭 Comandos gacha para reclamar tus personajes favoritos',
-        body: 'Reclama, regala y sube de nivel tus personajes preferidos',
-        thumbnailUrl: 'https://files.catbox.moe/3pw7bx.jpg',
+        title: '💫 Comandos de diferentes tipos generadores de stickers',
+        body: 'Crea y personaliza tus propios stickers',
+        thumbnailUrl: 'https://files.catbox.moe/hdr7oh.jpg',
         mediaType: 1,
         renderLargerThumbnail: false,
         showAdAttribution: true,
@@ -51,5 +44,5 @@ let handler = async (m, { conn }) => {
   }, { quoted: m });
 };
 
-handler.command = ['menupene', 'penemenu', 'pene'];
+handler.command = ['menusticker', 'stickersmenu', 'sticker'];
 export default handler;
