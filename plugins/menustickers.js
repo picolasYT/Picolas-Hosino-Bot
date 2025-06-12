@@ -1,3 +1,4 @@
+
 let handler = async (m, { conn }) => {
   const texto = `
 ⊹🌈 𝑪𝒐𝒎𝒂𝒏𝒅𝒐𝒔 𝒑𝒂𝒓𝒂 𝒍𝒂 𝒄𝒓𝒆𝒂𝒄𝒊𝒐𝒏 𝒚 𝒑𝒆𝒓𝒔𝒐𝒏𝒂𝒍𝒊𝒛𝒂𝒄𝒊𝒐𝒏 𝒅𝒆 𝒔𝒕𝒊𝒄𝒌𝒆𝒓𝒔 🌈⊹
@@ -23,7 +24,9 @@ let handler = async (m, { conn }) => {
 ╰──── ੈ₊˚༅༴╰────︶.︶ ⸙ ͛ ͎ ͛ ︶.︶ ੈ₊˚༅
   `.trim();
 
-  conn.sendFile(m.chat, 'https://files.catbox.moe/tfxlnk.png', texto, m, false, {
+  await conn.sendMessage(m.chat, {
+    image: { url: 'https://files.catbox.moe/tfxlnk.png' },
+    caption: texto,
     contextInfo: {
       mentionedJid: [m.sender],
       externalAdReply: {
@@ -39,7 +42,7 @@ let handler = async (m, { conn }) => {
         newsletterName: '⏤͟͞ू⃪፝͜⁞⟡『 𝙍𝙪𝙗𝙮 𝙃𝙤𝙨𝙝𝙞𝙣𝙤 𝘽𝙤𝙩 』࿐⟡'
       }
     }
-  });
+  }, { quoted: m });
 };
 
 handler.command = ['menustickers', 'stickersmenu', 'stickers'];
