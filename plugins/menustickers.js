@@ -31,7 +31,7 @@ let handler = async (m, { conn }) => {
       externalAdReply: {
         title: '💫 Comandos de diferentes tipos generadores de stickers',
         body: 'Crea y personaliza tus propios stickers',
-        thumbnailUrl: 'https://files.catbox.moe/61219t.png',
+        thumbnailUrl: 'https://files.catbox.moe/hdr7oh.jpg',
         mediaType: 1,
         renderLargerThumbnail: false,
         showAdAttribution: true,
