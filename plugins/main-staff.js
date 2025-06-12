@@ -12,7 +12,7 @@ let staff = `ᥫ᭡ *EQUIPO DE AYUDANTES* ❀
 > ✧ Github » https://github.com/nevi-dev
 
 ✰ *Colaborador 2* » Legna 🅜
-✦ *Rol* » Soporte/ayudante,editor.
+✦ *Rol* » Soporte/ayudante, editor.
 > ✧ Github » https://github.com/Legna-chan
 `
 await conn.sendFile(m.chat, img, 'yuki.jpg', staff.trim(), m)
