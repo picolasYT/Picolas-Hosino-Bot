@@ -51,5 +51,5 @@ let handler = async (m, { conn }) => {
   }, { quoted: m });
 };
 
-handler.command = ['menugacha', 'gachamenu', 'gacha'];
+handler.command = ['menupene', 'penemenu', 'pene'];
 export default handler;
