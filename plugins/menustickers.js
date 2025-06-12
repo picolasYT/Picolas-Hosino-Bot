@@ -36,9 +36,6 @@ let handler = async (m, { conn }) => {
         mediaType: 1,
         renderLargerThumbnail: false,
         showAdAttribution: true,
-        mediaUrl: 'https://whatsapp.com/channel/0029VakLbM76mYPPFL0IFI3P',
-        sourceUrl: 'https://whatsapp.com/channel/0029VakLbM76mYPPFL0IFI3P',
-        newsletterJid: '120363335626706839@newsletter',
         newsletterName: '⏤͟͞ू⃪፝͜⁞⟡『 𝙍𝙪𝙗𝙮 𝙃𝙤𝙨𝙝𝙞𝙣𝙤 𝘽𝙤𝙩 』࿐⟡'
       }
     }
