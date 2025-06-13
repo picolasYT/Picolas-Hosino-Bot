@@ -88,7 +88,7 @@ let handler = async function (m, { conn, text, args, usedPrefix, command }) {
                         title: "꒰🎀꒱ ʀᴇɢɪsᴛʀᴏ ᴄᴏᴍᴘʟᴇᴛᴀᴅᴏ ꒰🌸꒱",
                         body: '✦⃟ 𝑬𝒏𝒄𝒐𝒏𝒕𝒓𝒂𝒅𝒐… 𝒕𝒆 𝒕𝒆𝒏𝒈𝒐 𝒆𝒏 𝒎𝒊 𝒗𝒊𝒔𝒕𝒂 🌸',
                         thumbnailUrl: perfil,
-                        sourceUrl: 'https://chat.whatsapp.com/', // Puedes poner tu enlace de canal aquí
+                        sourceUrl: 'https://github.com/Dioneibi-rip/Ruby-Hoshino-Bot',
                         mediaType: 1,
                         showAdAttribution: false,
                         renderLargerThumbnail: false
