@@ -1,37 +1,27 @@
-var handler = async (m, { conn,usedPrefix, command, text }) => {
+const handler = async (m, { conn, text, participants }) => {
+  let user;
 
-if (isNaN(text) && !text.match(/@/g)){
+  // Obtener el usuario a promover
+  if (m.mentionedJid && m.mentionedJid.length) {
+    user = m.mentionedJid[0]; // usa el primer mencionado
+  } else if (m.quoted?.sender) {
+    user = m.quoted.sender;
+  } else {
+    throw '⚠️ Debes mencionar a un usuario o responder a su mensaje para promoverlo.';
+  }
 
-} else if (isNaN(text)) {
-var number = text.split`@`[1]
-} else if (!isNaN(text)) {
-var number = text
-}
+  // Promocionar al usuario
+  await conn.groupParticipantsUpdate(m.chat, [user], 'promote');
+  conn.reply(m.chat, `✅ @${user.split('@')[0]} ahora es administrador.`, m, {
+    mentions: [user]
+  });
+};
 
-if (!text && !m.quoted) return conn.reply(m.chat, `${emoji} Debes mencionar a un usuario para poder promoverlo a administrador.`, m)
-if (number.length > 13 || (number.length < 11 && number.length > 0)) return conn.reply(m.chat, `${emoji} Debe de responder o mensionar a una persona para usar este comando.`, m)
+handler.help = ['promote'];
+handler.tags = ['grupo'];
+handler.command = ['promote', 'darpija', 'promover'];
+handler.group = true;
+handler.admin = true;
+handler.botAdmin = true;
 
-try {
-if (text) {
-var user = number + '@s.whatsapp.net'
-} else if (m.quoted.sender) {
-var user = m.quoted.sender
-} else if (m.mentionedJid) {
-var user = number + '@s.whatsapp.net'
-} 
-} catch (e) {
-} finally {
-conn.groupParticipantsUpdate(m.chat, [user], 'promote')
-conn.reply(m.chat, `${done} Fue agregado como admin del grupo con exito.`, m)
-}
-
-}
-handler.help = ['promote']
-handler.tags = ['grupo']
-handler.command = ['promote','darpija', 'promover']
-handler.group = true
-handler.admin = true
-handler.botAdmin = true
-handler.fail = null
-
-export default handler
+export default handler;
