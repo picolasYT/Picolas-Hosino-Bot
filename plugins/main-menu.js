@@ -108,11 +108,11 @@ id: `${_p}menubusquedas`
       ]
     }];
 
-    let bodyText = "*\`☄︎  I N F O  -  U S U A R I O ☄︎\`*\n\n" +
-                   "┌  ◦ *Usuario:* %name\n" +
-                   "│  ◦ *Exp:* %exp\n" +
-                   "│  ◦ *Nivel:* %level\n" +
-                   "└  ◦ *Rango:* %role";
+    let bodyText = "*\`☄︎𝗜𝖭𝖥𝖮 - 𝗨𝖲𝖤𝖱☄︎\`*\n\n" +
+                   "╭━━ *𝗡𝗈𝗆𝖻𝗋𝖾:* %name\n" +
+                   "┃  ◦ *𝗘𝗑𝗉:* %exp\n" +
+                   "┃  ◦ *𝗡𝗂𝗏𝖾𝗅:* %level\n" +
+                   "╰━━ *𝗥𝖺𝗇𝗀𝗈:* %role";
     bodyText = bodyText.replace(/%name/g, name)
                        .replace(/%exp/g, exp)
                        .replace(/%level/g, level)
@@ -135,13 +135,13 @@ id: `${_p}menubusquedas`
       body: { 
         text: `${beforeText}\n\n${bodyText}`
       },
-      footer: { text: "⏤͟͞ू⃪ 𝑹𝒖𝒃𝒚-𝐻𝒐𝒔𝒉𝒊𝒏𝒐🌸⃝𖤐 • 𝗣𝗼𝘄𝗲𝗿𝗲𝗱 𝗕𝘆 ᴰⁱᵒⁿᵉⁱᵇⁱ⁻ʳⁱᵖ" },
+      footer: { text: "⏤͟͞ू⃪  ̸̷͢𝐑𝐮𝐛y͟ 𝐇𝐨𝐬𝐡𝐢n͟𖹭 𝐁𖹭t͟𑁯ᰍ" },
       nativeFlowMessage: {
         buttons: [
           {
             name: "single_select",
             buttonParamsJson: JSON.stringify({
-              title: "ධ⃟🌹 𝐌𝐄𝐍𝐔 𝐋𝐈𝐒𝐓",
+              title: "❀⃘⃛͜ ۪۪۪݃𓉘᳟ี ⃞̸͢𑁃 ̚𓉝᳟ี𝐌𝐄𝐍𝐔 𝐁𝐎𝐓❀⃘⃛͜ ۪۪۪݃",
               sections: sections
             })
           }
@@ -157,9 +157,9 @@ id: `${_p}menubusquedas`
     );
 
     await conn.relayMessage(m.chat, msgi.message, { messageId: msgi.key.id });
-    m.react('🌺');
+    m.react('💞');
   } catch (e) {
-    conn.reply(m.chat, `❎ Lo sentimos, el menú tiene un error.\n\n✐ *Razón:* ${e}`, m);
+    conn.reply(m.chat, `❀⃘⃛͜ ۪۪۪݃ Mis disculpas, el menú no se pudo cargar.\n\n✐ *Razón:* ${e}`, m);
     throw e;
   }
 };
