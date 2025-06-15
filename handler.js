@@ -502,4 +502,85 @@ this.sendFile(id, action === 'add' ? pp : pp, 'pp.jpg', text, null, false, { men
             text = (chat.sPromote || this.spromote || conn.spromote || '@user ahora es administrador')
         case 'demote':
             let pp = await this.profilePictureUrl(participants[0], 'image').catch(_ => logo) 
-    
+            if (!text)
+                text = (chat.sDemote || this.sdemote || conn.sdemote || '@user ya no es administrador')
+            text = text.replace('@user', '@' + participants[0].split('@')[0])
+            if (chat.detect)    
+            this.sendFile(id, pp, 'pp.jpg', text, null, false, { mentions: this.parseMention(text) })
+            //this.sendMessage(id, { text, mentions: this.parseMention(text) })
+            break
+    }
+}
+
+export async function groupsUpdate(groupsUpdate) {
+    if (opts['self'])
+        return
+    for (const groupUpdate of groupsUpdate) {
+        const id = groupUpdate.id
+        if (!id) continue
+        let chats = global.db.data.chats[id], text = ''
+        if (!chats?.detect) continue
+        if (groupUpdate.desc) text = (chats.sDesc || this.sDesc || conn.sDesc || 'Descripción cambiada a \n@desc').replace('@desc', groupUpdate.desc)
+        if (groupUpdate.subject) text = (chats.sSubject || this.sSubject || conn.sSubject || 'El nombre del grupo cambió a \n@group').replace('@group', groupUpdate.subject)
+        if (groupUpdate.icon) text = (chats.sIcon || this.sIcon || conn.sIcon || 'El icono del grupo cambió a').replace('@icon', groupUpdate.icon)
+        if (groupUpdate.revoke) text = (chats.sRevoke || this.sRevoke || conn.sRevoke || 'El enlace del grupo cambia a\n@revoke').replace('@revoke', groupUpdate.revoke)
+        if (!text) continue
+        await this.sendMessage(id, { text, mentions: this.parseMention(text) })
+    }
+}
+
+export async function deleteUpdate(message) {
+    try {
+        const { fromMe, id, participant } = message
+        if (fromMe)
+            return
+        let msg = this.serializeM(this.loadMessage(id))
+        if (!msg)
+            return
+        let chat = global.db.data.chats[msg.chat] || {}
+        if (chat.delete)
+            return
+        await this.reply(msg.chat, `
+≡ Borró un mensaje  
+
+ *Nombre :* @${participant.split`@`[0]} 
+
+Para desactivar esta función, escriba 
+*/off antidelete*
+*.enable delete*
+`.trim(), msg, {
+            mentions: [participant]
+        })
+        this.copyNForward(msg.chat, msg).catch(e => console.log(e, msg))
+    } catch (e) {
+        console.error(e)
+    }
+}
+
+global.dfail = (type, m, conn) => {
+    let msg = {
+  rowner: '「🌺」 *Gomenasai~! Esta función solo la puede usar mi creador celestial...* 🌌\n\n> *Dioneibi-sama.*',
+  owner: '「🌸」 *¡Nyaa~! Solo mi creador y programadores pueden usar este comando~!* 💾💕',
+  mods: '「🌟」 *Uguu~ Esto eso solo lo pueden usar mis desarrolladores mágicos~!* 🔮',
+  premium: '「🍡」 *Ehh~? Esta función es exclusiva para usuarios Premium-desu~!* ✨\n\n💫 *¿No eres premium aún? Consíguelo ahora usando:*\n> ✨ *.comprarpremium 2 dias*  (o reemplaza "2 dias" por la cantidad que desees).',
+  group: '「🐾」 *¡Onii-chan~! Este comando solo puede usarse en grupos grupales~!* 👥',
+  private: '「🎀」 *Shh~ Este comando es solo para ti y para mí, en privado~* 💌',
+  admin: '「🧸」 *¡Kyah~! Solo los admin-senpai pueden usar esta habilidad~!* 🛡️',
+  botAdmin: '「🔧」 *¡Espera! Necesito ser admin para que este comando funcione correctamente.*\n\n🔧 *Hazme admin y desataré todo mi poder~*',
+  unreg: `🍥 𝑶𝒉 𝒏𝒐~! *¡Aún no estás registrado~!* 😿\nNecesito conocerte para que uses mis comandos~ ✨\n\n📝 Por favor regístrate con:\n» */reg nombre.edad*\n\n🎶 Ejemplo encantado:\n» */reg Dioneibi-kun.15*\n\n💖 ¡Así podré reconocerte, nya~!*`,
+  restrict: '「📵」 *¡Ouh~! Esta función está dormida por ahora~* 💤'
+}[type];
+if (msg) return conn.reply(m.chat, msg, m, rcanal).then(_ => m.react('✖️'))}
+const file = global.__filename(import.meta.url, true);
+
+// NO TOCAR
+watchFile(file, async () => {
+unwatchFile(file);
+console.log(chalk.green('Actualizando "handler.js"'));
+// if (global.reloadHandler) console.log(await global.reloadHandler());
+
+if (global.conns && global.conns.length > 0 ) {
+const users = [...new Set([...global.conns.filter((conn) => conn.user && conn.ws.socket && conn.ws.socket.readyState !== ws.CLOSED).map((conn) => conn)])];
+for (const userr of users) {
+userr.subreloadHandler(false)
+}}});
