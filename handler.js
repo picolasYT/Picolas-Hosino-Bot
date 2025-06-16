@@ -155,6 +155,8 @@ if (!('welcome' in chat))
 chat.welcome = true
 if (!('autolevelup' in chat))
 chat.autolevelup = false
+if (!('primaryBot' in chat)) 
+chat.primaryBot = null
 if (!('autoAceptar' in chat))
 chat.autoAceptar = false
 if (!('autosticker' in chat))
@@ -194,6 +196,7 @@ delete: false,
 autoAceptar: false,
 autoRechazar: false,
 detect: true,
+primaryBot: null,
 antiBot: false,
 antiBot2: false,
 modoadmin: false,
