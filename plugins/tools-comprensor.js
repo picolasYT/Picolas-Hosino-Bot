@@ -1,34 +1,49 @@
-import fetch from 'node-fetch';
+import FormData from 'form-data'
+import fetch from 'node-fetch'
+import fs from 'fs'
+import path from 'path'
 
 const handler = async (m, { conn }) => {
-  let q = m.quoted ? m.quoted : m;
-  let mime = (q.msg || q).mimetype || '';
+  const q = m.quoted ? m.quoted : m;
+  const mime = (q.msg || q).mimetype || '';
 
   if (!mime || !mime.startsWith('image/')) {
     return m.reply(`❌ *Responde a una imagen o envía una imagen con el comando* _.comprimir_`);
   }
 
   try {
-    m.react('🧼');
+    m.react('🛠️');
 
-    const imgBuffer = await q.download();
-    const uploaded = await conn.uploadToQuax(imgBuffer); // usa tu sistema de subida, qu.ax o similar
+    const buffer = await q.download();
+    const tempPath = path.join('./temp', `${Date.now()}.jpg`);
 
-    const apiURL = `https://api.siputzx.my.id/api/iloveimg/compress?image=${encodeURIComponent(uploaded)}`;
+    if (!fs.existsSync('./temp')) fs.mkdirSync('./temp');
+    fs.writeFileSync(tempPath, buffer);
 
-    const res = await fetch(apiURL);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    // Subir a qu.ax
+    const imageURL = await uploadToQuax(tempPath);
 
-    const img = await res.buffer();
+    if (!imageURL) throw new Error('No se pudo subir la imagen a qu.ax');
 
+    // Llamar a la API de compresión
+    const compressAPI = `https://api.siputzx.my.id/api/iloveimg/compress?image=${encodeURIComponent(imageURL)}`;
+    const res = await fetch(compressAPI);
+
+    if (!res.ok) throw new Error(`Error al comprimir la imagen: ${res.status}`);
+    const compressedImage = await res.buffer();
+
+    // Enviar imagen comprimida
     await conn.sendMessage(m.chat, {
-      image: img,
+      image: compressedImage,
       caption: `🎯 *¡Imagen comprimida!*\n✨ *Calidad optimizada por LoveIMG*\n🔧 *by Ruby Hoshino Bot*`
     }, { quoted: m });
 
+    // Limpiar archivo temporal
+    fs.unlinkSync(tempPath);
+
   } catch (err) {
     console.error(err);
-    m.reply(`❌ *Ocurrió un error al comprimir la imagen.*\n\n🪵 *Error:* ${err.message}`);
+    m.reply(`❌ *Error al procesar la imagen.*\n\n🪵 *Detalle:* ${err.message}`);
   }
 };
 
