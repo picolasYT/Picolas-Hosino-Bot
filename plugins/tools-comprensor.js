@@ -1,7 +1,9 @@
-import FormData from 'form-data';
-import fetch from 'node-fetch';
 import fs from 'fs';
 import path from 'path';
+import fetch from 'node-fetch';
+import crypto from 'crypto';
+import { FormData, Blob } from 'formdata-node';
+import { fileTypeFromBuffer } from 'file-type';
 
 const handler = async (m, { conn }) => {
   const q = m.quoted ? m.quoted : m;
@@ -12,37 +14,26 @@ const handler = async (m, { conn }) => {
   }
 
   try {
-    m.react('🛠️');
+    m.react('📤');
 
-    // 1. Descarga y guarda temporalmente
     const buffer = await q.download();
-    const tempDir = './temp';
-    if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir);
-    const inputPath = path.join(tempDir, `${Date.now()}_in.jpg`);
-    fs.writeFileSync(inputPath, buffer);
+    const urlCatbox = await catbox(buffer); // Subimos a Catbox
 
-    // 2. Súbela a qu.ax usando nuestra función
-    const imageURL = await uploadToQuax(inputPath);
-    if (!imageURL) throw new Error('No se pudo subir la imagen a qu.ax');
+    const apiURL = `https://api.siputzx.my.id/api/iloveimg/compress?image=${encodeURIComponent(urlCatbox)}`;
+    const response = await fetch(apiURL);
+    if (!response.ok) throw new Error(`Error HTTP ${response.status}`);
+    const compressed = await response.buffer();
 
-    // 3. Llama a la API de compresión
-    const apiURL = `https://api.siputzx.my.id/api/iloveimg/compress?image=${encodeURIComponent(imageURL)}`;
-    const res = await fetch(apiURL);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const compressedBuffer = await res.buffer();
-
-    // 4. Envía la imagen comprimida
     await conn.sendMessage(m.chat, {
-      image: compressedBuffer,
-      caption: `🎯 *¡Imagen comprimida!*\n✨ *Calidad optimizada por LoveIMG*\n🔧 *by Ruby Hoshino Bot*`
+      image: compressed,
+      caption: `🎯 *¡Imagen comprimida!*\n✨ *Optimizada por LoveIMG*\n🐱 *Subida vía Catbox*`
     }, { quoted: m });
 
-    // 5. Limpieza
-    fs.unlinkSync(inputPath);
-
+    m.react('✅');
   } catch (err) {
     console.error(err);
-    m.reply(`❌ *Ocurrió un error al procesar la imagen.*\n\n🪵 *Detalle:* ${err.message}`);
+    m.react('❌');
+    m.reply(`❌ *Ocurrió un error al comprimir la imagen.*\n\n🪵 *Detalle:* ${err.message}`);
   }
 };
 
@@ -52,25 +43,22 @@ handler.command = ['compress', 'comprimir'];
 
 export default handler;
 
+/** Función de subida a Catbox (la misma que tú usaste) */
+async function catbox(content) {
+  const { ext, mime } = (await fileTypeFromBuffer(content)) || {};
+  const blob = new Blob([content.toArrayBuffer()], { type: mime });
+  const formData = new FormData();
+  const random = crypto.randomBytes(5).toString('hex');
+  formData.append('reqtype', 'fileupload');
+  formData.append('fileToUpload', blob, `${random}.${ext}`);
 
-/**
- * Función auxiliar para subir una imagen a qu.ax
- */
-async function uploadToQuax(filePath) {
-  const form = new FormData();
-  form.append('file', fs.createReadStream(filePath));
+  const res = await fetch('https://catbox.moe/user/api.php', {
+    method: 'POST',
+    body: formData,
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Linux; Android)',
+    }
+  });
 
-  try {
-    const res = await fetch('https://qu.ax/upload', {
-      method: 'POST',
-      body: form
-    });
-    const json = await res.json();
-    if (json.success && json.url) return json.url;
-    console.error('Error al subir a qu.ax:', json);
-    return null;
-  } catch (e) {
-    console.error('Error en uploadToQuax:', e);
-    return null;
-  }
+  return await res.text();
 }
