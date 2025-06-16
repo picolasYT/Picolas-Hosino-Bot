@@ -15,6 +15,16 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
 
     if (!text) return conn.reply(m.chat, `📌 Te Faltó El Texto!`, m);
 
+    // ✅ Comprobación especial de "nevi" o mención a +18096758983
+    const textoMin = text.toLowerCase();
+    if (
+        textoMin.includes('nevi') ||
+        m.mentionedJid?.includes('18096758983@s.whatsapp.net') ||
+        text.includes('+18096758983')
+    ) {
+        return conn.reply(m.chat, 'no puedo traicionar a uno de mis creadores', m);
+    }
+
     const who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender; 
     const mentionRegex = new RegExp(`@${who.split('@')[0].replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*`, 'g');
     const mishi = text.replace(mentionRegex, '');
