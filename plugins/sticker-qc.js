@@ -15,13 +15,18 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
 
     if (!text) return conn.reply(m.chat, `📌 Te Faltó El Texto!`, m);
 
-    // ✅ Comprobación especial de "nevi" o mención a +18096758983
+    // ✅ Detectar si se menciona o nombra a un OWNER
     const textoMin = text.toLowerCase();
-    if (
-        textoMin.includes('nevi') ||
-        m.mentionedJid?.includes('18096758983@s.whatsapp.net') ||
-        text.includes('+18096758983')
-    ) {
+    const owners = global.owner.map(([num]) => num.replace(/[^0-9]/g, '')); // limpia a solo dígitos
+    const mencionados = m.mentionedJid?.map(jid => jid.split('@')[0]) || [];
+
+    const seMencionaOwner = owners.some(owner =>
+        textoMin.includes(owner) ||              // por texto: +1809xxxxxxx o 1809xxxxxxx
+        textoMin.includes(`@${owner}`) ||        // por @numero
+        mencionados.includes(owner)              // por mención directa
+    );
+
+    if (seMencionaOwner) {
         return conn.reply(m.chat, 'no puedo traicionar a uno de mis creadores', m);
     }
 
