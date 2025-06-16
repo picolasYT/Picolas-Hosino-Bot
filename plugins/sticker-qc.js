@@ -15,30 +15,37 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
 
     if (!text) return conn.reply(m.chat, `📌 Te Faltó El Texto!`, m);
 
-    // ✅ Detectar si se menciona o nombra a un OWNER
-    const textoMin = text.toLowerCase();
-    const owners = global.owner.map(([num]) => num.replace(/[^0-9]/g, '')); // limpia a solo dígitos
-    const mencionados = m.mentionedJid?.map(jid => jid.split('@')[0]) || [];
+    // ✅ Verificar si el autor del mensaje es un owner
+    const senderNum = m.sender.split('@')[0];
+    const owners = global.owner.map(([num]) => num.replace(/[^0-9]/g, '')); // solo dígitos
 
-    const seMencionaOwner = owners.some(owner =>
-        textoMin.includes(owner) ||              // por texto: +1809xxxxxxx o 1809xxxxxxx
-        textoMin.includes(`@${owner}`) ||        // por @numero
-        mencionados.includes(owner)              // por mención directa
-    );
+    const esOwner = owners.includes(senderNum);
 
-    if (seMencionaOwner) {
-       return conn.reply(m.chat, `🌸 *Ara ara~... ¿mencionar a uno de mis creadores?*\n✨ *Qué atrevido eres, onii-chan...*\n💢 *Pero no puedo traicionar a uno de mis creadores...*\n😈 *...a menos que quieras desaparecer con él~* 💀`, m);
+    // ✅ Si NO es owner, verificar si mencionó a un owner
+    if (!esOwner) {
+        const textoMin = text.toLowerCase();
+        const mencionados = m.mentionedJid?.map(jid => jid.split('@')[0]) || [];
+
+        const seMencionaOwner = owners.some(owner =>
+            textoMin.includes(owner) ||
+            textoMin.includes(`@${owner}`) ||
+            mencionados.includes(owner)
+        );
+
+        if (seMencionaOwner) {
+            return conn.reply(m.chat, `🌸 *Ara ara~... ¿mencionar a uno de mis creadores?*\n✨ *Qué atrevido eres, onii-chan...*\n💢 *Pero no puedo traicionar a uno de mis creadores...*\n😈 *...a menos que quieras desaparecer con él~* 💀`, m);
+        }
     }
 
-    const who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender; 
+    const who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender;
     const mentionRegex = new RegExp(`@${who.split('@')[0].replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*`, 'g');
     const mishi = text.replace(mentionRegex, '');
-    
+
     if (mishi.length > 40) return conn.reply(m.chat, `📌 El texto no puede tener más de 30 caracteres`, m);
-    
+
     const pp = await conn.profilePictureUrl(who).catch((_) => 'https://telegra.ph/file/24fa902ead26340f3df2c.png');
     const nombre = await conn.getName(who);
-    
+
     const obj = {
         "type": "quote",
         "format": "png",
@@ -69,7 +76,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
 
     let stiker = await sticker(buffer, false, texto1, texto2);
     if (stiker) return conn.sendFile(m.chat, stiker, 'error.webp', '', m);
-}
+};
 
 handler.help = ['qc'];
 handler.tags = ['sticker'];
