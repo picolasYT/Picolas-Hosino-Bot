@@ -9,10 +9,10 @@ const handler = async (m, { conn, text }) => {
   let buffer;
   try {
     if (m.quoted && (m.quoted.msg || {}).mimetype?.startsWith('image/')) {
-      // Si es imagen respondida
+      
       buffer = await m.quoted.download();
     } else if (text && text.match(/^https?:\/\/.*\.(jpg|jpeg|png|gif)$/i)) {
-      // Si es link directo a imagen válido
+      
       const res = await fetch(text);
       if (!res.ok) throw new Error(`No se pudo descargar la imagen`);
       buffer = await res.buffer();
