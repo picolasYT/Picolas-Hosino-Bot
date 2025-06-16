@@ -27,7 +27,7 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
     );
 
     if (seMencionaOwner) {
-        return conn.reply(m.chat, 'no puedo traicionar a uno de mis creadores', m);
+       return conn.reply(m.chat, `🌸 *Ara ara~... ¿mencionar a uno de mis creadores?*\n✨ *Qué atrevido eres, onii-chan...*\n💢 *Pero no puedo traicionar a uno de mis creadores...*\n😈 *...a menos que quieras desaparecer con él~* 💀`, m);
     }
 
     const who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender; 
