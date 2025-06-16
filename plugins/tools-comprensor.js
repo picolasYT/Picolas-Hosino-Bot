@@ -20,30 +20,29 @@ const handler = async (m, { conn }) => {
     if (!fs.existsSync('./temp')) fs.mkdirSync('./temp');
     fs.writeFileSync(tempPath, buffer);
 
-    // Subir a qu.ax
+    // 🔧 Subir a qu.ax (CORREGIDO)
     const imageURL = await uploadToQuax(tempPath);
 
     if (!imageURL) throw new Error('No se pudo subir la imagen a qu.ax');
 
-    // Llamar a la API de compresión
+    // 🔧 Comprimir la imagen con la API
     const compressAPI = `https://api.siputzx.my.id/api/iloveimg/compress?image=${encodeURIComponent(imageURL)}`;
     const res = await fetch(compressAPI);
 
     if (!res.ok) throw new Error(`Error al comprimir la imagen: ${res.status}`);
     const compressedImage = await res.buffer();
 
-    // Enviar imagen comprimida
+    // ✅ Enviar imagen comprimida
     await conn.sendMessage(m.chat, {
       image: compressedImage,
       caption: `🎯 *¡Imagen comprimida!*\n✨ *Calidad optimizada por LoveIMG*\n🔧 *by Ruby Hoshino Bot*`
     }, { quoted: m });
 
-    // Limpiar archivo temporal
     fs.unlinkSync(tempPath);
 
   } catch (err) {
     console.error(err);
-    m.reply(`❌ *Error al procesar la imagen.*\n\n🪵 *Detalle:* ${err.message}`);
+    m.reply(`❌ *Ocurrió un error al comprimir la imagen.*\n\n🪵 *Error:* ${err.message}`);
   }
 };
 
