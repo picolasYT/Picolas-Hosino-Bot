@@ -5,19 +5,24 @@ import crypto from 'crypto';
 import { FormData, Blob } from 'formdata-node';
 import { fileTypeFromBuffer } from 'file-type';
 
-const handler = async (m, { conn }) => {
-  const q = m.quoted ? m.quoted : m;
-  const mime = (q.msg || q).mimetype || '';
-
-  if (!mime || !mime.startsWith('image/')) {
-    return m.reply(`❌ *Responde a una imagen o envía una imagen con el comando* _.comprimir_`);
-  }
-
+const handler = async (m, { conn, text }) => {
+  let buffer;
   try {
+    if (m.quoted && (m.quoted.msg || {}).mimetype?.startsWith('image/')) {
+      // Si es imagen respondida
+      buffer = await m.quoted.download();
+    } else if (text && text.match(/^https?:\/\/.*\.(jpg|jpeg|png|gif)$/i)) {
+      // Si es link directo a imagen válido
+      const res = await fetch(text);
+      if (!res.ok) throw new Error(`No se pudo descargar la imagen`);
+      buffer = await res.buffer();
+    } else {
+      return m.reply(`❌ *Responde a una imagen o envía un link directo a una imagen válida con el comando* _.comprimir_`);
+    }
+
     m.react('📤');
 
-    const buffer = await q.download();
-    const urlCatbox = await catbox(buffer); // Subimos a Catbox
+    const urlCatbox = await catbox(buffer); 
 
     const apiURL = `https://api.siputzx.my.id/api/iloveimg/compress?image=${encodeURIComponent(urlCatbox)}`;
     const response = await fetch(apiURL);
@@ -26,7 +31,7 @@ const handler = async (m, { conn }) => {
 
     await conn.sendMessage(m.chat, {
       image: compressed,
-      caption: `🎯 *¡Imagen comprimida!*\n✨ *Optimizada por LoveIMG*\n🐱 *Subida vía Catbox*`
+      caption: `🎯 *¡Imagen comprimida!*\n✨ *Optimizada por LoveIMG*`
     }, { quoted: m });
 
     m.react('✅');
@@ -43,7 +48,6 @@ handler.command = ['compress', 'comprimir'];
 
 export default handler;
 
-/** Función de subida a Catbox (la misma que tú usaste) */
 async function catbox(content) {
   const { ext, mime } = (await fileTypeFromBuffer(content)) || {};
   const blob = new Blob([content.toArrayBuffer()], { type: mime });
