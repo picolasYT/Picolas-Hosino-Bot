@@ -12,7 +12,7 @@ let handler = async (m, { conn, args }) => {
 
     let user = global.db.data.users[userId];
 
-    let name = conn.getName(userId);
+    let name = await conn.getName(userId);
     let cumpleanos = user.birth || 'No especificado';
     let genero = user.genre || 'No especificado';
     let pareja = user.marry || 'Nadie';
@@ -23,43 +23,40 @@ let handler = async (m, { conn, args }) => {
     let coins = user.coin || 0;
     let bankCoins = user.bank || 0;
 
-    let perfil = await conn.profilePictureUrl(userId, 'image').catch(_ => 'https://files.catbox.moe/xr2m6u.jpg');
+    let avatar = await conn.profilePictureUrl(userId, 'image').catch(_ => 'https://files.catbox.moe/xr2m6u.jpg');
 
-    let profileText = `
-「✿」 *Perfil* ◢@${userId.split('@')[0]}◤
-${description}
+    
+    const backgroundURL = encodeURIComponent('https://i.ibb.co.com/2jMjYXK/IMG-20250103-WA0469.jpg');
+    const avatarURL = encodeURIComponent(avatar);
 
-✦ Edad » ${user.age || 'Desconocida'}
-♛ *Cumpleaños* » ${cumpleanos}
-⚥ *Género* » ${genero}
-♡ *Casado con* » ${pareja}
 
-☆ *Experiencia* » ${exp.toLocaleString()}
-❖ *Nivel* » ${nivel}
-✎ Rango » ${role}
+    const imageAPI = `https://api.siputzx.my.id/api/canvas/profile?backgroundURL=${backgroundURL}&avatarURL=${avatarURL}&rankName=${encodeURIComponent(role)}&rankId=0&exp=${exp}&requireExp=0&level=${nivel}&name=${encodeURIComponent(name)}`;
 
-⛁ *Coins Cartera* » ${coins.toLocaleString()} ${moneda}
-⛃ *Coins Banco* » ${bankCoins.toLocaleString()} ${moneda}
-❁ *Premium* » ${user.premium ? '✅' : '❌'}
-  `.trim();
+    try {
+        await conn.sendFile(m.chat, imageAPI, 'perfil.jpg', `
+「✿」 *Perfil de @${userId.split('@')[0]}*
+✦ Edad: ${user.age || 'Desconocida'}
+♛ Cumpleaños: ${cumpleanos}
+⚥ Género: ${genero}
+♡ Casado con: ${pareja}
 
-    await conn.sendMessage(m.chat, { 
-        text: profileText,
-        contextInfo: {
-            mentionedJid: [userId],
-            externalAdReply: {
-                title: '✧ Perfil de Usuario ✧',
-                body: dev,
-                thumbnailUrl: perfil,
-                mediaType: 1,
-                showAdAttribution: true,
-                renderLargerThumbnail: true
-            }
-        }
-    }, { quoted: m });
+✎ Rango: ${role}
+☆ Exp: ${exp.toLocaleString()}
+❖ Nivel: ${nivel}
+
+⛁ Coins Cartera: ${coins.toLocaleString()} ${moneda}
+⛃ Coins Banco: ${bankCoins.toLocaleString()} ${moneda}
+❁ Premium: ${user.premium ? '✅' : '❌'}
+
+📝 Descripción: ${description}
+`.trim(), m, false, { mentions: [userId] });
+    } catch (e) {
+        await conn.reply(m.chat, '❌ Error al generar el perfil.', m);
+        console.error(e);
+    }
 };
 
-handler.help = ['profile'];
+handler.help = ['profile', 'perfil'];
 handler.tags = ['rg'];
 handler.command = ['profile', 'perfil'];
 
