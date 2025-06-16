@@ -57,6 +57,8 @@ function pickRandom(list) {
 const iconUrl = pickRandom(iconUrls)
 global.icono = await getBuffer(iconUrl)
 
+global.fkontak = { "key": { "participants":"0@s.whatsapp.net", "remoteJid": "status@broadcast", "fromMe": false, "id": "Halo" }, "message": { "contactMessage": { "vcard": `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD` }}, "participant": "0@s.whatsapp.net" }
+
 //creador y otros
 global.creador = 'Wa.me/18294868853'
 global.ofcbot = `${conn.user.jid.split('@')[0]}`
