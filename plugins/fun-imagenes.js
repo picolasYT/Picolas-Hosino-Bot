@@ -15,9 +15,20 @@ const handler = async (m, { conn, command, text }) => {
     }
     // Marron
     if (command == 'marron' || command == 'negro') {
-    const captionma = `*[ 💀 ] @${who.split('@')[0]} ES UN(A) MARRÓN DE MRD*`
-    conn.sendMessage(m.chat, {image: { url: 'https://telegra.ph/file/5592d6bd38d411554018c.png' }, caption: captionma, mentions: conn.parseMention(captionma)}, {quoted: m});   
-    }
+  const who = m.mentionedJid?.[0] || m.quoted?.sender;
+
+  if (!who) return conn.reply(m.chat, 'Etiqueta a alguien para usar este comando.', m);
+
+  const name = await conn.getName(who); // Nombre de perfil del usuario mencionado
+
+  const captionma = `*[ 💀 ] ${name.toUpperCase()} ES UN(A) MARRÓN DE MRD*`;
+
+  await conn.sendMessage(m.chat, {
+    image: { url: 'https://telegra.ph/file/5592d6bd38d411554018c.png' },
+    caption: captionma,
+    mentions: [who]
+  }, { quoted: m });
+}
     // Suicide
     if (command == 'suicide' || command == 'suicidar') {
     const caption = `*[ ⚰️ ] @${m.sender.split('@')[0]} SE HA SUICIDADO...*`
