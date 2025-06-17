@@ -1,7 +1,9 @@
 let handler = async (m, { conn, args, participants }) => {
-    const users = Object.entries(global.db.data.users).map(([key, value]) => {
-        return { ...value, jid: key };
-    });
+    const groupJids = participants.map(p => p.id);
+
+    const users = Object.entries(global.db.data.users)
+        .filter(([jid]) => groupJids.includes(jid))
+        .map(([key, value]) => ({ ...value, jid: key }));
 
     const sortedLim = users.sort((a, b) => {
         const totalA = (a.coin || 0) + (a.bank || 0);
@@ -16,11 +18,10 @@ let handler = async (m, { conn, args, participants }) => {
     for (let i = 0; i < len; i++) {
         const { jid, coin, bank } = sortedLim[i];
         const total = (coin || 0) + (bank || 0);
-        const name = await conn.getName(jid); // Nombre de WhatsApp del usuario
+        const name = await conn.getName(jid);
 
         text += `✰ ${i + 1} » *${name}*\n`;
-        text += `   wa.me/${jid.split('@')[0]}\n`;
-        text += `   Total → *¥${total} ${moneda}*\n\n`;
+        text += `  Total → *¥${total} ${moneda}*\n\n`;
     }
 
     await conn.reply(m.chat, text.trim(), m, {
