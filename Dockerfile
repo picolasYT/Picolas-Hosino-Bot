@@ -1,19 +1,21 @@
-# Usa Node.js 20 como base
-FROM node:20
+# Imagen base: Ubuntu minimal
+FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Establece el directorio de trabajo
-WORKDIR /app
-
-# Actualiza e instala paquetes necesarios
+# Actualiza e instala Node.js 20 y herramientas necesarias
 RUN apt update && \
     apt upgrade -y && \
-    apt install -y git imagemagick openssh-client ca-certificates && \
-    rm -rf /var/lib/apt/lists/*
+    apt install -y curl git imagemagick openssh-client ca-certificates && \
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt install -y nodejs && \
+    rm -rf /var/lib/apt/lists/* 
 
-# Copia todo el código fuente
+# Crea el directorio de trabajo
+WORKDIR /app
+
+# Copia todo tu código fuente al contenedor
 COPY . .
 
-# Ejecuta npm install y luego inicia tu app
-CMD yarn install && npm install && npm start
+# Comando de inicio: instala dependencias y ejecuta tu bot
+CMD npm install cfonts && npm install && npm Index.js
