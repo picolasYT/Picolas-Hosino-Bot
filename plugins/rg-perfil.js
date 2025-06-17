@@ -6,7 +6,7 @@ let handler = async (m, { conn, args }) => {
   let userId = m.quoted?.sender || m.mentionedJid?.[0] || m.sender;
   let user = global.db.data.users[userId];
 
-  // Validar estado premium actual
+  // Valido estado premium actual xd 
   if (user.premium && user.premiumTime && user.premiumTime < Date.now()) {
     user.premium = false;
   }
