@@ -91,7 +91,7 @@ global.error = '✖️'
 global.msm = '⚠︎'
 
 //Emojis Rubyi Bot
-global.emoji = '🌸'
+global.emoji = '🍨'
 global.emoji2 = '🍭'
 global.emoji3 = '🌺'
 global.emoji4 = '💗'
