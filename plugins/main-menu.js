@@ -9,6 +9,7 @@ let handler = async (m, { conn, args }) => {
     let userId = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.sender;
     let user = global.db.data.users[userId];
     let name = conn.getName(userId);
+    let { min, xp, max } = xpRange(level, global.multiplier);
     let _uptime = process.uptime() * 1000;
     let { exp, level, role } = global.db.data.users[m.sender];
     let uptime = clockString(_uptime);
