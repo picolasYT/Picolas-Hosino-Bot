@@ -69,7 +69,7 @@ let handler = async (m, { conn }) => {
             await conn.reply(
                 m.chat,
                 `╔═══════ • ° ❁⊕❁ ° • ═══════╗\n` +
-                `⟢ ✦ ¡*Reclamo exitoso*! ✦\n` +
+                `⟢ ✦ ¡Reclamo exitoso! ✦\n` +
                 `┃ Has reclamado a *${character.name}* como tu waifu 💖\n` +
                 `╚═══════ • ° ❁⊕❁ ° • ═══════╝`,
                 m
