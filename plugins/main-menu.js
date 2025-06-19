@@ -2,12 +2,13 @@ import moment from 'moment-timezone';
 import fs from 'fs';
 import path from 'path';
 
-// Usamos process.cwd() para obtener el directorio de trabajo actual
+
 const cwd = process.cwd();
 
 let handler = async (m, { conn, args }) => {
     let userId = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.sender;
     let user = global.db.data.users[userId];
+    let { coin } = global.db.data.users[m.sender];
     let name = conn.getName(userId);
     let { min, xp, max } = xpRange(level, global.multiplier);
     let _uptime = process.uptime() * 1000;
@@ -16,24 +17,24 @@ let handler = async (m, { conn, args }) => {
     let totalreg = Object.keys(global.db.data.users).length;
     let totalCommands = Object.values(global.plugins).filter((v) => v.help && v.tags).length;
 
-    // Construir la ruta correcta utilizando process.cwd()
+    
     const gifVideosDir = path.join(cwd, 'src', 'menu');  // Aquí utilizamos process.cwd() para construir la ruta
 
-    // Imprimir la ruta generada para depuración
+    
     console.log('Ruta generada para los GIFs:', gifVideosDir);
 
-    // Verifica si la ruta existe
+   
     if (!fs.existsSync(gifVideosDir)) {
         console.error('El directorio no existe:', gifVideosDir);
         return;
     }
 
-    // Lee los archivos del directorio
+    
     const gifVideos = fs.readdirSync(gifVideosDir)
         .filter(file => file.endsWith('.mp4'))  // Filtra solo los archivos .mp4
         .map(file => path.join(gifVideosDir, file));  // Obtiene las rutas completas de los archivos
 
-    // Escoge uno aleatorio
+   
     const randomGif = gifVideos[Math.floor(Math.random() * gifVideos.length)];
 
 
@@ -63,11 +64,11 @@ Aquí tienes mi lista de comandos
 ╔═══════⩽✦✰✦⩾═══════╗
      「 𝙄𝙉𝙁𝙊 𝘿𝙀𝙇 𝙐𝙎𝙐𝘼𝙍𝙄𝙊 」
 ╚═══════⩽✦✰✦⩾═══════╝
-║ ☆  🌐 *𝖢𝖫𝖨𝖤𝖭𝖳𝖤*: %name
-║ ☆ 🚀 *𝖤𝖷𝖯𝖤𝖱𝖨𝖤𝖭𝖢𝖨𝖠*: %exp
-║ ☆ 💴 *𝖤𝖲𝖳𝖱𝖤𝖫𝖫𝖠𝖲*: %estrellas
-║ ☆ 📊 *𝖭𝖨𝖵𝖤𝖫*: %level
-║ ☆ 🏅 *𝖱𝖠𝖭𝖦𝖮*: %role
+║ ☆  🌐 *𝖢𝖫𝖨𝖤𝖭𝖳𝖤*: ${name}
+║ ☆ 🚀 *𝖤𝖷𝖯𝖤𝖱𝖨𝖤𝖭𝖢𝖨𝖠*: ${exp}
+║ ☆ 💴 *𝖤𝖲𝖳𝖱𝖤𝖫𝖫𝖠𝖲*: ${coin}
+║ ☆ 📊 *𝖭𝖨𝖵𝖤𝖫*: ${level}
+║ ☆ 🏅 *𝖱𝖠𝖭𝖦𝖮*: ${role}
 ╚═══════════════════════╝
 
 > Crea un *Sub-Bot* con tu número utilizando *#qr* o *#code*
