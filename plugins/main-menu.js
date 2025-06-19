@@ -3,41 +3,33 @@ import fs from 'fs';
 import { xpRange } from '../lib/levelling.js';
 import path from 'path';
 
-
 const cwd = process.cwd();
 
 let handler = async (m, { conn, args }) => {
+  try {
     let userId = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.sender;
     let user = global.db.data.users[userId];
-    let { coin } = global.db.data.users[m.sender];
-    let name = conn.getName(userId);
+
+
+    let { exp, level, role, coin } = user;
     let { min, xp, max } = xpRange(level, global.multiplier);
+    let name = await conn.getName(userId);
     let _uptime = process.uptime() * 1000;
-    let { exp, level, role } = global.db.data.users[m.sender];
     let uptime = clockString(_uptime);
     let totalreg = Object.keys(global.db.data.users).length;
     let totalCommands = Object.values(global.plugins).filter((v) => v.help && v.tags).length;
 
-    
     const gifVideosDir = path.join(cwd, 'src', 'menu');
-
-    
-    console.log('Ruta generada para los GIFs:', gifVideosDir);
-
-   
     if (!fs.existsSync(gifVideosDir)) {
-        console.error('El directorio no existe:', gifVideosDir);
-        return;
+      console.error('❌ El directorio no existe:', gifVideosDir);
+      return;
     }
 
-    
     const gifVideos = fs.readdirSync(gifVideosDir)
-        .filter(file => file.endsWith('.mp4'))  
-        .map(file => path.join(gifVideosDir, file));
+      .filter(file => file.endsWith('.mp4'))
+      .map(file => path.join(gifVideosDir, file));
 
-   
     const randomGif = gifVideos[Math.floor(Math.random() * gifVideos.length)];
-
 
     let txt = `
 ☆✼★━━━━━━━━━━━━━━━━━★✼☆｡
@@ -46,7 +38,6 @@ let handler = async (m, { conn, args }) => {
         ┖┈┈┈┈┈┈┈୨♡୧┈┈┈┈┈┈┈┚
 ｡☆✼★━━━━━━━━━━━━━━━━━★✼☆｡
 
-
 ¡Hola, ${name}! Mi nombre es *Ruby Hoshino* (≧◡≦) 💖
 
 Aquí tienes mi lista de comandos
@@ -54,11 +45,11 @@ Aquí tienes mi lista de comandos
        「 𝙄𝙉𝙁𝙊 𝘿𝙀 𝙇𝘼 𝘽𝙊𝙏 」
 ╚═══════⩽✦✰✦⩾═══════╝
 ║ ☆ 🌟 *𝖳𝖨𝖯𝖮 𝖣𝖤 𝖡𝖮𝖳*: *𝖶𝖠𝖨𝖥𝖴*
-║ ☆ 🚩 *𝖬𝖮𝖣𝖮*: *𝖯𝖴𝖡𝖫𝖨𝖢A*
+║ ☆ 🚩 *𝖬𝖮𝖣𝖮*: *𝖯𝖴𝖡𝖫𝖨𝖢𝖠*
 ║ ☆ 📚 *B𝖠𝖨𝖫𝖤𝖸𝖲*: *𝖬𝖴𝖫𝖳𝖨 𝖣𝖤𝖵𝖨𝖢𝖤*
 ║ ☆ 🌐 *𝖢𝖮𝖬𝖠𝖭𝖣𝖮𝖲 𝖤𝖭 𝖳𝖮𝖳𝖠𝖫*: ${totalCommands}
-║ ☆ ⏱️ *𝖳𝖨𝖤𝖬𝖯𝖮* *𝖠𝖢𝖳𝖨𝖵A*: ${uptime}
-║ ☆ 👤 *𝖴𝖲𝖴𝖠𝖱𝖨𝖮𝖲* *𝖱𝖤𝖦𝖨𝖲𝖳𝖱𝖠𝖣𝖮𝖲*: ${totalreg}
+║ ☆ ⏱️ *𝖳𝖨𝖤𝖬𝖯𝖮 𝖠𝖢𝖳𝖨𝖵𝖠*: ${uptime}
+║ ☆ 👤 *𝖴𝖲𝖴𝖠𝖱𝖨𝖮𝖲 𝖱𝖤𝖦𝖨𝖲𝖳𝖱𝖠𝖣𝖮𝖲*: ${totalreg}
 ║ ☆ 👩‍💻 *𝖢𝖱𝖤𝖠𝖣𝖮𝖱*: [𝑾𝒉𝒂𝒕𝒔𝑨𝒑𝒑](https://Wa.me/18294868853)
 ╚════════════════════════╝
 
@@ -71,8 +62,8 @@ Aquí tienes mi lista de comandos
 ║ ☆ 📊 *𝖭𝖨𝖵𝖤𝖫*: ${level}
 ║ ☆ 🏅 *𝖱𝖠𝖭𝖦𝖮*: ${role}
 ╚═══════════════════════╝
-
 > Crea un *Sub-Bot* con tu número utilizando *#qr* o *#code*
+
 
 ╔══⩽✦✰✦⩾══╗
    「 ${(conn.user.jid == global.conn.user.jid ? '𝘽𝙤𝙩 𝙊𝙛𝙞𝙘𝙞𝙖𝙡' : '𝙎𝙪𝙗𝘽𝙤𝙩')} 」
