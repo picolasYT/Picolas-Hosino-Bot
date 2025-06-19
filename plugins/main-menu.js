@@ -13,6 +13,10 @@ let handler = async (m, { conn, args }) => {
   // Obtener nombre del usuario
   let name = await conn.getName(userId);
 
+  let exp = user.exp || 0;
+  let level = user.level || 0;
+  let role = user.role || 'Sin Rango';
+  let coins = user.coin || 0;
 
   // Obtener datos generales
   let _uptime = process.uptime() * 1000;
