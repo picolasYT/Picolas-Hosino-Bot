@@ -82,7 +82,7 @@ handler.help = ['pinterest <query>']
 handler.tags = ['buscador', 'descargas']
 handler.coin = 1;
 handler.register = true
-handler.command = /^(pinterest|pin)$/i
+handler.command = ['pinterest', 'pin'];
 handler.register = true
 
 export default pinterest
