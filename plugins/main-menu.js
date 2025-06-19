@@ -13,6 +13,7 @@ let handler = async (m, { conn, args }) => {
   // Obtener nombre del usuario
   let name = await conn.getName(userId);
 
+  let user = global.db.data.users[userId];
   let exp = user.exp || 0;
   let level = user.level || 0;
   let role = user.role || 'Sin Rango';
