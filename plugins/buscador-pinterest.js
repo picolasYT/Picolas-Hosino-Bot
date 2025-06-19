@@ -40,7 +40,7 @@ const pinterest = async (m, { conn, text, usedPrefix, command }) => {
   if (!text) return conn.reply(m.chat, `🌸 𝙐𝙨𝙤: *${usedPrefix + command}* <término de búsqueda>\n📌 Ejemplo: *${usedPrefix + command} anime girl*`, m, rcanal)
 
   await m.react('🕐')
-  conn.reply(m.chat, '*Procesando tu búsqueda...*', m, {
+  conn.reply(m.chat, '*🔎 Buscando imágenes en Pinterest...*', m, {
     contextInfo: {
       externalAdReply: {
         mediaUrl: null,
