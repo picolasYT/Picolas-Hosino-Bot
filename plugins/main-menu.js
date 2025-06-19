@@ -732,7 +732,7 @@ Aquí tienes mi lista de comandos
 };
 
 handler.help = ['menu'];
-handler.register = true
+handler.register = true;
 handler.tags = ['main'];
 handler.command = ['menu', 'menú', 'help'];
 
