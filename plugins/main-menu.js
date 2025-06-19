@@ -1,36 +1,47 @@
 import moment from 'moment-timezone';
 import fs from 'fs';
-import { xpRange } from '../lib/levelling.js';
 import path from 'path';
+import { xpRange } from '../lib/levelling.js';
 
 const cwd = process.cwd();
 
 let handler = async (m, { conn, args }) => {
   try {
-    let userId = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.sender;
+    // Obtiene el userId correcto: el mencionado o el propio sender
+    let userId = m.mentionedJid?.[0] || m.sender;
+    // Obtiene los datos del usuario de la base de datos global
     let user = global.db.data.users[userId];
+    if (!user) throw new Error('Usuario no registrado en la base de datos.');
 
-
-    let { exp, level, role, coin } = user;
+    // Obtiene la experiencia, nivel, rol y moneda del usuario
+    let { exp = 0, level = 1, role = 'Nuv', coin = 0 } = user;
+    // Obtiene rango xp para el nivel actual
     let { min, xp, max } = xpRange(level, global.multiplier);
+
+    // Obtiene el nombre de usuario de forma async
     let name = await conn.getName(userId);
+
+    // Calcula uptime del bot
     let _uptime = process.uptime() * 1000;
     let uptime = clockString(_uptime);
+
+    // Cantidad total de usuarios registrados
     let totalreg = Object.keys(global.db.data.users).length;
-    let totalCommands = Object.values(global.plugins).filter((v) => v.help && v.tags).length;
 
+    // Cantidad total de comandos disponibles
+    let totalCommands = Object.values(global.plugins).filter(v => v.help && v.tags).length;
+
+    // Carga lista de gifs para menú (opcional)
     const gifVideosDir = path.join(cwd, 'src', 'menu');
-    if (!fs.existsSync(gifVideosDir)) {
-      console.error('❌ El directorio no existe:', gifVideosDir);
-      return;
+    let gifVideos = [];
+    if (fs.existsSync(gifVideosDir)) {
+      gifVideos = fs.readdirSync(gifVideosDir)
+        .filter(f => f.endsWith('.mp4'))
+        .map(f => path.join(gifVideosDir, f));
     }
+    const randomGif = gifVideos.length ? gifVideos[Math.floor(Math.random() * gifVideos.length)] : null;
 
-    const gifVideos = fs.readdirSync(gifVideosDir)
-      .filter(file => file.endsWith('.mp4'))
-      .map(file => path.join(gifVideosDir, file));
-
-    const randomGif = gifVideos[Math.floor(Math.random() * gifVideos.length)];
-
+    // Construye el texto del menú con la info del usuario
     let txt = `
 ☆✼★━━━━━━━━━━━━━━━━━★✼☆｡
         ┎┈┈┈┈┈┈┈୨♡୧┈┈┈┈┈┈┈┒
@@ -40,16 +51,15 @@ let handler = async (m, { conn, args }) => {
 
 ¡Hola, ${name}! Mi nombre es *Ruby Hoshino* (≧◡≦) 💖
 
-Aquí tienes mi lista de comandos
 ╔═══════⩽✦✰✦⩾═══════╗
        「 𝙄𝙉𝙁𝙊 𝘿𝙀 𝙇𝘼 𝘽𝙊𝙏 」
 ╚═══════⩽✦✰✦⩾═══════╝
 ║ ☆ 🌟 *𝖳𝖨𝖯𝖮 𝖣𝖤 𝖡𝖮𝖳*: *𝖶𝖠𝖨𝖥𝖴*
-║ ☆ 🚩 *𝖬𝖮𝖣𝖮*: *𝖯𝖴𝖡𝖫𝖨𝖢𝖠*
+║ ☆ 🚩 *𝖬𝖮𝖣𝖮*: *𝖯𝖴𝖡𝖫𝖨𝖢A*
 ║ ☆ 📚 *B𝖠𝖨𝖫𝖤𝖸𝖲*: *𝖬𝖴𝖫𝖳𝖨 𝖣𝖤𝖵𝖨𝖢𝖤*
 ║ ☆ 🌐 *𝖢𝖮𝖬𝖠𝖭𝖣𝖮𝖲 𝖤𝖭 𝖳𝖮𝖳𝖠𝖫*: ${totalCommands}
-║ ☆ ⏱️ *𝖳𝖨𝖤𝖬𝖯𝖮 𝖠𝖢𝖳𝖨𝖵𝖠*: ${uptime}
-║ ☆ 👤 *𝖴𝖲𝖴𝖠𝖱𝖨𝖮𝖲 𝖱𝖤𝖦𝖨𝖲𝖳𝖱𝖠𝖣𝖮𝖲*: ${totalreg}
+║ ☆ ⏱️ *𝖳𝖨𝖤𝖬𝖯𝖮* *𝖠𝖢𝖳𝖨𝖵A*: ${uptime}
+║ ☆ 👤 *𝖴𝖲𝖴𝖠𝖱𝖨𝖮𝖲* *𝖱𝖤𝖦𝖨𝖲𝖳𝖱𝖠𝖣𝖮𝖲*: ${totalreg}
 ║ ☆ 👩‍💻 *𝖢𝖱𝖤𝖠𝖣𝖮𝖱*: [𝑾𝒉𝒂𝒕𝒔𝑨𝒑𝒑](https://Wa.me/18294868853)
 ╚════════════════════════╝
 
