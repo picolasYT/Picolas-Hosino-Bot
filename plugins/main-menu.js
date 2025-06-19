@@ -18,7 +18,7 @@ let handler = async (m, { conn, args }) => {
     let totalCommands = Object.values(global.plugins).filter((v) => v.help && v.tags).length;
 
     
-    const gifVideosDir = path.join(cwd, 'src', 'menu');  // Aquí utilizamos process.cwd() para construir la ruta
+    const gifVideosDir = path.join(cwd, 'src', 'menu');
 
     
     console.log('Ruta generada para los GIFs:', gifVideosDir);
@@ -31,8 +31,8 @@ let handler = async (m, { conn, args }) => {
 
     
     const gifVideos = fs.readdirSync(gifVideosDir)
-        .filter(file => file.endsWith('.mp4'))  // Filtra solo los archivos .mp4
-        .map(file => path.join(gifVideosDir, file));  // Obtiene las rutas completas de los archivos
+        .filter(file => file.endsWith('.mp4'))  
+        .map(file => path.join(gifVideosDir, file));
 
    
     const randomGif = gifVideos[Math.floor(Math.random() * gifVideos.length)];
