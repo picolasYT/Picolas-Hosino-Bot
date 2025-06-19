@@ -1,48 +1,45 @@
 import moment from 'moment-timezone';
 import fs from 'fs';
-import path from 'path';
 import { xpRange } from '../lib/levelling.js';
+import path from 'path';
 
 const cwd = process.cwd();
 
 let handler = async (m, { conn, args }) => {
-  try {
-    // Obtiene el userId correcto: el mencionado o el propio sender
-    let userId = m.mentionedJid?.[0] || m.sender;
-    // Obtiene los datos del usuario de la base de datos global
-    let user = global.db.data.users[userId];
-    if (!user) throw new Error('Usuario no registrado en la base de datos.');
+  // Obtener ID del usuario
+  let userId = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.sender;
 
-    // Obtiene la experiencia, nivel, rol y moneda del usuario
-    let { exp = 0, level = 1, role = 'Nuv', coin = 0 } = user;
-    // Obtiene rango xp para el nivel actual
-    let { min, xp, max } = xpRange(level, global.multiplier);
+  // Obtener datos del usuario correctamente
+  let user = global.db.data.users[userId] || {};
+  let { exp = 0, level = 0, role = '-', coin = 0 } = user;
 
-    // Obtiene el nombre de usuario de forma async
-    let name = await conn.getName(userId);
+  // Obtener nombre del usuario
+  let name = await conn.getName(userId);
 
-    // Calcula uptime del bot
-    let _uptime = process.uptime() * 1000;
-    let uptime = clockString(_uptime);
+  // Calcular experiencia
+  let { min, xp, max } = xpRange(level, global.multiplier || 1);
 
-    // Cantidad total de usuarios registrados
-    let totalreg = Object.keys(global.db.data.users).length;
+  // Obtener datos generales
+  let _uptime = process.uptime() * 1000;
+  let uptime = clockString(_uptime);
+  let totalreg = Object.keys(global.db.data.users).length;
+  let totalCommands = Object.values(global.plugins).filter(v => v.help && v.tags).length;
 
-    // Cantidad total de comandos disponibles
-    let totalCommands = Object.values(global.plugins).filter(v => v.help && v.tags).length;
+  // Buscar GIFs aleatorios
+  const gifVideosDir = path.join(cwd, 'src', 'menu');
+  if (!fs.existsSync(gifVideosDir)) {
+    console.error('El directorio no existe:', gifVideosDir);
+    return;
+  }
 
-    // Carga lista de gifs para menú (opcional)
-    const gifVideosDir = path.join(cwd, 'src', 'menu');
-    let gifVideos = [];
-    if (fs.existsSync(gifVideosDir)) {
-      gifVideos = fs.readdirSync(gifVideosDir)
-        .filter(f => f.endsWith('.mp4'))
-        .map(f => path.join(gifVideosDir, f));
-    }
-    const randomGif = gifVideos.length ? gifVideos[Math.floor(Math.random() * gifVideos.length)] : null;
+  const gifVideos = fs.readdirSync(gifVideosDir)
+    .filter(file => file.endsWith('.mp4'))
+    .map(file => path.join(gifVideosDir, file));
 
-    // Construye el texto del menú con la info del usuario
-    let txt = `
+  const randomGif = gifVideos[Math.floor(Math.random() * gifVideos.length)];
+
+  // Texto con info
+  let txt = `
 ☆✼★━━━━━━━━━━━━━━━━━★✼☆｡
         ┎┈┈┈┈┈┈┈୨♡୧┈┈┈┈┈┈┈┒
     𓏲꯭֟፝੭ ꯭⌑(꯭𝐑).꯭𝐔.꯭𝐁.꯭𝐘.꯭ ⭑𝐇.꯭𝐎.꯭𝐒.꯭𝐇.꯭𝐈.꯭𝐍.꯭𝐎.꯭𓏲꯭֟፝੭ 
@@ -51,22 +48,23 @@ let handler = async (m, { conn, args }) => {
 
 ¡Hola, ${name}! Mi nombre es *Ruby Hoshino* (≧◡≦) 💖
 
+Aquí tienes mi lista de comandos
 ╔═══════⩽✦✰✦⩾═══════╗
        「 𝙄𝙉𝙁𝙊 𝘿𝙀 𝙇𝘼 𝘽𝙊𝙏 」
 ╚═══════⩽✦✰✦⩾═══════╝
 ║ ☆ 🌟 *𝖳𝖨𝖯𝖮 𝖣𝖤 𝖡𝖮𝖳*: *𝖶𝖠𝖨𝖥𝖴*
-║ ☆ 🚩 *𝖬𝖮𝖣𝖮*: *𝖯𝖴𝖡𝖫𝖨𝖢A*
+║ ☆ 🚩 *𝖬𝖮𝖣𝖮*: *𝖯𝖴𝖡𝖫𝖨𝖢𝖠*
 ║ ☆ 📚 *B𝖠𝖨𝖫𝖤𝖸𝖲*: *𝖬𝖴𝖫𝖳𝖨 𝖣𝖤𝖵𝖨𝖢𝖤*
 ║ ☆ 🌐 *𝖢𝖮𝖬𝖠𝖭𝖣𝖮𝖲 𝖤𝖭 𝖳𝖮𝖳𝖠𝖫*: ${totalCommands}
-║ ☆ ⏱️ *𝖳𝖨𝖤𝖬𝖯𝖮* *𝖠𝖢𝖳𝖨𝖵A*: ${uptime}
-║ ☆ 👤 *𝖴𝖲𝖴𝖠𝖱𝖨𝖮𝖲* *𝖱𝖤𝖦𝖨𝖲𝖳𝖱𝖠𝖣𝖮𝖲*: ${totalreg}
+║ ☆ ⏱️ *𝖳𝖨𝖤𝖬𝖯𝖮 𝖠𝖢𝖳𝖨𝖵𝖠*: ${uptime}
+║ ☆ 👤 *𝖴𝖲𝖴𝖠𝖱𝖨𝖮𝖲 𝖱𝖤𝖦𝖨𝖲𝖳𝖱𝖠𝖣𝖮𝖲*: ${totalreg}
 ║ ☆ 👩‍💻 *𝖢𝖱𝖤𝖠𝖣𝖮𝖱*: [𝑾𝒉𝒂𝒕𝒔𝑨𝒑𝒑](https://Wa.me/18294868853)
 ╚════════════════════════╝
 
 ╔═══════⩽✦✰✦⩾═══════╗
      「 𝙄𝙉𝙁𝙊 𝘿𝙀𝙇 𝙐𝙎𝙐𝘼𝙍𝙄𝙊 」
 ╚═══════⩽✦✰✦⩾═══════╝
-║ ☆  🌐 *𝖢𝖫𝖨𝖤𝖭𝖳𝖤*: ${name}
+║ ☆ 🌐 *𝖢𝖫𝖨𝖤𝖭𝖳𝖤*: ${name}
 ║ ☆ 🚀 *𝖤𝖷𝖯𝖤𝖱𝖨𝖤𝖭𝖢𝖨𝖠*: ${exp}
 ║ ☆ 💴 *𝖸𝖤𝖭𝖤𝖲*: ${coin}
 ║ ☆ 📊 *𝖭𝖨𝖵𝖤𝖫*: ${level}
