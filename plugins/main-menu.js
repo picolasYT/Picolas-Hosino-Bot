@@ -9,15 +9,10 @@ let handler = async (m, { conn, args }) => {
   // Obtener ID del usuario
   let userId = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.sender;
 
-  // Obtener datos del usuario correctamente
-  let user = global.db.data.users[userId] || {};
-  let { exp = 0, level = 0, role = '-', coin = 0 } = user;
 
   // Obtener nombre del usuario
   let name = await conn.getName(userId);
 
-  // Calcular experiencia
-  let { min, xp, max } = xpRange(level, global.multiplier || 1);
 
   // Obtener datos generales
   let _uptime = process.uptime() * 1000;
