@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import baileys from '@whiskeysockets/baileys';
 
-async function sendAlbumMessage(jid, medias, options = {}) {
+async function sendAlbumMessage(jid, medias, conn, options = {}) {
     if (typeof jid !== "string") throw new TypeError(`jid must be string, received: ${jid}`);
     if (medias.length < 2) throw new RangeError("Se necesitan al menos 2 imágenes para un álbum");
 
@@ -35,8 +35,11 @@ async function sendAlbumMessage(jid, medias, options = {}) {
     return album;
 }
 
-const pinterest = async (m, { conn, text, usedPrefix, command }) => {
-    if (!text) return conn.reply(m.chat, `🍥 *Nyaa~ escribe qué deseas buscar*\n\n✨ Ejemplo: \`${usedPrefix + command} anime girl\``, m);
+// Aquí comienza el handler real que usará tu bot
+const handler = async (m, { conn, text, usedPrefix, command }) => {
+    if (!text) {
+        return conn.reply(m.chat, `🍥 *Nyaa~ escribe qué deseas buscar*\n\n✨ Ejemplo: \`${usedPrefix + command} anime girl\``, m);
+    }
 
     await m.react('🕐');
     conn.reply(m.chat, `🍡 *Kawaii-búsqueda activada, ${conn.getName(m.sender)}-chan!* Espera un momentito, porfis~`, m, {
@@ -44,7 +47,7 @@ const pinterest = async (m, { conn, text, usedPrefix, command }) => {
             externalAdReply: {
                 title: '🌸 Ruby Hoshino',
                 body: 'Buscando imágenes con amor...',
-                thumbnail: icons,
+                thumbnail: global.icons, // asegúrate que icons esté definido en global
                 sourceUrl: 'https://pinterest.com',
                 mediaType: 1,
                 renderLargerThumbnail: true,
@@ -67,7 +70,7 @@ const pinterest = async (m, { conn, text, usedPrefix, command }) => {
 
         const caption = `🌸 *Resultados para:* ${text}\n\n✨ Espero que te encanten, ${conn.getName(m.sender)}-chan~`;
 
-        await sendAlbumMessage(m.chat, imgs, { caption, quoted: m });
+        await sendAlbumMessage(m.chat, imgs, conn, { caption, quoted: m });
         await m.react('✅');
     } catch (e) {
         console.error(e);
@@ -76,8 +79,9 @@ const pinterest = async (m, { conn, text, usedPrefix, command }) => {
     }
 };
 
-handler.help = ['pinterest']
-handler.command = ['pinterest', 'pin']
-handler.tags = ['dl']
+handler.help = ['pinterest <tema>'];
+handler.tags = ['buscador', 'descargas'];
+handler.command = ['pinterest', 'pin'];
+handler.register = true;
 
-export default handler
+export default handler;
