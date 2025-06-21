@@ -1,6 +1,8 @@
 import fetch from 'node-fetch';
 import baileys from '@whiskeysockets/baileys';
 
+const newsletterJid  = '120363335626706839@newsletter';
+const newsletterName = '⏤͟͞ू⃪፝͜⁞⟡『 𝐓͢ᴇ𝙖፝ᴍ⃨ 𝘾𝒉꯭𝐚𝑛𝑛𝒆𝑙: 𝑹ᴜ⃜ɓ𝑦-𝑯ᴏ𝒔𝑯𝙞꯭𝑛𝒐 』࿐⟡';
 
 const sendAlbumMessage = async (jid, images, conn, options = {}) => {
     const caption = options.caption || '';
