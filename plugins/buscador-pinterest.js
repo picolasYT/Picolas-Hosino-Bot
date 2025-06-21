@@ -56,11 +56,7 @@ let handler = async (m, { conn, text }) => {
     await conn.sendMessage(m.chat, imageMessages, {
       quoted: m,
       contextInfo,
-      caption: `╭─❀⃟⃨ 𝑷𝒊𝒏𝒕𝒆𝒓𝒆𝒔𝒕 𝑨𝒍𝒃𝒖𝒎 ⛩️
-🌸 *Búsqueda:* ${text}
-💌 *Solicitado por:* ${userName}
-🖼️ *Imágenes encontradas:* ${maxImages}
-╰──────────────────⬣`,
+      caption: `🌸 *Resultados de Pinterest para:* _${text}_\n🖼️ Total: ${urlsUnicas.length} imágenes`,
       multiple: true // ✅ para que salgan como un álbum real
     });
 
