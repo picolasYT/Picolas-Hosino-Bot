@@ -8,7 +8,7 @@ const sendAlbumMessage = async (conn, jid, medias, options = {}) => {
   if (!Array.isArray(medias) || medias.length < 2) throw new RangeError("Se necesitan al menos 2 imágenes");
 
   const caption = options.text || options.caption || '';
-  const delay = !isNaN(options.delay) ? options.delay : 500;
+  const delay = 0;
 
   const contextInfo = {
     mentionedJid: [jid],
