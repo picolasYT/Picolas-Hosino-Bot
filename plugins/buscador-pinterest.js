@@ -1,70 +1,100 @@
 import axios from 'axios';
 
+
+const sendAlbumMessage = async (conn, jid, medias, options = {}) => {
+  if (typeof jid !== 'string') throw new TypeError(`jid debe ser string`);
+  if (!Array.isArray(medias) || medias.length < 2) throw new RangeError("Se necesitan al menos 2 imágenes para formar un álbum, senpai~");
+
+  const caption = options.text || options.caption || '';
+  const delay = !isNaN(options.delay) ? options.delay : 0;
+
+  delete options.text;
+  delete options.caption;
+  delete options.delay;
+
+  for (let i = 0; i < medias.length; i++) {
+    const { type, data } = medias[i];
+    const msg = {
+      [type]: data,
+      ...(i === 0 ? { caption } : {})
+    };
+    await conn.sendMessage(jid, msg, { quoted: options.quoted });
+    await new Promise(resolve => setTimeout(resolve, delay));
+  }
+
+  return true;
+};
+
+
 const pins = async (query) => {
   try {
     const res = await axios.get(`https://anime-xi-wheat.vercel.app/api/pinterest?q=${encodeURIComponent(query)}`);
-    const images = Array.from(new Set(res.data.images)); // eliminar duplicadas
-    return images.map(url => ({
-      image_large_url: url,
-      image_medium_url: url,
-      image_small_url: url
-    }));
+    if (Array.isArray(res.data.images)) {
+      return res.data.images.map(url => ({
+        image_large_url: url,
+        image_medium_url: url,
+        image_small_url: url
+      }));
+    }
+    return [];
   } catch (error) {
-    console.error('❌ Error:', error);
+    console.error('🔴 Error al buscar en Pinterest:', error.message);
     return [];
   }
 };
 
 let handler = async (m, { conn, text }) => {
-  const contextInfo = {
-    mentionedJid: [m.sender],
-    isForwarded: true,
-    forwardingScore: 999,
-    forwardedNewsletterMessageInfo: {
-      newsletterJid: '120363335626706839@newsletter',
-      newsletterName: '⏤͟͞ू⃪፝͜⁞⟡『 𝐓͢ᴇ𝙖፝ᴍ⃨ 𝘾𝒉꯭𝐚𝑛𝑛𝒆𝑙: 𝑹ᴜ⃜ɓ𝑦-𝑯ᴏ𝒔𝑯𝙞꯭𝑛𝒐 』࿐⟡',
-      serverMessageId: -1
-    },
-    externalAdReply: {
-      title: '🌸 Ruby-Hoshino-Search',
-      body: '🔎 Resultados desde Pinterest 🌺',
-      thumbnail: icons,
-      sourceUrl: redes,
-      mediaType: 1,
-      renderLargerThumbnail: true
-    }
-  };
+  const userName = conn.getName(m.sender);
 
-  if (!text) return m.reply('🌸 *Onii-chan~*, dime qué imagen quieres buscar en Pinterest~\nEj: *.pinterest gatos kawaii*', m, { contextInfo });
+  if (!text) {
+    return conn.reply(
+      m.chat,
+      `🌸 ${userName}-chan~!* Debes decirme qué quieres buscar en Pinterest 🖼️✨\n\n🌼 *Ejemplo:*\n.pinterest neko aesthetic`,
+      m
+    );
+  }
 
   try {
-    await conn.sendMessage(m.chat, { react: { text: '🖼️', key: m.key } });
+    await conn.sendMessage(m.chat, { react: { text: '🔍', key: m.key } });
 
     const results = await pins(text);
-    if (!results.length) return m.reply(`💦 *No encontré nada para:* "${text}", gomen...`, m, { contextInfo });
+    if (!results.length) {
+      return conn.reply(
+        m.chat,
+        `😿 *Gomen nasai ${userName}-chan...* No encontré nada con: *"${text}"*. Prueba con otra palabra~`,
+        m
+      );
+    }
 
-    const maxImages = Math.min(results.length, 10);
-    const urlsUnicas = [...new Set(results.map(v => v.image_large_url || v.image_medium_url))].slice(0, maxImages);
+    const maxImages = Math.min(results.length, 10); // límite de seguridad
+    const medias = [];
 
-    const imageMessages = await Promise.all(
-      urlsUnicas.map(async (url) => ({
-        image: { url },
-        mimetype: 'image/jpeg'
-      }))
-    );
+    for (let i = 0; i < maxImages; i++) {
+      medias.push({
+        type: 'image',
+        data: { url: results[i].image_large_url || results[i].image_medium_url }
+      });
+    }
 
-    await conn.sendMessage(m.chat, imageMessages, {
+    const caption = `
+╭─ꨪᰰ⃟⃨ ⛩️ 𝑷𝒊𝒏𝒕𝒆𝒓𝒆𝒔𝒕 𝑨𝒍𝒃𝒖𝒎 ─⬣
+🍥 *Búsqueda:* ${text}
+🧸 *Solicitado por:* ${userName}
+🖼️ *Resultados:* ${maxImages} imágenes
+╰───────────────────⬣`.trim();
+
+    await sendAlbumMessage(conn, m.chat, medias, {
+      caption,
       quoted: m,
-      contextInfo,
-      caption: `🌸 *Resultados de Pinterest para:* _${text}_\n🖼️ Total: ${urlsUnicas.length} imágenes`,
-      multiple: true // ✅ para que salgan como un álbum real
+      delay: 0,
     });
 
     await conn.sendMessage(m.chat, { react: { text: '✅', key: m.key } });
 
   } catch (error) {
     console.error(error);
-    m.reply('❌ Hubo un error al buscar imágenes en Pinterest.', m, { contextInfo });
+    await conn.sendMessage(m.chat, { react: { text: '❌', key: m.key } });
+    m.reply('😵‍💫 *Shimatta!* Ocurrió un error al intentar mostrar las imágenes. Inténtalo más tarde, onii-chan...');
   }
 };
 
