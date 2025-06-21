@@ -35,7 +35,7 @@ let handler = async (m, { conn, text }) => {
     }
   };
 
-  if (!text) return m.reply('🌸 dime qué imagen quieres buscar en Pinterest~\nEj: *.pinterest gatos kawaii*', m, { contextInfo });
+  if (!text) return m.reply('🌸 *Onii-chan~*, dime qué imagen quieres buscar en Pinterest~\nEj: *.pinterest gatos kawaii*', m, { contextInfo });
 
   try {
     await conn.sendMessage(m.chat, { react: { text: '🖼️', key: m.key } });
@@ -56,8 +56,12 @@ let handler = async (m, { conn, text }) => {
     await conn.sendMessage(m.chat, imageMessages, {
       quoted: m,
       contextInfo,
-      caption: `🌸 *Resultados de Pinterest para:* _${text}_\n🖼️ Total: ${urlsUnicas.length} imágenes`,
-      multiple: true
+      caption: `╭─❀⃟⃨ 𝑷𝒊𝒏𝒕𝒆𝒓𝒆𝒔𝒕 𝑨𝒍𝒃𝒖𝒎 ⛩️
+🌸 *Búsqueda:* ${text}
+💌 *Solicitado por:* ${userName}
+🖼️ *Imágenes encontradas:* ${maxImages}
+╰──────────────────⬣`,
+      multiple: true // ✅ para que salgan como un álbum real
     });
 
     await conn.sendMessage(m.chat, { react: { text: '✅', key: m.key } });
