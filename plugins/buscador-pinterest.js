@@ -80,4 +80,4 @@ handler.help = ['pinterest']
 handler.command = ['pinterest', 'pin']
 handler.tags = ['dl']
 
-export default handler;
+export default handler
