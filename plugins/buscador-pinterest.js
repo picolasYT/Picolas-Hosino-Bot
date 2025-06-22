@@ -59,7 +59,7 @@ const pinterest = async (m, { conn, text, usedPrefix, command }) => {
   if (!text) {
     return conn.reply(m.chat,
       `🌸 *Onii-chan... nani sagashitai no?* (✿◕‿◕)\n\n` +
-      `💡 Uso correcto:\n\`${usedPrefix + command} makima aesthetic\``, m);
+      `💡 Uso correcto:\n\`${usedPrefix + command} Shinobu aesthetic\``, m);
   }
 
   await m.react('🔍');
