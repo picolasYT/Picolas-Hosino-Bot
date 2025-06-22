@@ -53,7 +53,7 @@ async function sendAlbumMessage(jid, medias, options = {}) {
   return album;
 }
 
-const pinterest = async (m, { conn, text, usedPrefix, command }) => {
+const handler = async (m, { conn, text, usedPrefix, command }) => {
   const name = conn.getName(m.sender);
 
   if (!text) {
