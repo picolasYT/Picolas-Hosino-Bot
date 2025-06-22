@@ -109,9 +109,8 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
   }
 };
 
-pinterest.help = ['pinterest <consulta>'];
-pinterest.tags = ['buscador', 'descargas'];
-pinterest.command = /^(pinterest|pin)$/i;
-pinterest.register = true;
+handler.help = ['pinterest']
+handler.command = ['pinterest', 'pin']
+handler.tags = ['dl']
 
-export default pinterest;
+export default handler
