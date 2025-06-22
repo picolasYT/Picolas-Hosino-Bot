@@ -30,7 +30,7 @@ let handler = async (m, { conn }) => {
         const remainingTime = Math.ceil((cooldowns[userId] - now) / 1000);
         const minutes = Math.floor(remainingTime / 60);
         const seconds = remainingTime % 60;
-        return await conn.reply(m.chat, `《✧》Debes esperar *${minutes} minutos y ${seconds} segundos* para volver a reclamar.`, m);
+        return await conn.reply(m.chat, `!𝙙𝙚𝙗𝙚𝙨 𝙚𝙨𝙥𝙚𝙧𝙖𝙧 ${minutes} minutos y ${seconds} segundos* 𝙥𝙖𝙧𝙖 𝙫𝙤𝙡𝙫𝙚𝙧 𝙖 𝙧𝙚𝙘𝙡𝙖𝙢𝙖𝙧 𝙤𝙩𝙧𝙖 𝙬𝙖𝙞𝙛𝙪 (｡•̀ ⤙ •́ ｡ꐦ) !!!.`, m);
     }
 
     if (m.quoted && m.quoted.text) {
@@ -54,7 +54,7 @@ let handler = async (m, { conn }) => {
             if (character.user && character.user !== userId) {
                 await conn.reply(
                     m.chat,
-                    `《✧》El personaje *${character.name}* ya ha sido reclamado por @${character.user.split('@')[0]}, inténtalo a la próxima :v.`,
+                    `ඩා 𝙡𝙤 𝙨𝙞𝙚𝙣𝙩𝙤 𝙥𝙚𝙧𝙤 𝙚𝙡 𝙥𝙚𝙧𝙨𝙤𝙣𝙖𝙟𝙚 *${character.name}* 𝙮𝙖 𝙛𝙪𝙚 𝙧𝙚𝙘𝙡𝙖𝙢𝙖𝙙𝙤 𝙥𝙤𝙧 @${character.user.split('@')[0]},`,
                     m,
                     { mentions: [character.user] }
                 );
@@ -68,23 +68,21 @@ let handler = async (m, { conn }) => {
 
             await conn.reply(
                 m.chat,
-                `╔═══════ ೋღ 🌺 ღೋ ═══════╗
-\n` +
-                `⟢ ✦ ¡Reclamo exitoso! ✦\n` +
-                `┃ Has reclamado a *${character.name}* como tu waifu 💖\n` +
-                `╚═══════ ೋღ 🌺 ღೋ ═══════╝
-`,
+                `╔═══════ ೋღ 🌺 ღೋ ═══════╗\n` +
+                `⟢ ᥫ᭡ !⏤͟͟͞͞𝙍𝙀𝘾𝙇𝘼𝙈𝘼𝘿𝙊 𝙀𝙓𝙄𝙏𝙊𝙎𝘼𝙈𝙀𝙉𝙏𝙀⃤\n` +
+                `┃ ¡𝐅𝐄𝐋𝐈𝐂𝐈𝐃𝐀𝐃𝐄𝐒 𝐏𝐎𝐑 𝐑𝐄𝐂𝐋𝐀𝐌𝐀𝐑 𝐀 *${character.name}* 𝐂𝐎𝐌𝐎 𝐓𝐔́ 𝐍𝐔𝐄𝐕𝐀 𝐖𝐀𝐈𝐅𝐔 ૮(˶ᵔᵕᵔ˶)ა\n` +
+                `╚═══════ ೋღ 🌺 ღೋ ═══════╝`,
                 m
             );
 
             cooldowns[userId] = now + 30 * 60 * 1000; // 30 minutos
 
         } catch (error) {
-            await conn.reply(m.chat, `✘ Error al reclamar el personaje: ${error.message}`, m);
+            await conn.reply(m.chat, `𖤛 𝒊 𝒂𝒎 𝒔𝒐𝒓𝒓𝒚 𝒉𝒖𝒃𝒐 𝒖𝒏 𝒆𝒓𝒓𝒐𝒓 𝒂𝒍 𝒊𝒏𝒕𝒆𝒏𝒕𝒂𝒓 𝒓𝒆𝒄𝒍𝒂𝒎𝒂𝒓 𝒕𝒖 𝒘𝒂𝒊𝒇𝒖 ｡°(°¯᷄◠¯᷅°)°｡: ${error.message}`, m);
         }
 
     } else {
-        await conn.reply(m.chat, '《✧》Debes citar un personaje válido para reclamar.', m);
+        await conn.reply(m.chat, '⏤͟͟͞͞✐ 𝘿𝙚𝙗𝙚𝙨 𝙘𝙞𝙩𝙖𝙧 𝙪𝙣 𝙥𝙚𝙧𝙨𝙤𝙣𝙖𝙟𝙚 𝙫𝙖́𝙡𝙞𝙙𝙤 ՞߹ - ߹՞', m);
     }
 };
 
