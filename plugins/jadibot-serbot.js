@@ -30,17 +30,26 @@ let crm3 = "SBpbmZvLWRvbmFyLmpz"
 let crm4 = "IF9hdXRvcmVzcG9uZGVyLmpzIGluZm8tYm90Lmpz"
 let drm1 = ""
 let drm2 = ""
-let rtx = "*\n\n✐ Cσɳҽxισɳ SυႦ-Bσƚ Mσԃҽ QR\n\n✰ Con otro celular o en la PC escanea este QR para convertirte en un *Sub-Bot* Temporal.\n\n\`1\` » Haga clic en los tres puntos en la esquina superior derecha\n\n\`2\` » Toque dispositivos vinculados\n\n\`3\` » Escanee este codigo QR para iniciar sesion con el bot\n\n✧ ¡Este código QR expira en 45 segundos!."
-let rtx2 = `✐ Cσɳҽxισɳ SυႦ-Bσƚ Mσԃҽ Cσԃҽ\n
-✰ Usa este Código para convertirte en un *Sub-Bot* Temporal.\n
-\`1\` » Haga clic en los tres puntos en la esquina superior derecha\n
-\`2\` » Toque dispositivos vinculados\n
-\`3\` » Selecciona Vincular con el número de teléfono\n
-\`4\` » Escriba el Código para iniciar sesion con el bot\n
-✧ No es recomendable usar tu cuenta principal.\n
+let rtx2 = `┏ׅ 𝆬─̶᜔ׄ━໋〪᳝𝆬ꤩ ׅ୭࣮֟♡͚ׄ ᮫︵໋ׄ᷼ᮬ⌢̶᷼ᐢ᮫ׄ ׅ╭໋ׅ𝆬═ׄ꒰᮫᷼͡ 〪ׅ፟♟️ᤠ᮫〪̥〫֔ ᷼͡꒱݄ׄ═໋ׅׅ𝆬╮᮫݄ׄ 〪ᐢ᷼⌢̶໋ׄ᷼︵᮫〪ׄ𑂳 ׅ〫֠♡͚ׄ୭࣮𝆬 ׄ━໋〪ׅ֔ꤩ᜔─̶᜔ׄ᷑ ݄┓
+       ╭〪𝆬♡᮫ׅׄ ┅᮫ׅׄ͟͟͞͞𝑪𝑶𝑵𝑬𝑿𝑰𝑶𝑵 𝑫𝑬 𝑺𝑼𝑩 𝑩𝑶𝑻
+┗ 𝆬─̶᜔ׄ━໋〪᳝𝆬ꤩ ׅ୭࣮֟♡͚ׄ ᮫︶໋〪〫᷼⌢̶᷼ᐢ᮫ׄ ׅ𝆬╰᜔ׅ𝆬═ׄ꒰᮫᷼͡ 〪ׅ፟🔌ᤠ᮫〪̥〫֔ ᷼͡꒱݄ׄ═᜔໋ׅׅ𝆬╯᮫ׅ᷑𝆬 〪ᐢ᷼⌢̶໋ׄ᷼︶᮫᜔ ׅ〫֠♡͚ׄ୭࣮𝆬 ׄ━໋〪ׅ֔ꤩ᜔─̶᜔ׄ᷑ ݄┛
+
+⏤͟͟͞͞ ✐U͜͡T͜͡I͜͡L͜͡I͜͡Z͜͡A͜͡ E͜͡S͜͡T͜͡E͜͡ C͜͡Ó͜͡D͜͡I͜͡G͜͡O͜͡ P͜͡A͜͡R͜͡A͜͡ S͜͡E͜͡R͜͡ *S͜͡u͜͡b͜͡-͜͡B͜͡o͜͡t͜͡* T͜͡E͜͡M͜͡P͜͡O͜͡R͜͡A͜͡L͜͡​᭄࿐ ❐
+
+> ᠙᳞✿̶᮫᮫ְְׅ᳝ׅ᳝᳞᳞࣪᪲࣪֘⣷ׅ᳝࣪ ࣪𖡻ְׅ᳝ׅ࣪࣪֘ᰰ🩵⃞𝝸𝕝っ۪: » 𝙃𝘼𝙂𝘼 𝘾𝙇𝙄𝘾 𝙀𝙉 𝙇𝙊𝙎 𝙏𝙍𝙀𝙎 𝙋𝙐𝙉𝙏𝙊𝙎 𝙀𝙉 𝙇𝘼 𝙀𝙎𝙌𝙐𝙄𝙉𝘼 𝙎𝙐𝙋𝙀𝙍𝙄𝙊𝙍 𝘿𝙀𝙍𝙀𝘾𝙃𝘼 ᰔᩚ
+
+> ᠙᳞✿̶᮫᮫ְְׅ᳝ׅ᳝᳞᳞࣪᪲࣪֘⣷ׅ᳝࣪ ࣪𖡻ְׅ᳝ׅ࣪࣪֘ᰰ🩵⃞𝝸𝕝っ۪: » 𝙏𝙊𝙌𝙐𝙀 𝘿𝙄𝙎𝙋𝙊𝙎𝙄𝙏𝙄𝙑𝙊𝙎 𝙑𝙄𝙉𝘾𝙐𝙇𝘼𝘿𝙊𝙎 ᥫ᭡
+
+> ᠙᳞✿̶᮫᮫ְְׅ᳝ׅ᳝᳞᳞࣪᪲࣪֘⣷ׅ᳝࣪ ࣪𖡻ְׅ᳝ׅ࣪࣪֘ᰰ🩵⃞𝝸𝕝っ۪: » 𝙎𝙀𝙇𝙀𝘾𝘾𝙄𝙊𝙉𝘼 𝙑𝙄𝙉𝘾𝙐𝙇𝘼𝙍 𝘾𝙊𝙉 𝙀𝙇 𝙉𝙐́𝙈𝙀𝙍𝙊 𝘿𝙀 𝙏𝙀𝙇𝙀́𝙁𝙊𝙉𝙊
+
+> ᠙᳞✿̶᮫᮫ְְׅ᳝ׅ᳝᳞᳞࣪᪲࣪֘⣷ׅ᳝࣪ ࣪𖡻ְׅ᳝ׅ࣪࣪֘ᰰ🩵⃞𝝸𝕝っ۪: » 𝙀𝙎𝘾𝙍𝙄𝘽𝘼 𝙀𝙇 𝘾𝙊́𝘿𝙄𝙂𝙊 𝙋𝘼𝙍𝘼 𝙄𝙉𝙄𝘾𝙄𝘼𝙍 𝙎𝙀𝙎𝙄𝙊́𝙉 𝘾𝙊𝙉 𝙀𝙇 𝘽𝙊𝙏
+
+ᨶ႒ᩚ 𝙉𝙊 𝙎𝙀 𝙍𝙀𝘾𝙊𝙈𝙄𝙀𝙉𝘿𝘼 𝙐𝙎𝘼𝙍 𝙏𝙐 𝘾𝙐𝙀𝙉𝙏𝘼 𝙋𝙍𝙄𝙉𝘾𝙄𝙋𝘼𝙇!! ૮₍ɵ̷﹏ɵ̷̥̥᷅₎ა
+
 ︵۪۪۪۪۪۪۪⏜໋᳝ׅ۪۪۪࣪╼╽═┅᪲━᳝ׅ࣪🍒━ּ᳝ׅ࣪ᰰᩫ┅═╽╾໋᳝۪۪۪۪࣪⏜۪۪۪۪۪۪۪۪︵
        ꩘᮫۪࣫🪷𝂻݄˓ֱׄ֞𝐒ִ𝕦͠𝖕ִ𝖊ׄ𝖗̤𝗋̤𝖚𝗯𝗒 ִ֪𝐒ׄ𝖚͟𝖇ִ𝖇֗𝖔͟𝖙
                 𝐁̲̱𝕪ᰰ 𝖉̤𝗂͠𝗈ׄ𝗇֗𝖊𝗂͟𝖇𝗂֦ 𝖗𝖎𝖕 ❀⃪ְ᳝҇𝆬🌟̸̷҈҉ᩖ᪲𝆬𔗨ּ`
+
                 
 
 const __filename = fileURLToPath(import.meta.url)
