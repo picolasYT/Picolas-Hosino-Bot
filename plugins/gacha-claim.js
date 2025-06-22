@@ -1,115 +1,114 @@
 import { promises as fs } from 'fs'
+import fetch from 'node-fetch'
 
 const charactersFilePath = './src/database/characters.json'
 const haremFilePath = './src/database/harem.json'
+
 const cooldowns = {}
 
 async function loadCharacters() {
-    try {
-        const data = await fs.readFile(charactersFilePath, 'utf-8')
-        return JSON.parse(data)
-    } catch (error) {
-        throw new Error('❀ No se pudo cargar el archivo characters.json.')
-    }
+  try {
+    const data = await fs.readFile(charactersFilePath, 'utf-8')
+    return JSON.parse(data)
+  } catch (error) {
+    throw new Error('❀ No se pudo cargar el archivo characters.json.')
+  }
 }
 
 async function saveCharacters(characters) {
-    try {
-        await fs.writeFile(charactersFilePath, JSON.stringify(characters, null, 2), 'utf-8')
-    } catch (error) {
-        throw new Error('❀ No se pudo guardar el archivo characters.json.')
-    }
+  try {
+    await fs.writeFile(charactersFilePath, JSON.stringify(characters, null, 2), 'utf-8')
+  } catch (error) {
+    throw new Error('❀ No se pudo guardar el archivo characters.json.')
+  }
 }
 
 async function loadHarem() {
-    try {
-        const data = await fs.readFile(haremFilePath, 'utf-8')
-        return JSON.parse(data)
-    } catch (error) {
-        return []
-    }
+  try {
+    const data = await fs.readFile(haremFilePath, 'utf-8')
+    return JSON.parse(data)
+  } catch (error) {
+    return []
+  }
 }
 
 async function saveHarem(harem) {
-    try {
-        await fs.writeFile(haremFilePath, JSON.stringify(harem, null, 2), 'utf-8')
-    } catch (error) {
-        throw new Error('❀ No se pudo guardar el archivo harem.json.')
-    }
+  try {
+    await fs.writeFile(haremFilePath, JSON.stringify(harem, null, 2), 'utf-8')
+  } catch (error) {
+    throw new Error('❀ No se pudo guardar el archivo harem.json.')
+  }
 }
 
 let handler = async (m, { conn }) => {
-    const userId = m.sender
-    const now = Date.now()
+  const userId = m.sender
+  const now = Date.now()
 
-    if (cooldowns[userId] && now < cooldowns[userId]) {
-        const remainingTime = Math.ceil((cooldowns[userId] - now) / 1000)
-        const minutes = Math.floor(remainingTime / 60)
-        const seconds = remainingTime % 60
-        return await conn.reply(m.chat, `《✧》Debes esperar *${minutes} minutos y ${seconds} segundos* para usar *#rw* de nuevo.`, m)
-    }
+  if (cooldowns[userId] && now < cooldowns[userId]) {
+    const remainingTime = Math.ceil((cooldowns[userId] - now) / 1000)
+    const minutes = Math.floor(remainingTime / 60)
+    const seconds = remainingTime % 60
+    return await conn.reply(m.chat, `《✧》Debes esperar *${minutes} minutos y ${seconds} segundos* para usar *#rw* de nuevo.`, m)
+  }
 
-    try {
-        const characters = await loadCharacters()
-        const randomCharacter = characters[Math.floor(Math.random() * characters.length)]
-        const randomImage = randomCharacter.img[Math.floor(Math.random() * randomCharacter.img.length)]
+  try {
+    const characters = await loadCharacters()
+    const randomCharacter = characters[Math.floor(Math.random() * characters.length)]
+    const randomImage = randomCharacter.img[Math.floor(Math.random() * randomCharacter.img.length)]
 
-        const harem = await loadHarem()
-        const userEntry = harem.find(entry => entry.characterId === randomCharacter.id)
-        const statusMessage = randomCharacter.user 
-            ? `Reclamado por @${randomCharacter.user.split('@')[0]}` 
-            : 'Libre'
+    const harem = await loadHarem()
+    const userEntry = harem.find(entry => entry.characterId === randomCharacter.id)
+    const statusMessage = randomCharacter.user
+      ? `Reclamado por @${randomCharacter.user.split('@')[0]}`
+      : 'Libre'
 
-        const message = `╔◡╍┅•.⊹︵ࣾ᷼ ׁ𖥓┅╲۪ ⦙᷼͝🧸᷼͝⦙ ׅ╱ׅ╍𖥓 ︵ࣾ᷼︵ׄׄ᷼⊹┅╍◡╗
+    const message = `╔◡╍┅•.⊹︵ࣾ᷼ ׁ𖥓┅╲۪ ⦙᷼͝🧸᷼͝⦙ ׅ╱ׅ╍𖥓 ︵ࣾ᷼︵ׄׄ᷼⊹┅╍◡╗
 ┋  ⣿̶ֻ〪ׅ⃕݊⃧🐚⃚̶̸͝ᤢ֠◌ִ̲ 𝑪𝑯𝑨𝑹𝑨𝑪𝑻𝑬𝑹 𝑹𝑨𝑵𝑫𝑶𝑴 🐸ꨪ̸⃙ׅᮬֺ๋֢᳟  ┋
 ╚◠┅┅˙•⊹.⁀𖥓 ׅ╍╲۪ ⦙᷼͝🎠᷼͝⦙ ׅ╱ׅ╍𖥓 ◠˙⁀۪ׄ⊹˙╍┅◠╝
 
-꥓໋╭࣭۬═ֽ̥࣪━᜔๋݈═𑂺ׄ︵ິּ֙᷼⌒݈᳹᪾̯⌢ּ໋᩿࣭ׄ⌒ໍּ֣ׄ═ᮣໍ࣭ׄ━𑂺᜔꥓໋┉꥓ׂ᷼━᜔࣭֙ ⋮꥓ּ࣭ׄ🌹〪ິ᜔ּ໋࣭ׄ⋮ ꥓࣭֙━᜔ׂ᷼┉𑂺᜔꥓໋━࣭̺ׄ═࣭ׄᮣໍׅ⌒ּ໋᩿࣭ׄ⌢݈᳹᪾̯⌒ּׄ᷼︵𑂺ິ᜔֙═ֽ࣪━๋݈═̥࣭۬╮𞄳
-> ᠙᳞✿̶᮫᮫ְְׅ᳝ׅ᳝᳞᳞࣪᪲࣪֘⣷ׅ᳝࣪ ࣪࣪𖡻ְְׅ᳝ׅׅ࣪࣪֘ᰰ🌵᮫ְׅ᳝࣪᪲⃞̶𝝸𝕝᮫ְ᳝᳝⃨۪۪۪ׅ᳝࣪࣪っְְׅ᳝۪⃨۪۪۪࣪:   𝙉𝘖𝘔𝘉𝘙𝘌: *${randomCharacter.name}*
-> ᠙᳞✿̶᮫᮫ְְׅ᳝ׅ᳝᳞᳞࣪᪲࣪֘⣷ׅ᳝࣪ ࣪࣪𖡻ְְׅ᳝ׅׅ࣪࣪֘ᰰ🍭᮫ְׅ᳝࣪᪲⃞̶𝝸𝕝᮫ְ᳝᳝⃨۪۪۪ׅ᳝࣪࣪っְְׅ᳝۪⃨۪۪۪࣪:  𝙂𝘌𝘕𝘌𝘙𝘖: *${randomCharacter.gender}*
-> ᠙᳞✿̶᮫᮫ְְׅ᳝ׅ᳝᳞᳞࣪᪲࣪֘⣷ׅ᳝࣪ ࣪࣪𖡻ְְׅ᳝ׅׅ࣪࣪֘ᰰ💰᮫ְׅ᳝࣪᪲⃞̶𝝸𝕝᮫ְ᳝᳝⃨۪۪۪ׅ᳝࣪࣪っְְׅ᳝۪⃨۪۪۪࣪:   𝙑𝘈𝘓𝘖𝘙: *${randomCharacter.value}*
-> ᠙᳞✿̶᮫᮫ְְׅ᳝ׅ᳝᳞᳞࣪᪲࣪֘⣷ׅ᳝࣪ ࣪࣪𖡻ְְׅ᳝ׅׅ࣪࣪֘ᰰ🪄᮫ְׅ᳝࣪᪲⃞̶𝝸𝕝᮫ְ᳝᳝⃨۪۪۪ׅ᳝࣪࣪っְְׅ᳝۪⃨۪۪۪࣪:   𝙀𝘚𝘛𝘈𝘋𝘖: ${statusMessage}
-> ᠙᳞✿̶᮫᮫ְְׅ᳝ׅ᳝᳞᳞࣪᪲࣪֘⣷ׅ᳝࣪ ࣪࣪𖡻ְְׅ᳝ׅׅ࣪࣪֘ᰰ📚᮫ְׅ᳝࣪᪲⃞̶𝝸𝕝᮫ְ᳝᳝⃨۪۪۪ׅ᳝࣪࣪っְְׅ᳝۪⃨۪۪۪࣪:   𝙁𝘜𝘌𝘕𝘛𝘌: *${randomCharacter.source}*
-> ᠙᳞✿̶᮫᮫ְְׅ᳝ׅ᳝᳞᳞࣪᪲࣪֘⣷ׅ᳝࣪ ࣪࣪𖡻ְְׅ᳝ׅׅ࣪࣪֘ᰰ🆔᮫ְׅ᳝࣪᪲⃞̶𝝸𝕝᮫ְ᳝᳝⃨۪۪۪ׅ᳝࣪࣪っְְׅ᳝۪⃨۪۪۪࣪:   𝙄𝘿: *${randomCharacter.id}*
-꥓໋╰ׅ۬═ֽ̥࣪━᜔๋݈═𑂺ׄ︵ິּ֙᷼⌒݈᳹᪾̯⌢ּ໋᩿࣭ׄ⌒ໍּ֣ׄ═ᮣໍ࣭ׄ━𑂺᜔꥓໋┉꥓ׂ᷼━᜔࣭֙ ⋮꥓ּ࣭ׄ👒〪ິ᜔ּ໋࣭ׄ⋮ ꥓࣭֙━᜔ׂ᷼┉𑂺᜔꥓໋━࣭̺ׄ═࣭ׄᮣໍׅ⌒ּ໋᩿࣭ׄ⌢݈᳹᪾̯⌒ּׄ᷼︵𑂺ິ᜔֙═ֽ࣪━๋݈═̥࣭۬╯𞄳
-`
+🌸 𝙉𝙊𝙈𝘽𝙍𝙀: *${randomCharacter.name}*
+🚻 𝙂𝙀𝙉𝙀𝙍𝙊: *${randomCharacter.gender}*
+💰 𝙑𝘼𝙇𝙊𝙍: *${randomCharacter.value}*
+🪄 𝙀𝙎𝙏𝘼𝘿𝙊: ${statusMessage}
+📚 𝙁𝙐𝙀𝙉𝙏𝙀: *${randomCharacter.source}*
+🆔 𝙄𝘿: *${randomCharacter.id}*
+`.trim()
 
-        const mentions = userEntry ? [userEntry.userId] : []
+    const mentions = userEntry ? [userEntry.userId] : []
+    const thumbnail = await (await fetch(randomImage)).buffer()
 
-        // ──🌸 Simular reenviado desde canal
-        const contextInfo = {
-            mentionedJid: mentions,
-            isForwarded: true,
-            forwardingScore: 999,
-            forwardedNewsletterMessageInfo: {
-                newsletterJid: '120363335626706839@newsletter',
-                newsletterName: '⏤͟͞ू⃪፝͜⁞⟡『 Ruby-Hoshino Channel 』࿐⟡',
-                serverMessageId: -1
-            },
-            externalAdReply: {
-                title: 'Ruby Hoshino - Gacha Bot',
-                body: '💮 ᥫ᭡ 𝙏𝙐 𝙉𝙐𝙀𝙑𝘼 𝐖𝐀𝐈𝐅𝐔​᭄ ღゝ◡╹ )ノ',
-                thumbnailUrl: icons,
-                mediaType: 1,
-                renderLargerThumbnail: true,
-                sourceUrl: 'https://tus-redes-aqui.com'
-            }
+    await conn.sendMessage(m.chat, {
+      image: { url: randomImage },
+      caption: message,
+      contextInfo: {
+        mentionedJid: mentions,
+        isForwarded: true,
+        forwardingScore: 999,
+        forwardedNewsletterMessageInfo: {
+          newsletterJid: '120363335626706839@newsletter',
+          newsletterName: '⏤͟͞ू⃪፝͜⁞⟡『 Ruby-Hoshino Channel 』࿐⟡',
+          serverMessageId: -1
+        },
+        externalAdReply: {
+          title: '🌸 Ruby-Hoshino Gacha',
+          body: '𝙏𝙪 𝙣𝙪𝙚𝙫𝙖 𝙬𝙖𝙞𝙛𝙪 𝙖𝙥𝙖𝙧𝙚𝙘𝙞ó 💖',
+          thumbnail,
+          mediaType: 1,
+          renderLargerThumbnail: true,
+          sourceUrl: 'https://tus-redes-o-tu-canal.com'
         }
+      }
+    }, { quoted: m })
 
-        await conn.sendFile(m.chat, randomImage, `${randomCharacter.name}.jpg`, message, m, {
-            mentions,
-            contextInfo
-        })
-
-        if (!randomCharacter.user) {
-            await saveCharacters(characters)
-        }
-
-        cooldowns[userId] = now + 15 * 60 * 1000 // 15 minutos de cooldown
-
-    } catch (error) {
-        await conn.reply(m.chat, `✘ Error al cargar el personaje: ${error.message}`, m)
+    if (!randomCharacter.user) {
+      await saveCharacters(characters)
     }
+
+    cooldowns[userId] = now + 15 * 60 * 1000
+
+  } catch (error) {
+    await conn.reply(m.chat, `✘ Error al cargar el personaje: ${error.message}`, m)
+  }
 }
 
 handler.help = ['ver', 'rw', 'rollwaifu']
