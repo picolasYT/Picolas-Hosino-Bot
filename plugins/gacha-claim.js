@@ -30,7 +30,7 @@ let handler = async (m, { conn }) => {
         const remainingTime = Math.ceil((cooldowns[userId] - now) / 1000);
         const minutes = Math.floor(remainingTime / 60);
         const seconds = remainingTime % 60;
-        return await conn.reply(m.chat, `!𝙙𝙚𝙗𝙚𝙨 𝙚𝙨𝙥𝙚𝙧𝙖𝙧 ${minutes} minutos y ${seconds} segundos* 𝙥𝙖𝙧𝙖 𝙫𝙤𝙡𝙫𝙚𝙧 𝙖 𝙧𝙚𝙘𝙡𝙖𝙢𝙖𝙧 𝙤𝙩𝙧𝙖 𝙬𝙖𝙞𝙛𝙪 (｡•̀ ⤙ •́ ｡ꐦ) !!!.`, m);
+        return await conn.reply(m.chat, `𝙙𝙚𝙗𝙚𝙨 𝙚𝙨𝙥𝙚𝙧𝙖𝙧 ${minutes} minutos y ${seconds} segundos* 𝙥𝙖𝙧𝙖 𝙫𝙤𝙡𝙫𝙚𝙧 𝙖 𝙧𝙚𝙘𝙡𝙖𝙢𝙖𝙧 𝙤𝙩𝙧𝙖 𝙬𝙖𝙞𝙛𝙪 ᓀ‸ᓂ`, m);
     }
 
     if (m.quoted && m.quoted.text) {
