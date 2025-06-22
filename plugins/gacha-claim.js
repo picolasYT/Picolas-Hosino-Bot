@@ -1,96 +1,94 @@
-import { promises as fs } from 'fs'
+import { promises as fs } from 'fs';
 
-const charactersFilePath = './src/database/characters.json'
-const haremFilePath = './src/database/harem.json'
+const charactersFilePath = './src/database/characters.json';
+const haremFilePath = './src/database/harem.json';
 
-const cooldowns = {}
+const cooldowns = {};
 
 async function loadCharacters() {
     try {
-        const data = await fs.readFile(charactersFilePath, 'utf-8')
-        return JSON.parse(data)
+        const data = await fs.readFile(charactersFilePath, 'utf-8');
+        return JSON.parse(data);
     } catch (error) {
-        throw new Error('❀ No se pudo cargar el archivo characters.json.')
+        throw new Error('❀ No se pudo cargar el archivo characters.json.');
     }
 }
 
 async function saveCharacters(characters) {
     try {
-        await fs.writeFile(charactersFilePath, JSON.stringify(characters, null, 2), 'utf-8')
+        await fs.writeFile(charactersFilePath, JSON.stringify(characters, null, 2), 'utf-8');
     } catch (error) {
-        throw new Error('❀ No se pudo guardar el archivo characters.json.')
-    }
-}
-
-async function loadHarem() {
-    try {
-        const data = await fs.readFile(haremFilePath, 'utf-8')
-        return JSON.parse(data)
-    } catch (error) {
-        return []
-    }
-}
-
-async function saveHarem(harem) {
-    try {
-        await fs.writeFile(haremFilePath, JSON.stringify(harem, null, 2), 'utf-8')
-    } catch (error) {
-        throw new Error('❀ No se pudo guardar el archivo harem.json.')
+        throw new Error('❀ No se pudo guardar el archivo characters.json.');
     }
 }
 
 let handler = async (m, { conn }) => {
-    const userId = m.sender
-    const now = Date.now()
+    const userId = m.sender;
+    const now = Date.now();
 
     if (cooldowns[userId] && now < cooldowns[userId]) {
-        const remainingTime = Math.ceil((cooldowns[userId] - now) / 1000)
-        const minutes = Math.floor(remainingTime / 60)
-        const seconds = remainingTime % 60
-        return await conn.reply(m.chat, `《✧》Debes esperar *${minutes} minutos y ${seconds} segundos* para usar *#rw* de nuevo.`, m)
+        const remainingTime = Math.ceil((cooldowns[userId] - now) / 1000);
+        const minutes = Math.floor(remainingTime / 60);
+        const seconds = remainingTime % 60;
+        return await conn.reply(m.chat, `《✧》Debes esperar *${minutes} minutos y ${seconds} segundos* para volver a reclamar.`, m);
     }
 
-    try {
-        const characters = await loadCharacters()
-        const randomCharacter = characters[Math.floor(Math.random() * characters.length)]
-        const randomImage = randomCharacter.img[Math.floor(Math.random() * randomCharacter.img.length)]
+    if (m.quoted && m.quoted.text) {
+        try {
+            const characters = await loadCharacters();
+            const characterIdMatch = m.quoted.text.match(/𝙄𝘿: \*(.+?)\*/);
 
-        const harem = await loadHarem()
-        const userEntry = harem.find(entry => entry.characterId === randomCharacter.id)
-        const statusMessage = randomCharacter.user 
-            ? `Reclamado por @${randomCharacter.user.split('@')[0]}` 
-            : 'Libre'
+            if (!characterIdMatch) {
+                await conn.reply(m.chat, '《✧》No se pudo encontrar el ID del personaje en el mensaje citado.', m);
+                return;
+            }
 
-        const message = `╔◡╍┅•.⊹︵ࣾ᷼ ׁ𖥓┅╲۪ ⦙᷼͝🧸᷼͝⦙ ׅ╱ׅ╍𖥓 ︵ࣾ᷼︵ׄׄ᷼⊹┅╍◡╗
-┋  ⣿̶ֻ〪ׅ⃕݊⃧🐚⃚̶̸͝ᤢ֠◌ִ̲ 𝑪𝑯𝑨𝑹𝑨𝑪𝑻𝑬𝑹 𝑹𝑨𝑵𝑫𝑶𝑴 🐸ꨪ̸⃙ׅᮬֺ๋֢᳟  ┋
-╚◠┅┅˙•⊹.⁀𖥓 ׅ╍╲۪ ⦙᷼͝🎠᷼͝⦙ ׅ╱ׅ╍𖥓 ◠˙⁀۪ׄ⊹˙╍┅◠╝
+            const characterId = characterIdMatch[1];
+            const character = characters.find(c => c.id === characterId);
 
-꥓໋╭࣭۬═ֽ̥࣪━᜔๋݈═𑂺ׄ︵ິּ֙᷼⌒݈᳹᪾̯⌢ּ໋᩿࣭ׄ⌒ໍּ֣ׄ═ᮣໍ࣭ׄ━𑂺᜔꥓໋┉꥓ׂ᷼━᜔࣭֙ ⋮꥓ּ࣭ׄ🌹〪ິ᜔ּ໋࣭ׄ⋮ ꥓࣭֙━᜔ׂ᷼┉𑂺᜔꥓໋━࣭̺ׄ═࣭ׄᮣໍׅ⌒ּ໋᩿࣭ׄ⌢݈᳹᪾̯⌒ּׄ᷼︵𑂺ິ᜔֙═ֽ࣪━๋݈═̥࣭۬╮
-> ᠙᳞✿̶᮫᮫ְְׅ᳝ׅ᳝᳞᳞࣪᪲࣪֘⣷ׅ᳝࣪ ࣪࣪𖡻ְְׅ᳝ׅׅ࣪࣪֘ᰰ🌵᮫ְׅ᳝࣪᪲⃞̶𝝸𝕝᮫ְ᳝᳝⃨۪۪۪ׅ᳝࣪࣪っְְׅ᳝۪⃨۪۪۪࣪:   𝙉𝘖𝘔𝘉𝘙𝘌: *${randomCharacter.name}*
-> ᠙᳞✿̶᮫᮫ְְׅ᳝ׅ᳝᳞᳞࣪᪲࣪֘⣷ׅ᳝࣪ ࣪࣪𖡻ְְׅ᳝ׅׅ࣪࣪֘ᰰ🍭᮫ְׅ᳝࣪᪲⃞̶𝝸𝕝᮫ְ᳝᳝⃨۪۪۪ׅ᳝࣪࣪っְְׅ᳝۪⃨۪۪۪࣪:  𝙂𝘌𝘕𝘌𝘙𝘖: *${randomCharacter.gender}*
-> ᠙᳞✿̶᮫᮫ְְׅ᳝ׅ᳝᳞᳞࣪᪲࣪֘⣷ׅ᳝࣪ ࣪࣪𖡻ְְׅ᳝ׅׅ࣪࣪֘ᰰ💰᮫ְׅ᳝࣪᪲⃞̶𝝸𝕝᮫ְ᳝᳝⃨۪۪۪ׅ᳝࣪࣪っְְׅ᳝۪⃨۪۪۪࣪:   𝙑𝘈𝘓𝘖𝘙: *${randomCharacter.value}*
-> ᠙᳞✿̶᮫᮫ְְׅ᳝ׅ᳝᳞᳞࣪᪲࣪֘⣷ׅ᳝࣪ ࣪࣪𖡻ְְׅ᳝ׅׅ࣪࣪֘ᰰ🪄᮫ְׅ᳝࣪᪲⃞̶𝝸𝕝᮫ְ᳝᳝⃨۪۪۪ׅ᳝࣪࣪っְְׅ᳝۪⃨۪۪۪࣪:   𝙀𝘚𝘛𝘈𝘋𝘖: ${statusMessage}
-> ᠙᳞✿̶᮫᮫ְְׅ᳝ׅ᳝᳞᳞࣪᪲࣪֘⣷ׅ᳝࣪ ࣪࣪𖡻ְְׅ᳝ׅׅ࣪࣪֘ᰰ📚᮫ְׅ᳝࣪᪲⃞̶𝝸𝕝᮫ְ᳝᳝⃨۪۪۪ׅ᳝࣪࣪っְְׅ᳝۪⃨۪۪۪࣪:   𝙁𝘜𝘌𝘕𝘛𝘌: *${randomCharacter.source}*
-> ᠙᳞✿̶᮫᮫ְְׅ᳝ׅ᳝᳞᳞࣪᪲࣪֘⣷ׅ᳝࣪ ࣪࣪𖡻ְְׅ᳝ׅׅ࣪࣪֘ᰰ🆔᮫ְׅ᳝࣪᪲⃞̶𝝸𝕝᮫ְ᳝᳝⃨۪۪۪ׅ᳝࣪࣪っְְׅ᳝۪⃨۪۪۪࣪:   𝙄𝘿: *${randomCharacter.id}*
-꥓໋╰ׅ۬═ֽ̥࣪━᜔๋݈═𑂺ׄ︵ິּ֙᷼⌒݈᳹᪾̯⌢ּ໋᩿࣭ׄ⌒ໍּ֣ׄ═ᮣໍ࣭ׄ━𑂺᜔꥓໋┉꥓ׂ᷼━᜔࣭֙ ⋮꥓ּ࣭ׄ👒〪ິ᜔ּ໋࣭ׄ⋮ ꥓࣭֙━᜔ׂ᷼┉𑂺᜔꥓໋━࣭̺ׄ═࣭ׄᮣໍׅ⌒ּ໋᩿࣭ׄ⌢݈᳹᪾̯⌒ּׄ᷼︵𑂺ິ᜔֙═ֽ࣪━๋݈═̥࣭۬╯`
+            if (!character) {
+                await conn.reply(m.chat, '《✧》El mensaje citado no es un personaje válido.', m);
+                return;
+            }
 
-        const mentions = userEntry ? [userEntry.userId] : []
-        await conn.sendFile(m.chat, randomImage, `${randomCharacter.name}.jpg`, message, m, { mentions })
+            if (character.user && character.user !== userId) {
+                await conn.reply(
+                    m.chat,
+                    `《✧》El personaje *${character.name}* ya ha sido reclamado por @${character.user.split('@')[0]}, inténtalo a la próxima :v.`,
+                    m,
+                    { mentions: [character.user] }
+                );
+                return;
+            }
 
-        if (!randomCharacter.user) {
-            await saveCharacters(characters)
+            character.user = userId;
+            character.status = "Reclamado";
+
+            await saveCharacters(characters);
+
+            await conn.reply(
+                m.chat,
+                `╔═══════ • ° ❁⊕❁ ° • ═══════╗\n` +
+                `⟢ ✦ ¡Reclamo exitoso! ✦\n` +
+                `┃ Has reclamado a *${character.name}* como tu waifu 💖\n` +
+                `╚═══════ • ° ❁⊕❁ ° • ═══════╝`,
+                m
+            );
+
+            cooldowns[userId] = now + 30 * 60 * 1000; // 30 minutos
+
+        } catch (error) {
+            await conn.reply(m.chat, `✘ Error al reclamar el personaje: ${error.message}`, m);
         }
 
-        cooldowns[userId] = now + 15 * 60 * 1000
-
-    } catch (error) {
-        await conn.reply(m.chat, `✘ Error al cargar el personaje: ${error.message}`, m)
+    } else {
+        await conn.reply(m.chat, '《✧》Debes citar un personaje válido para reclamar.', m);
     }
-}
+};
 
-handler.help = ['ver', 'rw', 'rollwaifu']
-handler.tags = ['gacha']
-handler.command = ['ver', 'rw', 'rollwaifu']
-handler.group = true
+handler.help = ['claim'];
+handler.tags = ['gacha'];
+handler.command = ['c', 'claim', 'reclamar'];
+handler.group = true;
 
-export default handler
+export default handler;
