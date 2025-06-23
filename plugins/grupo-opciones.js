@@ -12,6 +12,9 @@ const handler = async (m, { conn, participants, groupMetadata }) => {
 ◈ Antibot: \`${antiBot ? 'Activado' : 'Desactivado'}\`
 > ➨ *Descripción:* Activa o descativa la expulsión de un grupo. otros bots no autorizados.
 
+◈ antiPorno: \`${antiPorno ? 'Activado' : 'Desactivado'}\`
+> ➨ *Descripción:* Activa o desactiva el bloqueo de enlaces de porno de WhatsApp. 
+
 ◈ Antisubbots: \`${antiBot2 ? 'Activado' : 'Desactivado'}\`
 > ➨ *Descripción:* Activa o descativa la expulsión de un grupo a subbots no autorizados.
 
