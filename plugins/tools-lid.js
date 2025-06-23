@@ -20,11 +20,11 @@ let handler = async (m, { conn, args, text, participants, usedPrefix, command })
       forwardingScore: 999,
       isForwarded: true,
       externalAdReply: {
-        title: '🌸 lid',
-        body: 'usuario lid,
-        thumbnailUrl: iconos,
+        title: '🌸 LID Viewer',
+        body: 'Consulta oficial de LID de WhatsApp',
+        thumbnailUrl: icons,
         mediaType: 1,
-        renderLargerThumbnail: false,
+        renderLargerThumbnail: true,
         showAdAttribution: true,
         sourceUrl: 'https://github.com/Dioneibi-rip'
       }
@@ -34,5 +34,7 @@ let handler = async (m, { conn, args, text, participants, usedPrefix, command })
 
 handler.help = ['lid', 'lid @usuario']
 handler.tags = ['tools']
-handler.command = ['Lid','lid'];
+handler.command = /^lid$/i
+handler.group = false
+handler.register = false
 export default handler
