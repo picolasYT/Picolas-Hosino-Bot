@@ -1,19 +1,60 @@
 let handler = async (m, { conn, args, text, usedPrefix, command }) => {
-if (!text) return conn.reply(m.chat, `${emoji} Por favor, ingrese el número al que quiere enviar una invitación al grupo.`, m)
-if (text.includes('+')) return conn.reply(`${emoji2} Ingrese el número todo junto sin el *+*`, m)
-if (isNaN(text)) return conn.reply(m.chat, `${emoji2} Ingrese sólo números sin su código de país y sin espacios.*`, m)
-let group = m.chat
-let link = 'https://chat.whatsapp.com/' + await conn.groupInviteCode(group)
- 
-      await conn.reply(text+'@s.whatsapp.net', `${emoji} *INVITACIÓN A GRUPO*\n\nUn usuario te invitó a unirte a este grupo \n\n${link}`, m, {mentions: [m.sender]})
-        m.reply(`${emoji} Se envió un enlace de invitación al usuario.`) 
 
+  if (!text || !args[0]) throw `✐ Uso:\n${usedPrefix + command} 8291234567`
+  
+  let numero = args[0].replace(/[^0-9]/g, '') // Limpia cualquier símbolo
+  if (numero.length < 8) throw '⚠️ Número no válido.'
+
+  let id = numero + '@s.whatsapp.net'
+
+  try {
+    await conn.groupParticipantsUpdate(m.chat, [id], 'add')
+    m.reply(`✅ Se intentó agregar a wa.me/${numero}`)
+  } catch (e) {
+    try {
+      let code = await conn.groupInviteCode(m.chat)
+      let groupName = (await conn.groupMetadata(m.chat)).subject
+      let invite = `https://chat.whatsapp.com/${code}`
+
+      // Enviar como contacto con link
+      await conn.sendMessage(m.chat, {
+        contacts: {
+          displayName: `Invitación a ${groupName}`,
+          contacts: [{
+            displayName: numero,
+            vcard: `BEGIN:VCARD\nVERSION:3.0\nFN:${numero}\nTEL;type=CELL;type=VOICE;waid=${numero}:${numero}\nEND:VCARD`
+          }]
+        }
+      }, { quoted: m })
+
+      await conn.sendMessage(id, {
+        text: `✨ 𝙃𝙖𝙨 𝙧𝙚𝙘𝙞𝙗𝙞𝙙𝙤 𝙪𝙣𝙖 𝙞𝙣𝙫𝙞𝙩𝙖𝙘𝙞𝙤́𝙣 𝙙𝙚𝙡 𝙜𝙧𝙪𝙥𝙤 *${groupName}*\n\n📎 𝙐́𝙣𝙚𝙩𝙚 𝙖 𝙩𝙧𝙖𝙫𝙚́𝙨 𝙙𝙚𝙡 𝙨𝙞𝙜𝙪𝙞𝙚𝙣𝙩𝙚 𝙚𝙣𝙡𝙖𝙘𝙚:\n${invite}`,
+        contextInfo: {
+          forwardingScore: 999,
+          isForwarded: true,
+          externalAdReply: {
+            title: "📩 Invitación al grupo",
+            body: groupName,
+            thumbnailUrl: 'https://i.imgur.com/BdfbH1A.png',
+            mediaType: 1,
+            renderLargerThumbnail: true,
+            showAdAttribution: true,
+            sourceUrl: invite
+          }
+        }
+      })
+
+      m.reply(`⚠️ *No se pudo añadir directamente.* Se le envió el contacto y el link al usuario.`)
+    } catch (err) {
+      m.reply('❌ Error al invitar o enviar contacto. Verifica que el número esté bien escrito.')
+    }
+  }
 }
-handler.help = ['invite *<521>*']
-handler.tags = ['group']
-handler.command = ['add', 'agregar', 'añadir']
-handler.group = true
-handler.admin = false
-handler.botAdmin = true
 
+handler.command = /^(agregar|adduser|añadir)$/i
+handler.help = ['agregar 8291234567']
+handler.tags = ['group']
+handler.group = true
+handler.admin = true
+handler.botAdmin = true
 export default handler
