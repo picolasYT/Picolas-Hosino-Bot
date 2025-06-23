@@ -175,6 +175,8 @@ if (!('modoadmin' in chat))
 chat.modoadmin = false   
 if (!('antiLink' in chat))
 chat.antiLink = true
+if (!('antiPorno' in chat))
+chat.antiPorno = false
 if (!('reaction' in chat))
 chat.reaction = false
 if (!('nsfw' in chat))
@@ -193,6 +195,7 @@ welcome: true,
 autolevelup: false,
 autoresponder: false,
 delete: false,
+antiPorno = false,
 autoAceptar: false,
 autoRechazar: false,
 detect: true,
