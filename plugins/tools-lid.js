@@ -20,9 +20,9 @@ let handler = async (m, { conn, args, text, participants, usedPrefix, command })
       forwardingScore: 999,
       isForwarded: true,
       externalAdReply: {
-        title: '🌸 LID Viewer',
-        body: 'Consulta oficial de LID de WhatsApp',
-        thumbnailUrl: icons,
+        title: '🌸 𝗟𝗜𝗗 𝙫𝙞𝙚𝙬𝙚𝙧',
+        body: 'ᢗ⃘⵿📌̷͚᪲ ּ͜𐭣ᰰ۟ ᥴ᥆ᥒsᥙᥣ𝗍ᥲ ᥆𝖿іᥴіᥲᥣ ძᥱᥣ ᥣіძ ძᥱᥣ ᥙsᥙᥲrі᥆⚡̵⃘꫶໋۪࣭࣪',
+        thumbnailUrl: iconos,
         mediaType: 1,
         renderLargerThumbnail: false,
         showAdAttribution: true,
