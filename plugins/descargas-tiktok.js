@@ -116,6 +116,7 @@ handler.help = ['tiktok'];
 handler.tags = ['descargas'];
 handler.command = ['tt', 'tiktok', 'ttdl'];
 handler.limit = true;
+handler.coin = 2
 handler.register = true;
 
 export default handler;
