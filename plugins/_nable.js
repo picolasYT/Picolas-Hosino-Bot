@@ -45,6 +45,16 @@ const handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, i
       bot.antiPrivate = isEnable;
       break;
 
+    case 'antiPorno':
+      if (m.isGroup) {
+        if (!(isAdmin || isOwner)) {
+          global.dfail('admin', m, conn);
+          throw false;
+        }
+      }
+      chat.antiPorno = isEnable;
+      break;
+
     case 'restrict':
     case 'restringir':
       isAll = true;
