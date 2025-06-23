@@ -35,9 +35,9 @@ let handler = async (m, { conn, args, text, usedPrefix, command }) => {
           externalAdReply: {
             title: "📩 Invitación al grupo",
             body: groupName,
-            thumbnailUrl: 'https://i.imgur.com/BdfbH1A.png',
+            thumbnailUrl: icons,
             mediaType: 1,
-            renderLargerThumbnail: true,
+            renderLargerThumbnail: false,
             showAdAttribution: true,
             sourceUrl: invite
           }
