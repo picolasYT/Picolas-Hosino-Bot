@@ -19,7 +19,7 @@ const handler = async (m, { conn, text, args }) => {
       thumbnail: icons,
       sourceUrl: redes,
       mediaType: 1,
-      renderLargerThumbnail: true,
+      renderLargerThumbnail: false,
     },
   };
 
