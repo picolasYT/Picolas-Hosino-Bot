@@ -24,7 +24,7 @@ let handler = async (m, { conn, args, text, participants, usedPrefix, command })
         body: 'Consulta oficial de LID de WhatsApp',
         thumbnailUrl: icons,
         mediaType: 1,
-        renderLargerThumbnail: true,
+        renderLargerThumbnail: false,
         showAdAttribution: true,
         sourceUrl: 'https://github.com/Dioneibi-rip'
       }
