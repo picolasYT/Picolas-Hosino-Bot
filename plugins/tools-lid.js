@@ -5,7 +5,7 @@ let handler = async (m, { conn, args, text, participants, usedPrefix, command })
     ? m.quoted.sender
     : m.sender
 
-  let lid = user.replace(/@s\.whatsapp\.net$/, '') + '@lid'
+  let lid = user.replace(/@s\.whatsapp\.net$/, '') + ''
 
   let caption = `
 ┏ׅ〘 *🌸 𝙇𝙞𝘿 𝙙𝙚𝙡 𝙪𝙨𝙪𝙖𝙧𝙞𝙤* 〙
