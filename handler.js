@@ -221,8 +221,8 @@ export async function handler(chatUpdate) {
 
     const groupMetadata = (m.isGroup ? ((conn.chats[m.chat] || {}).metadata || await this.groupMetadata(m.chat).catch(_ => null)) : {}) || {}
     const participants = (m.isGroup ? groupMetadata.participants : []) || []
-    const user = (m.isGroup ? participants.find(u => conn.decodeJid(u.id) === m.sender) : {}) || {}
-    const bot = (m.isGroup ? participants.find(u => conn.decodeJid(u.id) == this.user.jid) : {}) || {}
+    const user = (m.isGroup ? participants.find(u => u.id === m.sender) : {}) || {}
+    const bot = (m.isGroup ? participants.find(u => u.id === this.user.jid) : {}) || {}
     const isRAdmin = user?.admin == 'superadmin' || false
     const isAdmin = isRAdmin || user?.admin == 'admin' || false
     const isBotAdmin = bot?.admin || false
