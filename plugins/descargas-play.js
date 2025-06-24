@@ -37,7 +37,7 @@ const handler = async (m, { conn, text, command }) => {
     );
   }
 
-  await m.react("🌱");
+  await m.react("🍭");
 
   const search = await yts(text);
   if (!search?.all || search.all.length === 0) {
