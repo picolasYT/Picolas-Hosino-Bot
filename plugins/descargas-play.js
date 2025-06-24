@@ -1,9 +1,7 @@
 import yts from "yt-search";
 import fetch from "node-fetch";
 
-const APIKEY = "Sylphiette's";
 const SIZE_LIMIT_MB = 100;
-
 const newsletterJid = '120363335626706839@newsletter';
 const newsletterName = '⏤͟͞ू⃪፝͜⁞⟡『 Ruby-Hoshino-Channel 』࿐⟡';
 
@@ -39,13 +37,7 @@ const handler = async (m, { conn, text, command }) => {
 
   await m.react("🕝");
 
-  let search;
-  try {
-    search = await yts(text);
-  } catch (err) {
-    return conn.reply(m.chat, `❌ Error al buscar en YouTube: ${err.message}`, m, { contextInfo });
-  }
-
+  const search = await yts(text);
   if (!search?.all || search.all.length === 0) {
     return conn.reply(m.chat, `💦 *Gomen ne, no encontré nada con:* "${text}"`, m, { contextInfo });
   }
@@ -72,28 +64,28 @@ const handler = async (m, { conn, text, command }) => {
     { quoted: m }
   );
 
-  const urlAudio = `https://api.sylphy.xyz/download/ytmp3?url=${encodeURIComponent(video.url)}&apikey=${APIKEY}`;
-  const urlVideo = `https://api.sylphy.xyz/download/ytmp4?url=${encodeURIComponent(video.url)}&apikey=${APIKEY}`;
+  const urlAudio = `https://api.vreden.my.id/api/ytplaymp3?query=${encodeURIComponent(video.url)}`;
+  const urlVideo = `https://api.vreden.my.id/api/ytplaymp4?query=${encodeURIComponent(video.url)}`;
 
   try {
     if (command === "play") {
-      const resAudio = await fetch(urlAudio);
-      const json = await resAudio.json();
+      const res = await fetch(urlAudio);
+      const json = await res.json();
 
-      if (!json?.status || !json?.res?.downloadURL) {
-        const cause = json?.message || json?.error || "desconocida";
-        return conn.reply(m.chat, `❌ No pude obtener el audio, gomen~\n📛 *Causa:* ${cause}`, m, { contextInfo });
+      if (!json?.status || !json?.result?.download?.url) {
+        const reason = json?.message || "desconocida";
+        return conn.reply(m.chat, `❌ No pude obtener el audio, gomen~\n📛 *Causa:* ${reason}`, m, { contextInfo });
       }
 
-      const audioUrl = json.res.downloadURL;
-      const title = json.res.title || "audio.mp3";
+      const audioUrl = json.result.download.url;
+      const title = json.result.download.filename || "audio.mp3";
 
       await conn.sendMessage(
         m.chat,
         {
           audio: { url: audioUrl },
           mimetype: "audio/mpeg",
-          fileName: title + ".mp3",
+          fileName: title,
           ptt: false
         },
         { quoted: m }
@@ -101,16 +93,16 @@ const handler = async (m, { conn, text, command }) => {
       await m.react("🎶");
 
     } else if (command === "play2" || command === "playvid") {
-      const resVideo = await fetch(urlVideo);
-      const json = await resVideo.json();
+      const res = await fetch(urlVideo);
+      const json = await res.json();
 
-      if (!json?.status || !json?.res?.url) {
-        const cause = json?.message || json?.error || "desconocida";
-        return conn.reply(m.chat, `❌ No se pudo obtener el video...\n📛 *Causa:* ${cause}`, m, { contextInfo });
+      if (!json?.status || !json?.result?.download?.url) {
+        const reason = json?.message || "desconocida";
+        return conn.reply(m.chat, `❌ No pude obtener el video, gomen~\n📛 *Causa:* ${reason}`, m, { contextInfo });
       }
 
-      const videoUrl = json.res.url;
-      const title = json.res.title || "video.mp4";
+      const videoUrl = json.result.download.url;
+      const title = json.result.download.filename || "video.mp4";
 
       const head = await fetch(videoUrl, { method: "HEAD" });
       const contentLength = head.headers.get("content-length");
@@ -123,7 +115,7 @@ const handler = async (m, { conn, text, command }) => {
           video: { url: videoUrl },
           fileName: title,
           mimetype: "video/mp4",
-          caption: `🎞️ *Listo ${name}-chan!* Aquí está tu video!`,
+          caption: `🎞️ *Listo ${name}-chan!* Aquí está tu video~`,
           contextInfo
         },
         {
@@ -135,12 +127,7 @@ const handler = async (m, { conn, text, command }) => {
     }
   } catch (e) {
     console.error(e);
-    return conn.reply(
-      m.chat,
-      `❌ *Ocurrió un error inesperado, ${name}-chan...*\n📛 *Causa:* ${e.message}`,
-      m,
-      { contextInfo }
-    );
+    return conn.reply(m.chat, `❌ Ocurrió un error inesperado:\n${e.message}`, m, { contextInfo });
   }
 };
 
