@@ -2,7 +2,7 @@ import yts from "yt-search";
 import fetch from "node-fetch";
 
 const SIZE_LIMIT_MB = 100;
-const newsletterJid = '120363335626706839@newsletter';
+const newsletterJid  = '120363335626706839@newsletter';
 const newsletterName = '⏤͟͞ू⃪፝͜⁞⟡『 Ruby-Hoshino-Channel 』࿐⟡';
 
 const handler = async (m, { conn, text, command }) => {
@@ -69,23 +69,23 @@ const handler = async (m, { conn, text, command }) => {
 
   try {
     if (command === "play") {
-      const res = await fetch(urlAudio);
-      const json = await res.json();
+      const resAudio = await fetch(urlAudio);
+      const json = await resAudio.json();
 
       if (!json?.status || !json?.result?.download?.url) {
-        const reason = json?.message || "desconocida";
-        return conn.reply(m.chat, `❌ No pude obtener el audio, gomen~\n📛 *Causa:* ${reason}`, m, { contextInfo });
+        const cause = json?.message || json?.error || "Servidor no respondió correctamente.";
+        return conn.reply(m.chat, `❌ No pude obtener el audio, gomen~\n📛 *Causa:* ${cause}`, m, { contextInfo });
       }
 
       const audioUrl = json.result.download.url;
-      const title = json.result.download.filename || "audio.mp3";
+      const title = json.result.metadata?.title || "audio.mp3";
 
       await conn.sendMessage(
         m.chat,
         {
           audio: { url: audioUrl },
           mimetype: "audio/mpeg",
-          fileName: title,
+          fileName: title + ".mp3",
           ptt: false
         },
         { quoted: m }
@@ -93,16 +93,16 @@ const handler = async (m, { conn, text, command }) => {
       await m.react("🎶");
 
     } else if (command === "play2" || command === "playvid") {
-      const res = await fetch(urlVideo);
-      const json = await res.json();
+      const resVideo = await fetch(urlVideo);
+      const json = await resVideo.json();
 
       if (!json?.status || !json?.result?.download?.url) {
-        const reason = json?.message || "desconocida";
-        return conn.reply(m.chat, `❌ No pude obtener el video, gomen~\n📛 *Causa:* ${reason}`, m, { contextInfo });
+        const cause = json?.message || json?.error || "Servidor no respondió correctamente.";
+        return conn.reply(m.chat, `❌ No se pudo obtener el video...\n📛 *Causa:* ${cause}`, m, { contextInfo });
       }
 
       const videoUrl = json.result.download.url;
-      const title = json.result.download.filename || "video.mp4";
+      const title = json.result.metadata?.title || "video.mp4";
 
       const head = await fetch(videoUrl, { method: "HEAD" });
       const contentLength = head.headers.get("content-length");
@@ -115,7 +115,7 @@ const handler = async (m, { conn, text, command }) => {
           video: { url: videoUrl },
           fileName: title,
           mimetype: "video/mp4",
-          caption: `🎞️ *Listo ${name}-chan!* Aquí está tu video~`,
+          caption: `🎞️ *Listo ${name}-chan!* Aquí está tu video!`,
           contextInfo
         },
         {
@@ -127,7 +127,7 @@ const handler = async (m, { conn, text, command }) => {
     }
   } catch (e) {
     console.error(e);
-    return conn.reply(m.chat, `❌ Ocurrió un error inesperado:\n${e.message}`, m, { contextInfo });
+    return conn.reply(m.chat, `❌ Ocurrió un error inesperado:\n\`\`\`${e.message}\`\`\``, m, { contextInfo });
   }
 };
 
