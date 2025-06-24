@@ -1,5 +1,5 @@
 import { smsg } from './lib/simple.js'
-import { format } from 'util' 
+import { format } from 'util'
 import { fileURLToPath } from 'url'
 import path, { join } from 'path'
 import { unwatchFile, watchFile } from 'fs'
@@ -13,27 +13,27 @@ const delay = ms => isNumber(ms) && new Promise(resolve => setTimeout(function (
   resolve()
 }, ms))
 
+// Normaliza el JID a solo el número
 function normalizeJid(jid = '') {
-  return String(jid).split('@')[0];
+  if (!jid) return ''
+  return jid.replace(/\D/g, '')
 }
 
 export async function handler(chatUpdate) {
   this.msgqueque = this.msgqueque || []
   this.uptime = this.uptime || Date.now()
-  if (!chatUpdate)
-    return
+  if (!chatUpdate) return
   this.pushMessage(chatUpdate.messages).catch(console.error)
   let m = chatUpdate.messages[chatUpdate.messages.length - 1]
-  if (!m)
-    return;
-  if (global.db.data == null)
-    await global.loadDatabase()
+  if (!m) return;
+  if (global.db.data == null) await global.loadDatabase()
   try {
     m = smsg(this, m) || m
-    if (!m)
-      return
+    if (!m) return
     m.exp = 0
     m.coin = false
+
+    // ---- Manejo de usuarios y chats en la base de datos (igual que antes) ----
     try {
       let user = global.db.data.users[m.sender]
       if (typeof user !== 'object')
@@ -194,19 +194,33 @@ export async function handler(chatUpdate) {
     if (typeof m.text !== 'string')
       m.text = ''
 
-    const senderId = normalizeJid(m.sender)
+    // ---- Manejo de OWNER, MODS y PREMS ----
+    const senderIdNorm = normalizeJid(m.sender)
     let _user = global.db.data && global.db.data.users && global.db.data.users[m.sender]
-
-    const isROwner = [normalizeJid(global.conn.user.id), ...global.owner.map(([id]) => id)].includes(senderId)
+    const isROwner = [normalizeJid(global.conn.user.id), ...global.owner.map(([id]) => normalizeJid(id))].includes(senderIdNorm)
     const isOwner = isROwner || m.fromMe
-    const isMods = isOwner || (global.mods || []).map(normalizeJid).includes(senderId)
-    const isPrems = isROwner || (global.prems || []).map(normalizeJid).includes(senderId) || _user?.premium == true
+    const isMods = isOwner || (global.mods || []).map(normalizeJid).includes(senderIdNorm)
+    const isPrems = isROwner || (global.prems || []).map(normalizeJid).includes(senderIdNorm) || _user?.premium == true
 
-console.log('m.sender:', m.sender)
-console.log('this.user.jid:', this.user.jid)
-console.log('participants ids:', participants.map(u => u.id))
-console.log("Comparando:", m.sender, "con", participants.map(x => x.id));
-console.log("Bot:", this.user.jid, "con", participants.map(x => x.id));
+    // ---- GRUPOS: PARTICIPANTES Y ADMIN ----
+    let groupMetadata = {}, participants = [], user = {}, bot = {}
+    if (m.isGroup) {
+      groupMetadata = conn.chats[m.chat]?.metadata || await this.groupMetadata(m.chat).catch(_ => ({}))
+      participants = groupMetadata.participants || []
+      // Busca por número normalizado
+      user = participants.find(u => normalizeJid(u.id) === senderIdNorm) || {}
+      bot = participants.find(u => normalizeJid(u.id) === normalizeJid(this.user.jid)) || {}
+    }
+    const isRAdmin = user?.admin === 'superadmin'
+    const isAdmin = isRAdmin || user?.admin === 'admin'
+    const isBotAdmin = bot?.admin === 'superadmin' || bot?.admin === 'admin'
+
+    // ---- LOGS ÚTILES PARA DEPURAR ----
+    // console.log('m.sender:', m.sender)
+    // console.log('this.user.jid:', this.user.jid)
+    // console.log('participants ids:', participants.map(u => u.id))
+    // console.log("Comparando:", m.sender, "con", participants.map(x => x.id))
+    // console.log("Bot:", this.user.jid, "con", participants.map(x => x.id))
 
     if (opts['queque'] && m.text && !(isMods || isPrems)) {
       let queque = this.msgqueque, time = 1000 * 5
@@ -218,28 +232,16 @@ console.log("Bot:", this.user.jid, "con", participants.map(x => x.id));
       }, time)
     }
 
-    if (m.isBaileys) {
-      return
-    }
+    if (m.isBaileys) return
     m.exp += Math.ceil(Math.random() * 10)
 
     let usedPrefix
 
-    const groupMetadata = (m.isGroup ? ((conn.chats[m.chat] || {}).metadata || await this.groupMetadata(m.chat).catch(_ => null)) : {}) || {}
-    const participants = (m.isGroup ? groupMetadata.participants : []) || []
-    const user = (m.isGroup ? participants.find(u => u.id === m.sender) : {}) || {}
-    const bot = (m.isGroup ? participants.find(u => u.id === this.user.jid) : {}) || {}
-    const isRAdmin = user?.admin == 'superadmin' || false
-    const isAdmin = isRAdmin || user?.admin == 'admin' || false
-    const isBotAdmin = bot?.admin || false
-
     const ___dirname = path.join(path.dirname(fileURLToPath(import.meta.url)), './plugins')
     for (let name in global.plugins) {
       let plugin = global.plugins[name]
-      if (!plugin)
-        continue
-      if (plugin.disabled)
-        continue
+      if (!plugin) continue
+      if (plugin.disabled) continue
       const __filename = join(___dirname, name)
       if (typeof plugin.all === 'function') {
         try {
@@ -253,18 +255,14 @@ console.log("Bot:", this.user.jid, "con", participants.map(x => x.id));
         }
       }
       if (!opts['restrict'])
-        if (plugin.tags && plugin.tags.includes('admin')) {
-          continue
-        }
+        if (plugin.tags && plugin.tags.includes('admin')) continue
       const str2Regex = str => str.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&')
       let _prefix = plugin.customPrefix ? plugin.customPrefix : conn.prefix ? conn.prefix : global.prefix
       let match = (_prefix instanceof RegExp ? 
         [[_prefix.exec(m.text), _prefix]] :
         Array.isArray(_prefix) ?
         _prefix.map(p => {
-          let re = p instanceof RegExp ?
-            p :
-            new RegExp(str2Regex(p))
+          let re = p instanceof RegExp ? p : new RegExp(str2Regex(p))
           return [re.exec(m.text), re]
         }) :
         typeof _prefix === 'string' ?
@@ -288,11 +286,9 @@ console.log("Bot:", this.user.jid, "con", participants.map(x => x.id));
           chatUpdate,
           __dirname: ___dirname,
           __filename
-        }))
-          continue
+        })) continue
       }
-      if (typeof plugin !== 'function')
-        continue
+      if (typeof plugin !== 'function') continue
       if ((usedPrefix = (match[0] || '')[0])) {
         let noPrefix = m.text.replace(usedPrefix, '')
         let [command, ...args] = noPrefix.trim().split` `.filter(v => v)
@@ -302,28 +298,26 @@ console.log("Bot:", this.user.jid, "con", participants.map(x => x.id));
         command = (command || '').toLowerCase()
         let fail = plugin.fail || global.dfail
         let isAccept = plugin.command instanceof RegExp ? 
-                            plugin.command.test(command) :
-                            Array.isArray(plugin.command) ?
-                                plugin.command.some(cmd => cmd instanceof RegExp ? 
-                                    cmd.test(command) :
-                                    cmd === command) :
-                            typeof plugin.command === 'string' ? 
-                            plugin.command === command :
-                            false
+          plugin.command.test(command) :
+          Array.isArray(plugin.command) ?
+            plugin.command.some(cmd => cmd instanceof RegExp ?
+              cmd.test(command) :
+              cmd === command) :
+          typeof plugin.command === 'string' ?
+            plugin.command === command :
+            false
 
         global.comando = command
 
         if ((m.id.startsWith('NJX-') || (m.id.startsWith('BAE5') && m.id.length === 16) || (m.id.startsWith('B24E') && m.id.length === 20))) return
 
-        if (!isAccept) {
-          continue
-        }
+        if (!isAccept) continue
         m.plugin = name
         if (m.chat in global.db.data.chats || m.sender in global.db.data.users) {
           let chat = global.db.data.chats[m.chat]
           let user = global.db.data.users[m.sender]
           if (!['grupo-unbanchat.js'].includes(name) && chat && chat.isBanned && !isROwner) return
-          if (name != 'grupo-unbanchat.js' && name != 'owner-exec.js' && name != 'owner-exec2.js' && name != 'grupo-delete.js' && chat?.isBanned && !isROwner) return 
+          if (name != 'grupo-unbanchat.js' && name != 'owner-exec.js' && name != 'owner-exec2.js' && name != 'grupo-delete.js' && chat?.isBanned && !isROwner) return
           if (user.antispam > 2) return
           if (m.text && user.banned && !isROwner) {
             m.reply(`《✦》Estas baneado/a, no puedes usar comandos en este bot!\n\n${user.bannedReason ? `✰ *Motivo:* ${user.bannedReason}` : '✰ *Motivo:* Sin Especificar'}\n\n> ✧ Si este Bot es cuenta oficial y tiene evidencia que respalde que este mensaje es un error, puedes exponer tu caso con un moderador.`)
@@ -333,50 +327,48 @@ console.log("Bot:", this.user.jid, "con", participants.map(x => x.id));
 
           if (user.antispam2 && isROwner) return
           let time = global.db.data.users[m.sender].spam + 3000
-          if (new Date - global.db.data.users[m.sender].spam < 3000) return console.log(`[ SPAM ]`) 
+          if (new Date - global.db.data.users[m.sender].spam < 3000) return console.log(`[ SPAM ]`)
           global.db.data.users[m.sender].spam = new Date * 1
 
           if (m.chat in global.db.data.chats || m.sender in global.db.data.users) {
             let chat = global.db.data.chats[m.chat]
             let user = global.db.data.users[m.sender]
             let setting = global.db.data.settings[this.user.jid]
-            if (name != 'grupo-unbanchat.js' && chat?.isBanned)
-              return 
-            if (name != 'owner-unbanuser.js' && user?.banned)
-              return
+            if (name != 'grupo-unbanchat.js' && chat?.isBanned) return
+            if (name != 'owner-unbanuser.js' && user?.banned) return
           }
         }
-        let hl = _prefix 
+        let hl = _prefix
         let adminMode = global.db.data.chats[m.chat].modoadmin
-        let mini = `${plugins.botAdmin || plugins.admin || plugins.group || plugins || noPrefix || hl ||  m.text.slice(0, 1) == hl || plugins.command}`
-        if (adminMode && !isOwner && !isROwner && m.isGroup && !isAdmin && mini) return   
-        if (plugin.rowner && plugin.owner && !(isROwner || isOwner)) { 
+        let mini = `${plugins.botAdmin || plugins.admin || plugins.group || plugins || noPrefix || hl || m.text.slice(0, 1) == hl || plugins.command}`
+        if (adminMode && !isOwner && !isROwner && m.isGroup && !isAdmin && mini) return
+        if (plugin.rowner && plugin.owner && !(isROwner || isOwner)) {
           fail('owner', m, this)
           continue
         }
-        if (plugin.rowner && !isROwner) { 
+        if (plugin.rowner && !isROwner) {
           fail('rowner', m, this)
           continue
         }
-        if (plugin.owner && !isOwner) { 
+        if (plugin.owner && !isOwner) {
           fail('owner', m, this)
           continue
         }
-        if (plugin.mods && !isMods) { 
+        if (plugin.mods && !isMods) {
           fail('mods', m, this)
           continue
         }
-        if (plugin.premium && !isPrems) { 
+        if (plugin.premium && !isPrems) {
           fail('premium', m, this)
           continue
         }
-        if (plugin.group && !m.isGroup) { 
+        if (plugin.group && !m.isGroup) {
           fail('group', m, this)
           continue
-        } else if (plugin.botAdmin && !isBotAdmin) { 
+        } else if (plugin.botAdmin && !isBotAdmin) {
           fail('botAdmin', m, this)
           continue
-        } else if (plugin.admin && !isAdmin) { 
+        } else if (plugin.admin && !isAdmin) {
           fail('admin', m, this)
           continue
         }
@@ -384,12 +376,12 @@ console.log("Bot:", this.user.jid, "con", participants.map(x => x.id));
           fail('private', m, this)
           continue
         }
-        if (plugin.register == true && _user.registered == false) { 
+        if (plugin.register == true && _user.registered == false) {
           fail('unreg', m, this)
           continue
         }
         m.isCommand = true
-        let xp = 'exp' in plugin ? parseInt(plugin.exp) : 17 
+        let xp = 'exp' in plugin ? parseInt(plugin.exp) : 17
         if (xp > 200)
           m.reply('chirrido -_-')
         else
@@ -399,7 +391,7 @@ console.log("Bot:", this.user.jid, "con", participants.map(x => x.id));
           continue
         }
         if (plugin.level > _user.level) {
-          conn.reply(m.chat, `❮✦❯ Se requiere el nivel: *${plugin.level}*\n\n• Tu nivel actual es: *${_user.level}*\n\n• Usa este comando para subir de nivel:\n*${usedPrefix}levelup*`, m)       
+          conn.reply(m.chat, `❮✦❯ Se requiere el nivel: *${plugin.level}*\n\n• Tu nivel actual es: *${_user.level}*\n\n• Usa este comando para subir de nivel:\n*${usedPrefix}levelup*`, m)
           continue
         }
         let extra = {
@@ -461,11 +453,12 @@ console.log("Bot:", this.user.jid, "con", participants.map(x => x.id));
         this.msgqueque.splice(quequeIndex, 1)
     }
     let user, stats = global.db.data.stats
-    if (m) { let utente = global.db.data.users[m.sender]
+    if (m) {
+      let utente = global.db.data.users[m.sender]
       if (utente.muto == true) {
         let bang = m.key.id
         let cancellazzione = m.key.participant
-        await conn.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: bang, participant: cancellazzione }})
+        await conn.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: bang, participant: cancellazzione } })
       }
       if (m.sender && (user = global.db.data.users[m.sender])) {
         user.exp += m.exp
@@ -503,15 +496,15 @@ console.log("Bot:", this.user.jid, "con", participants.map(x => x.id));
 
     try {
       if (!opts['noprint']) await (await import(`./lib/print.js`)).default(m, this)
-    } catch (e) { 
+    } catch (e) {
       console.log(m, m.quoted, e)
     }
-    let settingsREAD = global.db.data.settings[this.user.jid] || {}  
+    let settingsREAD = global.db.data.settings[this.user.jid] || {}
     if (opts['autoread']) await this.readMessages([m.key])
 
     if (db.data.chats[m.chat].reaction && m.text.match(/(ción|dad|aje|oso|izar|mente|pero|tion|age|ous|ate|and|but|ify|ai|yuki|a|s)/gi)) {
       let emot = pickRandom(["🍟", "😃", "😄", "😁", "😆", "🍓", "😅", "😂", "🤣", "🥲", "☺️", "😊", "😇", "🙂", "🙃", "😉", "😌", "😍", "🥰", "😘", "😗", "😙", "🌺", "🌸", "😚", "😋", "😛", "😝", "😜", "🤪", "🤨", "🌟", "🤓", "😎", "🥸", "🤩", "🥳", "😏", "💫", "😞", "😔", "😟", "😕", "🙁", "☹️", "😣", "😖", "😫", "😩", "🥺", "😢", "😭", "😤", "😠", "😡", "🤬", "🤯", "😳", "🥵", "🥶", "😶‍🌫️", "😱", "😨", "😰", "😥", "😓", "🤗", "🤔", "🫣", "🤭", "🤖", "🍭", "🤫", "🫠", "🤥", "😶", "📇", "😐", "💧", "😑", "🫨", "😬", "🙄", "😯", "😦", "😧", "😮", "😲", "🥱", "😴", "🤤", "😪", "😮‍💨", "😵", "😵‍💫", "🤐", "🥴", "🤢", "🤮", "🤧", "😷", "🤒", "🤕", "🤑", "🤠", "😈", "👿", "👺", "🧿", "🌩", "👻", "😺", "😸", "😹", "😻", "😼", "😽", "🙀", "😿", "😾", "🫶", "👍", "✌️", "🙏", "🫵", "🤏", "🤌", "☝️", "🖕", "🙏", "🫵", "🫂", "🐱", "🤹‍♀️", "🤹‍♂️", "🗿", "✨", "⚡", "🔥", "🌈", "🩷", "❤️", "🧡", "💛", "💚", "🩵", "💙", "💜", "🖤", "🩶", "🤍", "🤎", "💔", "❤️‍🔥", "❤️‍🩹", "❣️", "💕", "💞", "💓", "💗", "💖", "💘", "💝", "🚩", "👊", "⚡️", "💋", "🫰", "💅", "👑", "🐣", "🐤", "🐈"])
-      if (!m.fromMe) return this.sendMessage(m.chat, { react: { text: emot, key: m.key }})
+      if (!m.fromMe) return this.sendMessage(m.chat, { react: { text: emot, key: m.key } })
     }
     function pickRandom(list) { return list[Math.floor(Math.random() * list.length)] }
   }
