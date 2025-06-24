@@ -18,7 +18,7 @@ const handler = async (m, { conn, text, command }) => {
       serverMessageId: -1
     },
     externalAdReply: {
-      title: package,
+      title: packname,
       body: "༻𝐵𝑈́𝑆𝑄𝑈𝐸𝐷𝐴𝑆 𝐷𝐸𝑆𝐷𝐸 𝑌𝑂𝑈𝑇𝑈𝐵𝐸༺",
       thumbnail: await (await fetch("https://i.imgur.com/4Kk2bNy.jpg")).buffer(),
       sourceUrl: "https://youtube.com",
