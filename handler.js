@@ -1,5 +1,5 @@
 import { smsg } from './lib/simple.js'
-import { format } from 'util'
+import { format } from 'util' 
 import { fileURLToPath } from 'url'
 import path, { join } from 'path'
 import { unwatchFile, watchFile } from 'fs'
@@ -13,7 +13,6 @@ const delay = ms => isNumber(ms) && new Promise(resolve => setTimeout(function (
   resolve()
 }, ms))
 
-// 🔥 FUNCION PARA NORMALIZAR CUALQUIER JID (número o LID)
 function normalizeJid(jid = '') {
   return String(jid).split('@')[0];
 }
@@ -40,50 +39,164 @@ export async function handler(chatUpdate) {
       if (typeof user !== 'object')
         global.db.data.users[m.sender] = {}
       if (user) {
-        // ... (tus inicializaciones de campos de usuario)
-      } else {
-        // ... (tu objeto de usuario por defecto)
-      }
+        if (!isNumber(user.exp)) user.exp = 0
+        if (!isNumber(user.coin)) user.coin = 10
+        if (!isNumber(user.joincount)) user.joincount = 1
+        if (!isNumber(user.diamond)) user.diamond = 3
+        if (!isNumber(user.lastadventure)) user.lastadventure = 0
+        if (!isNumber(user.lastclaim)) user.lastclaim = 0
+        if (!isNumber(user.health)) user.health = 100
+        if (!isNumber(user.crime)) user.crime = 0
+        if (!isNumber(user.lastcofre)) user.lastcofre = 0
+        if (!isNumber(user.lastdiamantes)) user.lastdiamantes = 0
+        if (!isNumber(user.lastpago)) user.lastpago = 0
+        if (!isNumber(user.lastcode)) user.lastcode = 0
+        if (!isNumber(user.lastcodereg)) user.lastcodereg = 0
+        if (!isNumber(user.lastduel)) user.lastduel = 0
+        if (!isNumber(user.lastmining)) user.lastmining = 0
+        if (!('muto' in user)) user.muto = false
+        if (!('premium' in user)) user.premium = false
+        if (!user.premium) user.premiumTime = 0
+        if (!('registered' in user)) user.registered = false
+        if (!('genre' in user)) user.genre = ''
+        if (!('birth' in user)) user.birth = ''
+        if (!('marry' in user)) user.marry = ''
+        if (!('description' in user)) user.description = ''
+        if (!('packstickers' in user)) user.packstickers = null
+        if (!user.registered) {
+          if (!('name' in user)) user.name = m.name
+          if (!isNumber(user.age)) user.age = -1
+          if (!isNumber(user.regTime)) user.regTime = -1
+        }
+        if (!isNumber(user.afk)) user.afk = -1
+        if (!('afkReason' in user)) user.afkReason = ''
+        if (!('role' in user)) user.role = 'Nuv'
+        if (!('banned' in user)) user.banned = false
+        if (!('useDocument' in user)) user.useDocument = false
+        if (!isNumber(user.level)) user.level = 0
+        if (!isNumber(user.bank)) user.bank = 0
+        if (!isNumber(user.warn)) user.warn = 0
+      } else
+        global.db.data.users[m.sender] = {
+          exp: 0,
+          coin: 10,
+          joincount: 1,
+          diamond: 3,
+          lastadventure: 0,
+          health: 100,
+          lastclaim: 0,
+          lastcofre: 0,
+          lastdiamantes: 0,
+          lastcode: 0,
+          lastduel: 0,
+          lastpago: 0,
+          lastmining: 0,
+          lastcodereg: 0,
+          muto: false,
+          registered: false,
+          genre: '',
+          birth: '',
+          marry: '',
+          description: '',
+          packstickers: null,
+          name: m.name,
+          age: -1,
+          regTime: -1,
+          afk: -1,
+          afkReason: '',
+          banned: false,
+          useDocument: false,
+          bank: 0,
+          level: 0,
+          role: 'Nuv',
+          premium: false,
+          premiumTime: 0,
+        }
       let chat = global.db.data.chats[m.chat]
       if (typeof chat !== 'object')
         global.db.data.chats[m.chat] = {}
       if (chat) {
-        // ... (tus campos de chat)
-      } else {
-        // ... (tu objeto de chat por defecto)
-      }
+        if (!('isBanned' in chat)) chat.isBanned = false
+        if (!('sAutoresponder' in chat)) chat.sAutoresponder = ''
+        if (!('welcome' in chat)) chat.welcome = true
+        if (!('autolevelup' in chat)) chat.autolevelup = false
+        if (!('autoAceptar' in chat)) chat.autoAceptar = false
+        if (!('autosticker' in chat)) chat.autosticker = false
+        if (!('autoRechazar' in chat)) chat.autoRechazar = false
+        if (!('autoresponder' in chat)) chat.autoresponder = false
+        if (!('detect' in chat)) chat.detect = true
+        if (!('antiBot' in chat)) chat.antiBot = false
+        if (!('antiBot2' in chat)) chat.antiBot2 = false
+        if (!('modoadmin' in chat)) chat.modoadmin = false
+        if (!('antiLink' in chat)) chat.antiLink = true
+        if (!('antiImg' in chat)) chat.antiImg = false
+        if (!('reaction' in chat)) chat.reaction = false
+        if (!('nsfw' in chat)) chat.nsfw = false
+        if (!('antifake' in chat)) chat.antifake = false
+        if (!('delete' in chat)) chat.delete = false
+        if (!isNumber(chat.expired)) chat.expired = 0
+        if (!('antiLag' in chat)) chat.antiLag = false
+        if (!('per' in chat)) chat.per = []
+      } else
+        global.db.data.chats[m.chat] = {
+          isBanned: false,
+          sAutoresponder: '',
+          welcome: true,
+          autolevelup: false,
+          autoresponder: false,
+          delete: false,
+          autoAceptar: false,
+          autoRechazar: false,
+          detect: true,
+          antiBot: false,
+          antiBot2: false,
+          modoadmin: false,
+          antiLink: true,
+          antifake: false,
+          reaction: false,
+          nsfw: false,
+          expired: 0,
+          antiLag: false,
+          per: [],
+        }
       var settings = global.db.data.settings[this.user.jid]
       if (typeof settings !== 'object') global.db.data.settings[this.user.jid] = {}
       if (settings) {
-        // ... (tus campos de settings)
+        if (!('self' in settings)) settings.self = false
+        if (!('restrict' in settings)) settings.restrict = true
+        if (!('jadibotmd' in settings)) settings.jadibotmd = true
+        if (!('antiPrivate' in settings)) settings.antiPrivate = false
+        if (!('autoread' in settings)) settings.autoread = false
       } else global.db.data.settings[this.user.jid] = {
-        // ... (tu objeto de settings por defecto)
+        self: false,
+        restrict: true,
+        jadibotmd: true,
+        antiPrivate: false,
+        autoread: false,
+        status: 0
       }
     } catch (e) {
       console.error(e)
     }
 
-    // 🔥 NUEVA DETECCIÓN DE PERMISOS (soporta @lid y clásico)
     const mainBot = global.conn.user.jid
     const chat = global.db.data.chats[m.chat] || {}
     const isSubbs = chat.antiLag === true
     const allowedBots = chat.per || []
     if (!allowedBots.includes(mainBot)) allowedBots.push(mainBot)
     const isAllowed = allowedBots.includes(this.user.jid)
-    if (isSubbs && !isAllowed)
+    if (isSubbs && !isAllowed) 
       return
 
-    if (opts['nyimak']) return
-    if (!m.fromMe && opts['self']) return
-    if (opts['swonly'] && m.chat !== 'status@broadcast') return
+    if (opts['nyimak'])  return
+    if (!m.fromMe && opts['self'])  return
+    if (opts['swonly'] && m.chat !== 'status@broadcast')  return
     if (typeof m.text !== 'string')
       m.text = ''
 
-    // 🔥 Normaliza el JID de quien envía el mensaje
     const senderId = normalizeJid(m.sender)
     let _user = global.db.data && global.db.data.users && global.db.data.users[m.sender]
 
-    // 🔥 Ahora compara con owners, mods y prems "normalizados"
     const isROwner = [normalizeJid(global.conn.user.id), ...global.owner.map(([id]) => id)].includes(senderId)
     const isOwner = isROwner || m.fromMe
     const isMods = isOwner || (global.mods || []).map(normalizeJid).includes(senderId)
@@ -106,26 +219,13 @@ export async function handler(chatUpdate) {
 
     let usedPrefix
 
-    // --- GESTIÓN DE GRUPO, ADMINS Y LID ---
-    let groupMetadata = {}
-    if (m.isGroup) {
-      try {
-        groupMetadata = await this.groupMetadata(m.chat)
-      } catch (e) {
-        groupMetadata = (this.chats[m.chat] || {}).metadata || {}
-      }
-    }
-    const participants = groupMetadata.participants || []
-    const senderIdNorm = normalizeJid(m.sender)
-    const botIdNorm = normalizeJid(this.user.jid)
-    const user = (m.isGroup ? participants.find(u => normalizeJid(u.id) === senderIdNorm) : {}) || {}
-    const bot = (m.isGroup ? participants.find(u => normalizeJid(u.id) === botIdNorm) : {}) || {}
-
-    // WhatsApp con LID: el campo admin puede estar vacío en grupos privados.
-    // Si no hay campo admin, se deberá asumir "false".
-    const isRAdmin = user?.admin === 'superadmin' || false
-    const isAdmin = isRAdmin || user?.admin === 'admin' || false
-    const isBotAdmin = bot?.admin === 'admin' || false
+    const groupMetadata = (m.isGroup ? ((conn.chats[m.chat] || {}).metadata || await this.groupMetadata(m.chat).catch(_ => null)) : {}) || {}
+    const participants = (m.isGroup ? groupMetadata.participants : []) || []
+    const user = (m.isGroup ? participants.find(u => conn.decodeJid(u.id) === m.sender) : {}) || {}
+    const bot = (m.isGroup ? participants.find(u => conn.decodeJid(u.id) == this.user.jid) : {}) || {}
+    const isRAdmin = user?.admin == 'superadmin' || false
+    const isAdmin = isRAdmin || user?.admin == 'admin' || false
+    const isBotAdmin = bot?.admin || false
 
     const ___dirname = path.join(path.dirname(fileURLToPath(import.meta.url)), './plugins')
     for (let name in global.plugins) {
