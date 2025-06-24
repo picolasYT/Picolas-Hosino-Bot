@@ -13,7 +13,6 @@ const delay = ms => isNumber(ms) && new Promise(resolve => setTimeout(function (
   resolve()
 }, ms))
 
-// 🔥 FUNCION PARA NORMALIZAR CUALQUIER JID (número o LID)
 function normalizeJid(jid = '') {
   return String(jid).split('@')[0];
 }
@@ -180,7 +179,6 @@ export async function handler(chatUpdate) {
       console.error(e)
     }
 
-    // 🔥 NUEVA DETECCIÓN DE PERMISOS (soporta @lid y clásico)
     const mainBot = global.conn.user.jid
     const chat = global.db.data.chats[m.chat] || {}
     const isSubbs = chat.antiLag === true
@@ -196,11 +194,9 @@ export async function handler(chatUpdate) {
     if (typeof m.text !== 'string')
       m.text = ''
 
-    // 🔥 NUEVO: Normaliza el JID de quien envía el mensaje
     const senderId = normalizeJid(m.sender)
     let _user = global.db.data && global.db.data.users && global.db.data.users[m.sender]
 
-    // 🔥 Ahora compara con owners, mods y prems "normalizados"
     const isROwner = [normalizeJid(global.conn.user.id), ...global.owner.map(([id]) => id)].includes(senderId)
     const isOwner = isROwner || m.fromMe
     const isMods = isOwner || (global.mods || []).map(normalizeJid).includes(senderId)
