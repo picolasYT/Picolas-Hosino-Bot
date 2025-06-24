@@ -20,7 +20,7 @@ const handler = async (m, { conn, text, command }) => {
     },
     externalAdReply: {
       title: packname,
-      body: '🎧 Ruby Hoshino Downloader',
+      body: dev,
       thumbnail: icons,
       sourceUrl: redes,
       mediaType: 1,
@@ -37,7 +37,7 @@ const handler = async (m, { conn, text, command }) => {
     );
   }
 
-  await m.react("🍭");
+  await m.react("🌱");
 
   const search = await yts(text);
   if (!search?.all || search.all.length === 0) {
@@ -65,7 +65,7 @@ const handler = async (m, { conn, text, command }) => {
     {
       image: { url: video.thumbnail },
       caption,
-
+      contextInfo
     },
     { quoted: m }
   );
@@ -93,7 +93,7 @@ const handler = async (m, { conn, text, command }) => {
           fileName: title + ".mp3",
           ptt: false
         },
-        { quoted: m }
+        { quoted: m, contextInfo }
       );
       await m.react("🎶");
 
