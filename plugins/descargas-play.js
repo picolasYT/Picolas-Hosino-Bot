@@ -20,7 +20,7 @@ const handler = async (m, { conn, text, command }) => {
     },
     externalAdReply: {
       title: packname,
-      body: dev,
+      body: '🎧 Ruby Hoshino Downloader',
       thumbnail: icons,
       sourceUrl: redes,
       mediaType: 1,
