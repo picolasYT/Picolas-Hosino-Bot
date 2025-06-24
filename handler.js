@@ -202,6 +202,12 @@ export async function handler(chatUpdate) {
     const isMods = isOwner || (global.mods || []).map(normalizeJid).includes(senderId)
     const isPrems = isROwner || (global.prems || []).map(normalizeJid).includes(senderId) || _user?.premium == true
 
+console.log('m.sender:', m.sender)
+console.log('this.user.jid:', this.user.jid)
+console.log('participants ids:', participants.map(u => u.id))
+console.log("Comparando:", m.sender, "con", participants.map(x => x.id));
+console.log("Bot:", this.user.jid, "con", participants.map(x => x.id));
+
     if (opts['queque'] && m.text && !(isMods || isPrems)) {
       let queque = this.msgqueque, time = 1000 * 5
       const previousID = queque[queque.length - 1]
