@@ -11,7 +11,14 @@ const handler = async (m, { conn, text, args, usedPrefix, command }) => {
   try {
     console.log('Handler disparado:', command, text, args);
 
-    const name = await conn.getName(m.sender).catch(() => m.sender);
+    // Cambiado: getName síncrono
+    let name;
+    try {
+      name = conn.getName(m.sender);
+    } catch (e) {
+      name = m.sender;
+    }
+
     const contextInfo = {
       mentionedJid: [m.sender],
       isForwarded: true,
@@ -46,8 +53,15 @@ const handler = async (m, { conn, text, args, usedPrefix, command }) => {
       if (global.owner.find(o => o[0] === onlyNumber)) {
         return conn.reply(m.chat, `🌸 ${onlyNumber} ya es owner, ${name}-chan~`, m, { contextInfo });
       }
-      let contactName = await conn.getName(who).catch(() => '');
-      if (!contactName) contactName = onlyNumber;
+
+      // Cambiado: getName síncrono
+      let contactName;
+      try {
+        contactName = conn.getName(who);
+      } catch (e) {
+        contactName = onlyNumber;
+      }
+
       const entry = [ onlyNumber, contactName, true ];
       global.owner.splice(protectedOwners.length, 0, entry);
       console.log('global.owner tras añadir:', JSON.stringify(global.owner));
