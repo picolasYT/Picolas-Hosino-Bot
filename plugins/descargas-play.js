@@ -65,7 +65,7 @@ const handler = async (m, { conn, text, command }) => {
     {
       image: { url: video.thumbnail },
       caption,
-      contextInfo
+
     },
     { quoted: m }
   );
@@ -93,7 +93,7 @@ const handler = async (m, { conn, text, command }) => {
           fileName: title + ".mp3",
           ptt: false
         },
-        { quoted: m, contextInfo }
+        { quoted: m }
       );
       await m.react("🎶");
 
