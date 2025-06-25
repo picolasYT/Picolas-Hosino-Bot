@@ -422,7 +422,6 @@ if (db.data.chats[m.chat].reaction && m.text.match(/(ción|dad|aje|oso|izar|ment
     if (!m.fromMe) return this.sendMessage(m.chat, { react: { text: emot, key: m.key }})
 }
 function pickRandom(list) { return list[Math.floor(Math.random() * list.length)] }
-}
 
 global.dfail = (type, m, conn) => {
 const msg = {
