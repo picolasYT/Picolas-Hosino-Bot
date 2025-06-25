@@ -144,7 +144,8 @@ export async function handler(chatUpdate) {
       m.plugin = name
       // ... [tu lógica adicional de bans, etc. aquí igual que antes] ...
       let adminMode = global.db.data.chats[m.chat]?.modoadmin
-      let (adminMode && !isOwner && !isROwner && m.isGroup && !isAdmin && mini) return
+      let mini = `${plugin.botAdmin || plugin.admin || plugin.group || plugin || noPrefix || usedPrefix || m.text.slice(0, 1) == usedPrefix || plugin.command}`
+      if (adminMode && !isOwner && !isROwner && m.isGroup && !isAdmin && mini) return
       if (plugin.rowner && plugin.owner && !(isROwner || isOwner)) { fail('owner', m, this); continue }
       if (plugin.rowner && !isROwner) { fail('rowner', m, this); continue }
       if (plugin.owner && !isOwner) { fail('owner', m, this); continue }
