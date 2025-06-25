@@ -175,9 +175,9 @@ export async function handler(chatUpdate) {
         let _user = global.db.data && global.db.data.users && global.db.data.users[m.sender]
 
         const isROwner = [conn.decodeJid(global.conn.user.id), ...global.owner.map(([number]) => number)]
-            .map(v => v.replace(/[^0-9]/g, '') + (m.sender.endsWith('@lid') ? '@lid' : '@s.whatsapp.net'))
-            .includes(normalizeJid(m.sender))
-        const isOwner = isROwner || m.fromMe
+  .map(v => v.replace(/[^0-9]/g, '') + detectwhat)
+  .includes(m.sender);
+        const isOwner = isROwner || m.fromMe;
         const isMods = isOwner || global.mods.map(v => v.replace(/[^0-9]/g, '') + (m.sender.endsWith('@lid') ? '@lid' : '@s.whatsapp.net')).includes(normalizeJid(m.sender))
         const isPrems = isROwner || global.prems.map(v => v.replace(/[^0-9]/g, '') + (m.sender.endsWith('@lid') ? '@lid' : '@s.whatsapp.net')).includes(normalizeJid(m.sender)) || _user?.premium == true
 
