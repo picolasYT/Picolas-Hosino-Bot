@@ -1,59 +1,72 @@
-import { sticker } from '../lib/sticker.js'
-let handler = m => m
+import JavaScriptObfuscator from 'javascript-obfuscator';
 
-// Si usas iconos y redes, define estos valores
+var handler = async (m, { conn, text }) => {
+  const loadings = [
+    '《██▒▒▒▒▒▒▒▒▒▒▒》10%',
+    '《████▒▒▒▒▒▒▒▒▒》30%',
+    '《███████▒▒▒▒▒▒》50%',
+    '《██████████▒▒▒》70%',
+    '《█████████████》100%',
+    '𝙻𝙾𝙰𝙳𝙸𝙽𝙶 𝙲𝙾𝙼𝙿𝙻𝙴𝚃𝙴𝙳...'
+  ];
 
-// Utilidad para obtener un elemento aleatorio de un array
-function getRandom(arr) {
-  return arr[Math.floor(Math.random() * arr.length)]
-}
+  let { key } = await conn.sendMessage(m.chat, { text: '_Loading_' });
+  if (!text) return m.reply('*`🌹 INGRESA EL CÓDIGO QUE VAS A OFUSCAR`*');
 
-handler.all = async function (m, { conn }) {
-  let chat = global.db.data.chats[m.chat]
-  // Asegúrate que m.mentionedJid y this.user.jid existen
-  if (
-    Array.isArray(m.mentionedJid) &&
-    this.user?.jid &&
-    m.mentionedJid.includes(this.user.jid) &&
-    m.isGroup &&
-    !chat.isBanned
-  ) {
-    let noetiqueta = 'https://qu.ax/MKCm.webp'
-    let or = ['texto', 'sticker'];
-    let media = getRandom(or)
-    if (media === 'sticker') {
-      return await this.sendFile(
-        m.chat,
-        noetiqueta,
-        'sticker.webp',
-        '',
-        m,
-        true,
-        {
-          contextInfo: {
-            forwardingScore: 200,
-            isForwarded: false,
-            externalAdReply: {
-              showAdAttribution: false,
-              title: 'Yo que?',
-              mediaType: 2,
-              sourceUrl: redes,
-              thumbnail: icons
-            }
-          }
-        },
-        { quoted: m, ephemeralExpiration: 24 * 60 * 60 * 1000, disappearingMessagesInChat: 24 * 60 * 60 * 1000 }
-      )
+  try {
+    // Opciones avanzadas para máxima ofuscación
+    const options = {
+      compact: true,
+      controlFlowFlattening: true,
+      controlFlowFlatteningThreshold: 1,
+      deadCodeInjection: true,
+      deadCodeInjectionThreshold: 1,
+      debugProtection: true,
+      debugProtectionInterval: true,
+      disableConsoleOutput: true,
+      identifierNamesGenerator: 'hexadecimal',
+      log: false,
+      numbersToExpressions: true,
+      renameGlobals: true,
+      selfDefending: true,
+      simplify: true,
+      splitStrings: true,
+      splitStringsChunkLength: 3,
+      stringArray: true,
+      stringArrayEncoding: ['rc4'],
+      stringArrayIndexShift: true,
+      stringArrayRotate: true,
+      stringArrayShuffle: true,
+      stringArrayWrappersCount: 5,
+      stringArrayWrappersChainedCalls: true,
+      stringArrayWrappersType: 'function',
+      stringArrayThreshold: 1,
+      transformObjectKeys: true,
+      unicodeEscapeSequence: true
+    };
+
+    // Animación de carga
+    for (let i = 0; i < loadings.length; i++) {
+      await new Promise(resolve => setTimeout(resolve, 350));
+      await conn.sendMessage(m.chat, { text: loadings[i] }, { quoted: m });
     }
-    if (media === 'texto') {
-      return await this.sendMessage(
+
+    // Ofuscar el código
+    let obfuscatedCode = JavaScriptObfuscator.obfuscate(text, options).getObfuscatedCode();
+    if (obfuscatedCode.length > 4000) {
+      // Si es muy largo, lo envía como archivo
+      await conn.sendMessage(
         m.chat,
-        { text: getRandom(['*QUE YO QUE?*', 'Que?', 'Hola?']) },
-        { quoted: m, ephemeralExpiration: 24 * 60 * 60 * 1000, disappearingMessagesInChat: 24 * 60 * 60 * 1000 }
-      )
+        { document: Buffer.from(obfuscatedCode), mimetype: 'text/javascript', fileName: 'ofuscado.js' },
+        { quoted: m }
+      );
+    } else {
+      await conn.sendMessage(m.chat, { text: '```js\n' + obfuscatedCode + '\n```' }, { quoted: m });
     }
+  } catch (e) {
+    m.reply('*Error al ofuscar el código:*\n' + e.message);
   }
-  return !0
-}
+};
 
-export default handler
+handler.command = /^(ofuscar|ofuscador)$/i;
+export default handler;
