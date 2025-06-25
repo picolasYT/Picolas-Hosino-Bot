@@ -13,8 +13,9 @@ const delay = ms => isNumber(ms) && new Promise(resolve => setTimeout(function (
   resolve()
 }, ms))
 
+// --- Universal JID/LID normalizer ---
 function normalizeJid(jid = '') {
-  return String(jid).split('@')[0];
+  return String(jid).replace(/[^0-9]/g, '');
 }
 
 export async function handler(chatUpdate) {
@@ -179,6 +180,32 @@ export async function handler(chatUpdate) {
       console.error(e)
     }
 
+    // --- Permisos (LID/Clásico) ---
+    const senderId = normalizeJid(m.sender)
+    const isROwner = [normalizeJid(global.conn.user.id), ...global.owner.map(([id]) => id)].includes(senderId)
+    const isOwner = isROwner || m.fromMe
+    const isMods = isOwner || (global.mods || []).map(normalizeJid).includes(senderId)
+    let _user = global.db.data && global.db.data.users && global.db.data.users[m.sender]
+    const isPrems = isROwner || (global.prems || []).map(normalizeJid).includes(senderId) || _user?.premium == true
+
+    // --- Grupo/Administradores con LID ---
+    let groupMetadata = {}
+    if (m.isGroup) {
+      try {
+        groupMetadata = await this.groupMetadata(m.chat)
+      } catch (e) {
+        groupMetadata = (this.chats[m.chat] || {}).metadata || {}
+      }
+    }
+    const participants = groupMetadata.participants || []
+    const botIds = [this.user.jid, this.user.lid].map(normalizeJid)
+    const user = m.isGroup ? participants.find(u => normalizeJid(u.id) === senderId) : {}
+    const bot = m.isGroup ? participants.find(u => botIds.includes(normalizeJid(u.id))) : {}
+
+    const isRAdmin = user?.admin === 'superadmin'
+    const isAdmin = isRAdmin || user?.admin === 'admin'
+    const isBotAdmin = !!bot?.admin
+
     const mainBot = global.conn.user.jid
     const chat = global.db.data.chats[m.chat] || {}
     const isSubbs = chat.antiLag === true
@@ -193,14 +220,6 @@ export async function handler(chatUpdate) {
     if (opts['swonly'] && m.chat !== 'status@broadcast')  return
     if (typeof m.text !== 'string')
       m.text = ''
-
-    const senderId = normalizeJid(m.sender)
-    let _user = global.db.data && global.db.data.users && global.db.data.users[m.sender]
-
-    const isROwner = [normalizeJid(global.conn.user.id), ...global.owner.map(([id]) => id)].includes(senderId)
-    const isOwner = isROwner || m.fromMe
-    const isMods = isOwner || (global.mods || []).map(normalizeJid).includes(senderId)
-    const isPrems = isROwner || (global.prems || []).map(normalizeJid).includes(senderId) || _user?.premium == true
 
     if (opts['queque'] && m.text && !(isMods || isPrems)) {
       let queque = this.msgqueque, time = 1000 * 5
@@ -218,14 +237,6 @@ export async function handler(chatUpdate) {
     m.exp += Math.ceil(Math.random() * 10)
 
     let usedPrefix
-
-    const groupMetadata = (m.isGroup ? ((conn.chats[m.chat] || {}).metadata || await this.groupMetadata(m.chat).catch(_ => null)) : {}) || {}
-    const participants = (m.isGroup ? groupMetadata.participants : []) || []
-    const user = (m.isGroup ? participants.find(u => conn.decodeJid(u.id) === m.sender) : {}) || {}
-    const bot = (m.isGroup ? participants.find(u => conn.decodeJid(u.id) == this.user.jid) : {}) || {}
-    const isRAdmin = user?.admin == 'superadmin' || false
-    const isAdmin = isRAdmin || user?.admin == 'admin' || false
-    const isBotAdmin = bot?.admin || false
 
     const ___dirname = path.join(path.dirname(fileURLToPath(import.meta.url)), './plugins')
     for (let name in global.plugins) {
