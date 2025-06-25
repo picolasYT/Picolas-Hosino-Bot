@@ -2,7 +2,6 @@ import { sticker } from '../lib/sticker.js'
 let handler = m => m
 
 // Si usas iconos y redes, define estos valores
-const redes = 'https://tus-redes.social/'; // Cambia por tu enlace real
 
 // Utilidad para obtener un elemento aleatorio de un array
 function getRandom(arr) {
