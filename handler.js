@@ -130,11 +130,7 @@ if (settings) {
 // ========== INICIO SOPORTE LID Y ADMIN ==========
 
 // OBTÉN PARTICIPANTES
-const groupMetadata = (m.isGroup ? ((conn.chats[m.chat] || {}).metadata || await this.groupMetadata(m.chat).catch(_ => null)) : {}) || {}
-const participants = (m.isGroup ? groupMetadata.participants : []) || []
-
-// LÓGICA LID: BUSCA EL PARTICIPANTE REAL
-let partisipan = m.key?.participant || '';
+const groupMetadata = (m.isGroup ? ((conn.chats[m.chat] || {}).metadata || await this.groupMetadata(m.chat).catch(_ m.key?.participant || '';
 if (partisipan.endsWith('@lid')) {
     const parsingParticipant = participants.find(p => p.id === partisipan);
     m.participant = parsingParticipant?.jid || partisipan;
