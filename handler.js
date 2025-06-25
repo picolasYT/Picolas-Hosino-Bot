@@ -133,13 +133,6 @@ if (settings) {
 const groupMetadata = (m.isGroup ? ((conn.chats[m.chat] || {}).metadata || await this.groupMetadata(m.chat).catch(_ => null)) : {}) || {}
 const participants = (m.isGroup ? groupMetadata.participants : []) || []
 
-// CONSOLE DEBUG PARA VER IDS
-if (m.isGroup) {
-    console.log("====== DEPURACIÓN ADMIN ======");
-    console.log("PARTICIPANTS IDs:", participants.map(p => p.id));
-    console.log("M.SENDER:", m.sender);
-}
-
 // LÓGICA LID: BUSCA EL PARTICIPANTE REAL
 let partisipan = m.key?.participant || '';
 if (partisipan.endsWith('@lid')) {
