@@ -137,18 +137,8 @@ global.taguser = '@' + m.sender.split("@")[0]
 var more = String.fromCharCode(8206)
 global.readMore = more.repeat(850)
 
-global.packsticker = `
-⏜͜⌒᳝︵໋۪۪۪۪۪᳝֔࣪⡳۟︵໋۪۪۪᳝֔࣪⌒꒰🍥꒱︵᳝࣪⡳۪۟︵໋۪۪۪᳝֔⌒⏜
+global.packsticker = `⏜͜⌒᳝︵໋۪۪۪۪۪᳝֔࣪⡳۟︵໋۪۪۪᳝֔࣪⌒꒰🍥꒱︵᳝࣪⡳۪۟︵໋۪۪۪᳝֔⌒⏜\n\n𑁯ᰰᘘ᷒ᰰ ༝⃟ꪆ 𓈒꫶⭑⃕ 𝑷𝑨𝑪𝑲 𝑺𝑻𝑰𝑪𝑲𝑬𝑹 𖹭⭑⃕ ꫶𓈒 ༝⃟ꪆ ᘘ᷒ᰰ𑁯\n\n⌯⃝⃕ 🧸 𝐔𝐒𝐔𝐀𝐑𝐈𝐎: ${nombre}\n⌯⃝⃕ 🩷 𝐁𝐎𝐓: ${botname}\n⌯⃝⃕ 🕰 𝐅𝐄𝐂𝐇𝐀: ${fecha}\n⌯⃝⃕ 📅 𝐇𝐎𝐑𝐀: ${tiempo}\n\nᰔᩚ⃟꫶⭑⃕ ——— 𝒅𝒐𝒏'𝒕 𝒄𝒐𝒑𝒚 𝒎𝒚 𝒇𝒍𝒐𝒘 ——— ⭑꫶⃕ᩚᰔ`;
 
-𑁯ᰰᘘ᷒ᰰ ༝⃟ꪆ 𓈒꫶⭑⃕ 𝑷𝑨𝑪𝑲 𝑺𝑻𝑰𝑪𝑲𝑬𝑹 𖹭⭑⃕ ꫶𓈒 ༝⃟ꪆ ᘘ᷒ᰰ𑁯
-
-⌯⃝⃕ 🧸 𝐔𝐒𝐔𝐀𝐑𝐈𝐎: ${nombre}
-⌯⃝⃕ 🩷 𝐁𝐎𝐓: ${botname}
-⌯⃝⃕ 🕰 𝐅𝐄𝐂𝐇𝐀: ${fecha}
-⌯⃝⃕ 📅 𝐇𝐎𝐑𝐀: ${tiempo}
-
-ᰔᩚ⃟꫶⭑⃕ ——— 𝒅𝒐𝒏'𝒕 𝒄𝒐𝒑𝒚 𝒎𝒚 𝒇𝒍𝒐𝒘 ——— ⭑꫶⃕ᩚᰔ
-`;
 
 // rcanaɭ con icono como buffer
 global.rcanal = {
