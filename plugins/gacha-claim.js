@@ -36,14 +36,15 @@ let handler = async (m, { conn }) => {
     if (m.quoted && m.quoted.text) {
         try {
             const characters = await loadCharacters();
-            const characterIdMatch = m.quoted.text.match(/𝙄𝘿: \*(.+?)\*/);
+            // Mejor detección de ID, soporta variantes con o sin espacio
+            const characterIdMatch = m.quoted.text.match(/ID:\s*\*([^\*]+)\*/i);
 
             if (!characterIdMatch) {
                 await conn.reply(m.chat, '《✧》No se pudo encontrar el ID del personaje en el mensaje citado.', m);
                 return;
             }
 
-            const characterId = characterIdMatch[1];
+            const characterId = characterIdMatch[1].trim();
             const character = characters.find(c => c.id === characterId);
 
             if (!character) {
@@ -68,8 +69,8 @@ let handler = async (m, { conn }) => {
 
             await conn.reply(
                 m.chat,
-                ` ᥫ᭡ ⏤͟͟͞͞𝙍𝙀𝘾𝙇𝘼𝙈𝘼𝘿𝙊 𝙀𝙓𝙄𝙏𝙊𝙎𝘼𝙈𝙀𝙉𝙏𝙀⃤\n` +
-                `┃ ¡𝐅𝐄𝐋𝐈𝐂𝐈𝐃𝐀𝐃𝐄𝐒 𝐏𝐎𝐑 𝐑𝐄𝐂𝐋𝐀𝐌𝐀𝐑 𝐀 *${character.name}* ૮(˶ᵔᵕᵔ˶)ა,
+                `ᥫ᭡ ⏤͟͟͞͞𝙍𝙀𝘾𝙇𝘼𝙈𝘼𝘿𝙊 𝙀𝙓𝙄𝙏𝙊𝙎𝘼𝙈𝙀𝙉𝙏𝙀⃤\n` +
+                `┃ ¡𝐅𝐄𝐋𝐈𝐂𝐈𝐃𝐀𝐃𝐄𝐒 𝐏𝐎𝐑 𝐑𝐄𝐂𝐋𝐀𝐌𝐀𝐑 𝐀 *${character.name}* ૮(˶ᵔᵕᵔ˶)ა`,
                 m
             );
 
