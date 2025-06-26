@@ -26,13 +26,11 @@ let m = chatUpdate.messages[chatUpdate.messages.length - 1]
 if (!m)
 return
 
-// === SOLO UN BOT RESPONDE AL AZAR EN GRUPOS ===
 if (m.isGroup && global.conns && global.conns.length > 1) {
     let botsEnGrupo = global.conns.filter(c => c.user && c.user.jid && c.ws && c.ws.socket && c.ws.socket.readyState !== 3)
     let elegido = botsEnGrupo[Math.floor(Math.random() * botsEnGrupo.length)]
     if (this.user.jid !== elegido.user.jid) return
 }
-// === FIN BLOQUE ===
 
 if (global.db.data == null)
 await global.loadDatabase()       
