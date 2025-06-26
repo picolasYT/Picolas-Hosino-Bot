@@ -13,7 +13,6 @@ const delay = ms => isNumber(ms) && new Promise(resolve => setTimeout(function (
     resolve()
 }, ms))
 
-// === NUEVAS FUNCIONES DE MANEJO DE JID ===
 const normalizeJid = jid => jid?.replace(/[^0-9]/g, '')
 const cleanJid = jid => jid?.split(':')[0] || ''
 
@@ -252,7 +251,6 @@ m.text = ''
 
 let _user = global.db.data && global.db.data.users && global.db.data.users[m.sender]
 
-// === MANEJO DE ADMIN/BOT CON JID UNIVERSAL (AMBOS FORMATOS) ===
 const groupMetadata = (m.isGroup ? ((conn.chats[m.chat] || {}).metadata || await this.groupMetadata(m.chat).catch(_ => null)) : {}) || {}
 const participants = (m.isGroup ? groupMetadata.participants : []) || []
 
