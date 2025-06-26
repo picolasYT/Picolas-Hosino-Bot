@@ -112,7 +112,7 @@ export async function handler(chatUpdate) {
                 lastmining: 0,
                 lastcodereg: 0,
                 muto: false,
-                registered: false: false,
+                registered: false,
                 premiumTime: 0,
             }
         let chat = global.db.data.chats[m.chat]
