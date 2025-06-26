@@ -124,7 +124,7 @@ export async function handler(chatUpdate) {
             if (!('autolevelup' in chat)) chat.autolevelup = false
             if (!('autoAceptar' in chat)) chat.autoAceptar = false
             if (!('autosticker' in chat)) chat.autosticker = false
-            if (!('autoRechazar if (!isNumber(chat.expired)) chat.expired = 0
+            if (!('autoRechazar' in chat)) chat.autoRechazar = false
             if (!('antiLag' in chat)) chat.antiLag = false
             if (!('per' in chat)) chat.per = []
         } else
