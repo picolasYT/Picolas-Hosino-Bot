@@ -1,71 +1,41 @@
-import JavaScriptObfuscator from 'javascript-obfuscator';
+import JavaScriptObfuscator from 'javascript-obfuscator'
 
-const handler = async (m, { conn, text, command }) => {
-  if (!text) {
-    return m.reply('🌹 Ingresa el código JavaScript que quieres ofuscar.\nEjemplo:\n.ofuscar console.log("Hola mundo")');
-  }
+let handler = async (m, { conn, usedPrefix, command }) => {
+  if (!m.quoted || !m.quoted.text) 
+    return m.reply(`✳️ Responde a un mensaje que contenga el código JavaScript que deseas ofuscar.\n\nEjemplo:\n${usedPrefix + command} (responde a un mensaje con código)`)
 
-  // Opciones muy agresivas de ofuscación
-  const options = {
+  let code = m.quoted.text.trim()
+  if (!code) return m.reply('✳️ El código a ofuscar no puede estar vacío.')
+
+  // Ofuscación fuerte
+  let obfuscated = JavaScriptObfuscator.obfuscate(code, {
     compact: true,
     controlFlowFlattening: true,
     controlFlowFlatteningThreshold: 1,
+    numbersToExpressions: true,
+    simplify: true,
+    stringArray: true,
+    stringArrayEncoding: ['base64'],
+    stringArrayThreshold: 1,
+    splitStrings: true,
+    splitStringsChunkLength: 5,
+    renameGlobals: true,
     deadCodeInjection: true,
     deadCodeInjectionThreshold: 1,
-    debugProtection: true,
-    debugProtectionInterval: true,
-    disableConsoleOutput: true,
-    identifierNamesGenerator: 'hexadecimal',
-    log: false,
-    numbersToExpressions: true,
-    renameGlobals: true,
-    selfDefending: true,
-    simplify: true,
-    splitStrings: true,
-    splitStringsChunkLength: 2,
-    stringArray: true,
-    stringArrayEncoding: ['rc4'],
-    stringArrayIndexShift: true,
-    stringArrayRotate: true,
-    stringArrayShuffle: true,
-    stringArrayWrappersCount: 5,
-    stringArrayWrappersChainedCalls: true,
-    stringArrayWrappersType: 'function',
-    stringArrayThreshold: 1,
-    transformObjectKeys: true,
     unicodeEscapeSequence: true
-  };
+  }).getObfuscatedCode()
 
-  // Proceso de ofuscación
-  try {
-    const obfuscated = JavaScriptObfuscator.obfuscate(text, options).getObfuscatedCode();
-
-    // Si es muy largo, lo manda como archivo .js
-    if (obfuscated.length > 4000) {
-      await conn.sendMessage(
-        m.chat,
-        {
-          document: Buffer.from(obfuscated),
-          mimetype: 'text/javascript',
-          fileName: 'codigo_ofuscado.js'
-        },
-        { quoted: m }
-      );
-      return m.reply('✅ Código ofuscado y enviado como archivo.');
-    }
-    // Si es corto, lo manda como mensaje de texto
-    await conn.sendMessage(
-      m.chat,
-      {
-        text: '```js\n' + obfuscated + '\n```'
-      },
-      { quoted: m }
-    );
-  } catch (e) {
-    m.reply('❌ Error al ofuscar el código:\n' + (e && e.message ? e.message : e));
+  // Si el código es muy largo, puedes adaptarlo para enviarlo como archivo
+  if (obfuscated.length > 4000) {
+    return conn.sendMessage(m.chat, { document: Buffer.from(obfuscated), mimetype: 'text/javascript', fileName: 'codigo-ofuscado.js' }, { quoted: m })
   }
-};
 
-// Comando: .ofuscar  o .obfuscate
-handler.command = /^(ofuscar|obfuscate)$/i;
-export default handler;
+  m.reply('✅ Código fuertemente ofuscado:\n\n' + obfuscated)
+}
+
+handler.help = ['ofuscar']
+handler.tags = ['tools']
+handler.command = ['ofuscar', 'obfuscate']
+handler.group = true
+
+export default handler
