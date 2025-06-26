@@ -1,19 +1,36 @@
-let handler = async (m, { conn, usedPrefix, command }) => {
+let handler = async (m, { conn, participants, isAdmin, groupMetadata, mentionedJid }) => {
+  
+  const groupOwner = groupMetadata.owner || groupMetadata.participants.find(p => p.admin === 'superadmin')?.id;
 
-  if (!m.mentionedJid[0] && !m.quoted) return m.reply(`✳️ Ingresa el tag de un usuario. Ejemplo :\n\n*${usedPrefix + command}* @tag`)
-  let user = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted.sender
-  if (conn.user.jid.includes(user)) return m.reply(`✳️ No puedo degradarme a mí mismo.`)
+  
+  if (!mentionedJid[0]) {
+    return m.reply('⚠️ Debes mencionar a un usuario para quitarle el admin.\n\nEjemplo: *.demote @usuario*');
+  }
 
-  await conn.groupParticipantsUpdate(m.chat, [user], 'demote')
-  m.reply(`✅ Usuario degradado de administrador con éxito`)
+  const user = mentionedJid[0];
 
-}
+  
+  if (user === groupOwner) {
+    return m.reply('❌ No puedes quitarle el admin al propietario del grupo.');
+  }
 
-handler.help = ['demote @user']
-handler.tags = ['group']
-handler.command = ['demote', 'degradar']
+  const target = participants.find(p => p.id === user);
+
+  
+  if (!target?.admin) {
+    return m.reply('⚠️ El usuario que mencionaste no es admin.');
+  }
+
+ 
+  await conn.groupParticipantsUpdate(m.chat, [user], 'demote');
+  await m.react('✅');
+};
+
+handler.help = ['demote @usuario'];
+handler.tags = ['grupo'];
+handler.command = ['demote'];
+handler.group = true;
 handler.admin = true
-handler.group = true
 handler.botAdmin = true
 
-export default handler
+export default handler;
