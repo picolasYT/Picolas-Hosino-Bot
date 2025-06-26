@@ -37,7 +37,7 @@ let handler = async (m, { conn }) => {
         try {
             const characters = await loadCharacters();
             // Mejor detección de ID, soporta variantes con o sin espacio
-            const characterIdMatch = m.quoted.text.match(/ID:\s*\*([^\*]+)\*/i);
+            const characterIdMatch = m.quoted.text.match(/𝙄𝘿:\s*\*([^\*]+)\*/i);
 
             if (!characterIdMatch) {
                 await conn.reply(m.chat, '《✧》No se pudo encontrar el ID del personaje en el mensaje citado.', m);
