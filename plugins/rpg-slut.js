@@ -29,13 +29,13 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
     { texto: `✿ Te dejaron propina tras hacer un baile en una despedida de soltero: *¥{monto}*.`, ganar: true, min: 150, max: 600 },
 
     // Pérdidas
-    { texto: `✿ Te arrestaron por indecencia pública. Pagaste *¥{monto}* de multa.`, ganar: false, min: 800, max: 2000 },
-    { texto: `✿ Tu cliente se fue sin pagar. Perdiste *¥{monto}*.`, ganar: false, min: 1000, max: 2500 },
-    { texto: `✿ Te fracturaste haciendo una pose extraña. Gastaste *¥{monto}* en la clínica.`, ganar: false, min: 300, max: 1200 },
-    { texto: `✿ Nadie quiso tus servicios hoy. Perdiste *¥{monto}* en maquillaje y trajes.`, ganar: false, min: 50, max: 400 },
-    { texto: `✿ Te emborrachaste y pagaste la cuenta de todos. Perdiste *¥{monto}*.`, ganar: false, min: 300, max: 1000 },
-    { texto: `✿ Le rompiste la verga a tu cliente. Tuviste que devolver *¥{monto}*.`, ganar: false, min: 1500, max: 3200 },
-    { texto: `✿ Te drogaron y amaneciste sin cartera. Te robaron *¥{monto}*.`, ganar: false, min: 2000, max: 5000 },
+    { texto: `✿ Te arrestaron por indecencia pública. Pagaste *-{monto}* de multa.`, ganar: false, min: 800, max: 2000 },
+    { texto: `✿ Tu cliente se fue sin pagar. Perdiste *-{monto}*.`, ganar: false, min: 1000, max: 2500 },
+    { texto: `✿ Te fracturaste haciendo una pose extraña. Gastaste *-{monto}* en la clínica.`, ganar: false, min: 300, max: 1200 },
+    { texto: `✿ Nadie quiso tus servicios hoy. Perdiste *-{monto}* en maquillaje y trajes.`, ganar: false, min: 50, max: 400 },
+    { texto: `✿ Te emborrachaste y pagaste la cuenta de todos. Perdiste *-{monto}*.`, ganar: false, min: 300, max: 1000 },
+    { texto: `✿ Le rompiste la verga a tu cliente. Tuviste que devolver *-{monto}*.`, ganar: false, min: 1500, max: 3200 },
+    { texto: `✿ Te drogaron y amaneciste sin cartera. Te robaron *-{monto}*.`, ganar: false, min: 2000, max: 5000 },
   ]
 
   let accion = acciones[Math.floor(Math.random() * acciones.length)]
