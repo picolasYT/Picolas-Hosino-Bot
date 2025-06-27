@@ -1,7 +1,7 @@
 let handler = async (m, { conn }) => {
   let user = global.db.data.users[m.sender];
 
-  const tiempoMs = 86400000; // 24 horas
+  const tiempoMs = 86400000; 
   const tiempoActual = Date.now();
   const diferencia = tiempoActual - (user.lastclaim || 0);
 
@@ -10,16 +10,14 @@ let handler = async (m, { conn }) => {
     return conn.reply(m.chat, `🌸 𝑌𝑎 𝑐𝑜𝑏𝑟𝑎𝑠𝑡𝑒 𝑡𝑢 𝑟𝑒𝑐𝑜𝑚𝑝𝑒𝑛𝑠𝑎.\n\n⌛ 𝑉𝑢𝑒𝑙𝑣𝑒 𝑒𝑛 *${restante}* 𝑝𝑎𝑟𝑎 𝑛𝑜 𝑝𝑒𝑟𝑑𝑒𝑟 𝑡𝑢 𝑟𝑎𝑐ℎ𝑎.`, m);
   }
 
-  // Reiniciar racha si ha pasado más de 48h
   if (diferencia > tiempoMs * 2) {
     user.dailyStreak = 1;
   } else {
     user.dailyStreak = (user.dailyStreak || 0) + 1;
   }
 
-  // Cálculo de recompensa por racha
   let streak = user.dailyStreak;
-  let reward = 30000 + (streak * 5000); // día 1 = 35,000, día 2 = 40,000, etc.
+  let reward = 30000 + (streak * 5000);
   let diamantes = Math.floor(5 + streak);
   let exp = Math.floor(200 + streak * 20);
 
@@ -41,7 +39,6 @@ handler.register = true;
 
 export default handler;
 
-// Función de conversión
 function msToTime(duration) {
   let hours = Math.floor(duration / (1000 * 60 * 60));
   let minutes = Math.floor((duration % (1000 * 60 * 60)) / (1000 * 60));
