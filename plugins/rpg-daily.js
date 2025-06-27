@@ -1,28 +1,39 @@
-var handler = async (m, { conn }) => {
-    let coin = Math.floor(Math.random() * (500 - 100 + 1)) + 100;
-    let exp = Math.floor(Math.random() * (500 - 100 + 1)) + 100;
-    let d = Math.floor(Math.random() * (500 - 100 + 1)) + 100;
+let handler = async (m, { conn }) => {
+  let user = global.db.data.users[m.sender];
 
-    global.db.data.users[m.sender].diamond += d;
-    global.db.data.users[m.sender].coin += coin;
+  const tiempoMs = 86400000; // 24 horas
+  const tiempoActual = Date.now();
+  const diferencia = tiempoActual - (user.lastclaim || 0);
 
-    let time = global.db.data.users[m.sender].lastclaim + 86400000;
-    if (new Date() - global.db.data.users[m.sender].lastclaim < 7200000) {
-        return conn.reply(m.chat, `${emoji4} *Vuelve en ${msToTime(time - new Date())}*`, m);
-    }
+  if (diferencia < tiempoMs) {
+    let restante = msToTime((user.lastclaim + tiempoMs) - tiempoActual);
+    return conn.reply(m.chat, `🌸 𝑌𝑎 𝑐𝑜𝑏𝑟𝑎𝑠𝑡𝑒 𝑡𝑢 𝑟𝑒𝑐𝑜𝑚𝑝𝑒𝑛𝑠𝑎.\n\n⌛ 𝑉𝑢𝑒𝑙𝑣𝑒 𝑒𝑛 *${restante}* 𝑝𝑎𝑟𝑎 𝑛𝑜 𝑝𝑒𝑟𝑑𝑒𝑟 𝑡𝑢 𝑟𝑎𝑐ℎ𝑎.`, m);
+  }
 
-    global.db.data.users[m.sender].exp += exp;
-    conn.reply(m.chat, `${emoji} *Recompensa Diaria*
+  // Reiniciar racha si ha pasado más de 48h
+  if (diferencia > tiempoMs * 2) {
+    user.dailyStreak = 1;
+  } else {
+    user.dailyStreak = (user.dailyStreak || 0) + 1;
+  }
 
-Recursos:
-✨ Xp : *+${exp}*
-💎 Diamantes : *+${d}*
-💸 ${moneda} : *+${coin}*`, m);
+  // Cálculo de recompensa por racha
+  let streak = user.dailyStreak;
+  let reward = 30000 + (streak * 5000); // día 1 = 35,000, día 2 = 40,000, etc.
+  let diamantes = Math.floor(5 + streak);
+  let exp = Math.floor(200 + streak * 20);
 
-    global.db.data.users[m.sender].lastclaim = Date.now();
+  user.coin += reward;
+  user.diamond += diamantes;
+  user.exp += exp;
+  user.lastclaim = tiempoActual;
+
+  conn.reply(m.chat, `「✿」Has reclamado tu recompensa diaria de *¥${reward.toLocaleString()} ${moneda}*! (Día *${streak}*)\n` +
+    `> Día *${streak + 1}* » *+¥${(reward + 5000).toLocaleString()}* 🍀\n\n` +
+    `✨ EXP: *+${exp}*\n💎 Diamantes: *+${diamantes}*\n💰 ${moneda}: *+${reward}*`, m);
 }
 
-handler.help = ['daily', 'claim'];
+handler.help = ['daily', 'diario'];
 handler.tags = ['rpg'];
 handler.command = ['daily', 'diario'];
 handler.group = true;
@@ -30,15 +41,10 @@ handler.register = true;
 
 export default handler;
 
+// Función de conversión
 function msToTime(duration) {
-    var milliseconds = parseInt((duration % 1000) / 100),
-        seconds = Math.floor((duration / 1000) % 60),
-        minutes = Math.floor((duration / (1000 * 60)) % 60),
-        hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+  let hours = Math.floor(duration / (1000 * 60 * 60));
+  let minutes = Math.floor((duration % (1000 * 60 * 60)) / (1000 * 60));
 
-    hours = (hours < 10) ? '0' + hours : hours;
-    minutes = (minutes < 10) ? '0' + minutes : minutes;
-    seconds = (seconds < 10) ? '0' + seconds : seconds;
-
-    return hours + ' Horas ' + minutes + ' Minutos';
+  return `${hours} hora(s) y ${minutes} minuto(s)`;
 }
