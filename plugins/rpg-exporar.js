@@ -45,7 +45,7 @@ let handler = async (m, { conn, text, command }) => {
   users[senderId].exp += evento.exp
   users[senderId].health += evento.health
 
-  let img = 'https://qu.ax/ljzxA.jpg'
+  let img = 'https://files.catbox.moe/357gtl.jpg'
   let info = `╭─「 *🌲 Exploración del Bosque Mágico* 」─
 │ ✦ Misión: *${evento.nombre}*
 │ ✦ Evento: ${evento.mensaje}
