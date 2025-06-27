@@ -7,6 +7,7 @@ let handler = async (m, { conn: _envio, command, usedPrefix, args, text, isOwner
   const isDeleteSession = /^(deletesesion|deletebot|deletesession|deletesesaion)$/i.test(command);
   const isPauseBot = /^(stop|pausarai|pausarbot)$/i.test(command);
   const isShowBots = /^(bots|sockets|socket)$/i.test(command);
+  const isShowBotsNums = /^(botsnums|botsnum|botnums|botlnums)$/i.test(command); // Nuevo comando
 
   const reportError = async (e) => {
     await m.reply(`⚠️ Ocurrió un error inesperado, lo siento mucho...`)
@@ -59,17 +60,42 @@ let handler = async (m, { conn: _envio, command, usedPrefix, args, text, isOwner
     }
 
     case isShowBots: {
+      // SOLO NOMBRES, SIN NÚMEROS, SIN MENCIÓN
       const users = [...new Set([...global.conns.filter(conn => conn.user && conn.ws.socket && conn.ws.socket.readyState !== ws.CLOSED)])];
+      const listaSubBots = users.map((v, i) => 
+        `🌟 *SUB-BOT #${i + 1}*\n👤 Nombre: ${v.user.name || 'Sub-Bot'}`
+      ).join('\n\n───────────────\n\n');
 
-      const convertirMsADiasHorasMinutosSegundos = (ms) => {
-        let segundos = Math.floor(ms / 1000);
+      const finalMessage = listaSubBots.length === 0
+        ? '💤 No hay Sub-Bots activos por ahora... intenta más tarde.'
+        : listaSubBots;
+
+      const msg = `
+${emoji || '🤖'} 𝐋𝐈𝐒𝐓𝐀 𝐃𝐄 𝐒𝐔𝐁-𝐁𝐎𝐓𝐒 𝐀𝐂𝐓𝐈𝐕𝐎𝐒 💫
+
+ㅤㅤㅤㅤㅤ¿𝐐𝐮𝐢𝐞𝐫𝐞𝐬 𝐭𝐞𝐧𝐞𝐫 𝐮𝐧 𝐛𝐨𝐭 𝐞𝐧 𝐭𝐮 𝐠𝐫𝐮𝐩𝐨?
+ㅤ𝖯𝗎𝖾d𝖾𝗌 𝗉𝖾𝖽𝗂𝗋 𝗉𝖾𝗋𝗆𝗂𝗌𝗈 𝖺 uno ellos para unirlo sin problema!
+
+🌐 𝐒𝐔𝐁-𝐁𝐎𝐓𝐒 𝐂𝐎𝐍𝐄𝐂𝐓𝐀𝐃𝐎𝐒: ${users.length || '0'}
+
+${finalMessage}`.trim();
+
+      await _envio.sendMessage(m.chat, {
+        text: msg,
+        mentions: []
+      }, { quoted: m });
+      break;
+    }
+
+    case isShowBotsNums: {
+      // NOMBRES + NÚMERO + ENLACE (como antes)
+      const users = [...new Set([...global.conns.filter(conn => conn.user && conn.ws.socket && conn.ws.socket.readyState !== ws.C segundos = Math.floor(ms / 1000);
         let minutos = Math.floor(segundos / 60);
         let horas = Math.floor(minutos / 60);
         let días = Math.floor(horas / 24);
         segundos %= 60;
         minutos %= 60;
         horas %= 24;
-
         return [
           días ? `${días} día(s)` : '',
           horas ? `${horas} hora(s)` : '',
@@ -77,7 +103,6 @@ let handler = async (m, { conn: _envio, command, usedPrefix, args, text, isOwner
           segundos ? `${segundos} segundo(s)` : '',
         ].filter(Boolean).join(', ');
       };
-
       const listaSubBots = users.map((v, i) => 
 `🌟 *SUB-BOT #${i + 1}*
 📱 Número: https://wa.me/${v.user.jid.replace(/[^0-9]/g, '')}?text=${usedPrefix}estado
@@ -90,14 +115,10 @@ let handler = async (m, { conn: _envio, command, usedPrefix, args, text, isOwner
         : listaSubBots;
 
       const msg = `
-${emoji} 𝐋𝐈𝐒𝐓𝐀 𝐃𝐄 𝐒𝐔𝐁-𝐁𝐎𝐓𝐒 𝐀𝐂𝐓𝐈𝐕𝐎𝐒 💫
+${emoji || '🤖'} 𝐋𝐈𝐒𝐓𝐀 𝐃𝐄 𝐒𝐔𝐁-𝐁𝐎𝐓𝐒 𝐀𝐂𝐓𝐈𝐕𝐎𝐒 💫
 
-ㅤㅤㅤㅤㅤㅤֹㅤ¿𝐐𝐮𝐢𝐞𝐫𝐞𝐬 𝐭𝐞𝐧𝐞𝐫 𝐮𝐧 𝐛𝐨𝐭 𝐞𝐧 𝐭𝐮 𝐠𝐫𝐮𝐩𝐨?
-ㅤ𝖯𝗎𝖾d𝖾𝗌 𝗉𝖾𝖽𝗂𝗋 𝗉𝖾𝗋𝗆𝗂𝗌𝗈 𝖺 uno de estos para unirlo 𝗌𝗂𝗇 probrema!
-
-${emoji2} 𝐀𝐃𝐕𝐄𝐑𝐓𝐄𝐍𝐂𝐈𝐀:
-⚠️ ֹ𝖤𝖫 𝖴𝖲𝖮 𝖣𝖤 𝖫𝖮𝖲 𝖲𝖴𝖡-𝖡𝖮𝖳𝖲 𝖤𝖲 𝖱𝖤𝖲𝖯𝖮𝖭𝖲𝖠𝖡𝖨𝖫𝖨𝖣𝖠𝖣 𝖣𝖤 𝖢𝖠𝖣𝖠 𝖴𝖲𝖴𝖠𝖱𝖨𝖮
-𝖤𝗅 𝗇𝗎𝗆𝖾𝗋𝗈 𝗉𝗋𝗂𝗇𝖼𝗂𝗉𝖺𝗅 𝗇𝗈 𝗌𝖾 𝗁𝖺𝖼𝖾 𝗋𝖾𝗌𝗉𝗈𝗇𝗌𝖺𝖻𝗅𝖾 𝗉𝗈𝗋 𝖾𝗅 𝗆𝖺𝗅 𝗎𝗌𝗈 🚫
+ㅤㅤㅤㅤㅤ¿𝐐𝐮𝐢𝐞𝐫𝐞𝐬 𝐭𝐞𝐧𝐞𝐫 𝐮𝐧 𝐛𝐨𝐭 𝐞𝐧 𝐭𝐮 𝐠𝐫𝐮𝐩𝐨?
+ㅤ𝖯𝗎𝖾d𝖾𝗌 𝗉𝖾𝖉𝗂𝗋 𝗉𝖾𝗋𝗆𝗂𝗌𝗈 𝖺 uno de ellos para unirlo sin problema!
 
 🌐 𝐒𝐔𝐁-𝐁𝐎𝐓𝐒 𝐂𝐎𝐍𝐄𝐂𝐓𝐀𝐃𝐎𝐒: ${users.length || '0'}
 
@@ -105,19 +126,11 @@ ${finalMessage}`.trim();
 
       await _envio.sendMessage(m.chat, {
         text: msg,
-        mentions: _envio.parseMention(msg)
+        mentions: [] // si quieres que se mencionen, agrega aquí los números
       }, { quoted: m });
       break;
     }
-  }
-};
+ solo funcione para admins/owners, agrega una validación al inicio de ese case.
+- Puedes personalizar los textos/emoji a tu gusto.
 
-handler.tags = ['serbot'];
-handler.help = ['sockets', 'deletesesion', 'pausarai'];
-handler.command = [
-  'deletesesion', 'deletebot', 'deletesession', 'deletesesaion',
-  'stop', 'pausarai', 'pausarbot',
-  'bots', 'sockets', 'socket'
-];
-
-export default handler;
+¿Quieres que `.botsnums` sea visible solo para el owner o para admins? ¿O necesitas una versión con botones? Pídelo y te lo adapto.
