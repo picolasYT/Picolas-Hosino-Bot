@@ -139,10 +139,9 @@ global.readMore = more.repeat(850)
 
 global.packsticker = {
   packname: `⏜͜⌒᳝︵໋۪۪۪۪۪᳝֔࣪⡳۟︵໋۪۪۪᳝֔࣪⌒꒰🍥꒱︵᳝࣪⡳۪۟︵໋۪۪۪᳝֔⌒⏜
-⌯⃝⃕ 🧸 𝐔𝐒𝐔𝐀𝐑𝐈𝐎: ${nombre}`,
-  author: "Gay si lo robas"
-}
+⌯⃝⃕ 🧸 𝐩𝐫𝐨𝐩𝐢𝐞𝐝𝐚𝐝 𝐝𝐞 ${nombre}
 
+> 𑁯ᰰᘘ᷒ᰰ ༝⃟ꪆ 𝙂𝘼𝙔 𝙎𝙄 𝙇𝙊 𝙍𝙊𝘽𝘼𝙎 ༝⃟ꪆ ᘘ᷒ᰰ𑁯`,
 
 // rcanaɭ con icono como buffer
 global.rcanal = {
