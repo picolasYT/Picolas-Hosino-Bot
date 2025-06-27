@@ -1,37 +1,43 @@
 const baseCoinReward = 20000;
 
-var handler = async (m, { conn }) => {
+let handler = async (m, { conn }) => {
+  let user = global.db.data.users[m.sender] || {};
+  user.monthly = user.monthly || 0;
 
-    let user = global.db.data.users[m.sender] || {};
-    user.monthly = user.monthly || 0;
+  const cooldown = 604800000 * 4; // 4 semanas
+  let timeRemaining = user.monthly + cooldown - new Date();
 
-    const cooldown = 604800000 * 4; // 4 semanas
+  if (timeRemaining > 0) {
+    return m.reply(`${emoji3} ✿ Ya reclamaste tu *recompensa mensual* ✿\n⏳ Vuelve en *${msToTime(timeRemaining)}*`);
+  }
 
-    let timeRemaining = user.monthly + cooldown - new Date();
+  let coinReward = pickRandom([20000, 25000, 30000, 35000, 40000]);
+  let expReward = pickRandom([4000, 5000, 6000, 7000, 8000]);
+  let diamondReward = pickRandom([5, 6, 7, 8, 9, 10]);
 
-    if (timeRemaining > 0) {
-        return m.reply(`${emoji3} ¡Ya reclamaste tu regalo mensual! Vuelve en:\n *${msToTime(timeRemaining)}*`);
-    }
+  user.coin = (user.coin || 0) + coinReward;
+  user.exp = (user.exp || 0) + expReward;
+  user.diamonds = (user.diamonds || 0) + diamondReward;
 
-    let coinReward = pickRandom([1, 2, 3, 4, 5]);
-    let expReward = pickRandom([500, 1000, 1500, 2000, 2500]);
-    let diamondReward = pickRandom([1, 2, 3]);
+  user.monthly = Date.now();
 
-    user.coin = (user.coin || 0) + coinReward;
-    user.exp = (user.exp || 0) + expReward;
-    user.diamonds = (user.diamonds || 0) + diamondReward;
+  let mensaje = `
+╭───────「  🎁 𝐌𝐄𝐍𝐒𝐔𝐀𝐋 - 𝐁𝐎𝐍𝐔𝐒 🎁 」───────
+│
+│ ✿ ¡𝙷𝚊𝚜 𝚛𝚎𝚌𝚕𝚊𝚖𝚊𝚍𝚘 𝚝𝚞 𝚁𝙴𝙶𝙰𝙻𝙾 𝙼𝙴𝙽𝚂𝚄𝙰𝙻!
+│
+│ 💸 ${moneda} : *+¥${coinReward.toLocaleString()}*
+│ ✨ Experiencia : *+${expReward} XP*
+│ 💎 Diamantes : *+${diamondReward}*
+╰─────────────────────────────
 
-    m.reply(`
-\`\`\`🎁 ¡Ha pasado un mes! ¡Disfruta de tu regalo mensual!. \`\`\`
+⏳ Puedes volver a reclamarlo dentro de *4 semanas*
+`.trim();
 
-💸 *${moneda}* : +${coinReward}
-✨ *Experiencia* : +${expReward}
-💎 *Diamantes* : +${diamondReward}`);
-
-    user.monthly = new Date * 1;
+  m.reply(mensaje);
 }
 
-handler.help = ['monthly'];
+handler.help = ['mensual'];
 handler.tags = ['rpg'];
 handler.command = ['mensual', 'monthly'];
 handler.group = true;
@@ -40,13 +46,12 @@ handler.register = true;
 export default handler;
 
 function pickRandom(list) {
-    return list[Math.floor(Math.random() * list.length)];
+  return list[Math.floor(Math.random() * list.length)];
 }
 
 function msToTime(duration) {
-    var days = Math.floor(duration / (1000 * 60 * 60 * 24));
-    var hours = Math.floor((duration % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    var minutes = Math.floor((duration % (1000 * 60 * 60)) / (1000 * 60));
-    
-    return `${days} días ${hours} horas ${minutes} minutos`;
+  const days = Math.floor(duration / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((duration % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((duration % (1000 * 60 * 60)) / (1000 * 60));
+  return `${days} días, ${hours} horas, ${minutes} minutos`;
 }
