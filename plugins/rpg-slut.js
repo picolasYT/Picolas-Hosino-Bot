@@ -1,85 +1,56 @@
 let cooldowns = {}
 
-let handler = async (m, { conn, text, command }) => {
-  const users = global.db.data.users
-  const senderId = m.sender
-  const senderName = conn.getName(senderId)
+let handler = async (m, { conn, text, command, usedPrefix }) => {
+  let users = global.db.data.users
+  let senderId = m.sender
+  let senderName = conn.getName(senderId)
 
-  const cooldown = 5 * 60 * 1000
-  if (cooldowns[senderId] && Date.now() - cooldowns[senderId] < cooldown) {
-    const wait = Math.ceil((cooldowns[senderId] + cooldown - Date.now()) / 1000)
-    return m.reply(`⏳ Debes esperar *${segundosAHMS(wait)}* para usar *#slut* de nuevo.`)
+  let tiempo = 5 * 60
+  if (cooldowns[m.sender] && Date.now() - cooldowns[m.sender] < tiempo * 1000) {
+    let tiempo2 = segundosAHMS(Math.ceil((cooldowns[m.sender] + tiempo * 1000 - Date.now()) / 1000))
+    m.reply(`💦 Debes esperar *${tiempo2}* para volver a usar *#slut*.`)
+    return
   }
 
-  cooldowns[senderId] = Date.now()
-
+  cooldowns[m.sender] = Date.now()
   let senderCoin = users[senderId].coin || 0
   let randomUserId = Object.keys(users)[Math.floor(Math.random() * Object.keys(users).length)]
   while (randomUserId === senderId) {
     randomUserId = Object.keys(users)[Math.floor(Math.random() * Object.keys(users).length)]
   }
-  const randomUserCoin = users[randomUserId].coin || 0
-  const randomName = conn.getName(randomUserId)
+  let randomUserCoin = users[randomUserId].coin || 0
 
-  // Ganancias grandes
-  const bigGain = Math.floor(Math.random() * 3001) + 2000 // 2000 - 5000
-  const mediumGain = Math.floor(Math.random() * 1001) + 500 // 500 - 1500
-  const bigLoss = Math.floor(Math.random() * 2501) + 1500 // 1500 - 4000
-  const mediumLoss = Math.floor(Math.random() * 801) + 400 // 400 - 1200
+  const acciones = [
+    // Ganancias
+    { texto: `✿ Te vistieron de maid en público y te dieron *¥{monto}* por dejar que todos te usen como juguete.`, ganar: true, min: 2000, max: 5349 },
+    { texto: `✿ Participaste en una orgía oculta y alguien te pagó *¥{monto}* por tus \"servicios\" VIP.`, ganar: true, min: 1200, max: 4000 },
+    { texto: `✿ Le hiciste un show a @usuario y te lanzó *¥{monto}* encima como recompensa.`, ganar: true, min: 800, max: 2300 },
+    { texto: `✿ Estuviste en una película para adultos sin saberlo, pero te pagaron *¥{monto}*.`, ganar: true, min: 1500, max: 3100 },
+    { texto: `✿ Te dejaron propina tras hacer un baile en una despedida de soltero: *¥{monto}*.`, ganar: true, min: 150, max: 600 },
 
-  const gananciaTextos = [
-    `💋 *@${randomUserId.split('@')[0]}* se enamoró de ti y te ofreció una noche en su mansión. Recibiste *+${bigGain} ${moneda}*.`,
-    `💃 Fuiste a un club de lujo y diste un espectáculo que puso a todos locos. Te lanzaron *+${bigGain} ${moneda}* en billetes.`,
-    `💎 Un empresario solitario pagó *+${bigGain} ${moneda}* por una noche contigo. ¡Te hiciste rica(o)!`,
-    `🍷 Le diste unos besos a *@${randomUserId.split('@')[0]}* y te pagó *+${mediumGain} ${moneda}* solo por tu sonrisa.`,
-    `💌 Alguien vio tu perfil en una app y te transfirió *+${mediumGain} ${moneda}* por solo hablarle.`,
-    `🥂 Montaste un show en un bar y te pagaron *+${mediumGain} ${moneda}*.`,
-    `🛐 Hiciste un ritual erótico para un culto secreto. Recibiste *+${bigGain} ${moneda}* como ofrenda.`,
-    `🌟 Apareciste en un video viral como la "slut del año". YouTube te pagó *+${bigGain} ${moneda}*!`,
-    `💖 Fuiste parte de un trío épico con *@${randomUserId.split('@')[0]}* y alguien más. Ganaste *+${mediumGain} ${moneda}*.`,
-    `🛏️ Terminaste siendo contratado(a) como escort por un político. Ganancia total: *+${bigGain} ${moneda}*.`
+    // Pérdidas
+    { texto: `✿ Te arrestaron por indecencia pública. Pagaste *¥{monto}* de multa.`, ganar: false, min: 800, max: 2000 },
+    { texto: `✿ Tu cliente se fue sin pagar. Perdiste *¥{monto}*.`, ganar: false, min: 1000, max: 2500 },
+    { texto: `✿ Te fracturaste haciendo una pose extraña. Gastaste *¥{monto}* en la clínica.`, ganar: false, min: 300, max: 1200 },
+    { texto: `✿ Nadie quiso tus servicios hoy. Perdiste *¥{monto}* en maquillaje y trajes.`, ganar: false, min: 50, max: 400 },
+    { texto: `✿ Te emborrachaste y pagaste la cuenta de todos. Perdiste *¥{monto}*.`, ganar: false, min: 300, max: 1000 },
+    { texto: `✿ Le rompiste algo importante a tu cliente. Tuviste que devolver *¥{monto}*.`, ganar: false, min: 1500, max: 3200 },
+    { texto: `✿ Te drogaron y amaneciste sin cartera. Te robaron *¥{monto}*.`, ganar: false, min: 2000, max: 5000 },
   ]
 
-  const perdidaTextos = [
-    `🤕 Fuiste con *@${randomUserId.split('@')[0]}* pero no sabía lo que hacía... Te lesionaste. *-${mediumLoss} ${moneda}* en hospital.`,
-    `🚓 Te atrapó la policía por prostitución ilegal. Pagaste fianza de *-${bigLoss} ${moneda}*.`,
-    `💔 *@${randomUserId.split('@')[0]}* te bloqueó y te denunció. Te quitaron *-${mediumLoss} ${moneda}*.`,
-    `🦠 Te contagiaste de algo. Gastaste *-${mediumLoss} ${moneda}* en tratamiento.`,
-    `💢 Estabas borracho(a) y perdiste todo lo ganado. Se te fueron *-${bigLoss} ${moneda}*.`,
-    `📉 Un cliente dijo que eras pésimo(a) y pidió reembolso. Te quitaron *-${mediumLoss} ${moneda}*.`,
-    `🧽 Estabas tan desesperado(a) que ofreciste el servicio por *comida*. Perdiste *-${mediumLoss} ${moneda}*.`,
-    `🐷 Un cliente te hizo disfrazarte de cerdito, pero te grabó y extorsionó. Pagaste *-${bigLoss} ${moneda}*.`,
-    `😢 Fuiste con alguien que no tenía dinero y tú terminaste pagando el motel. *-${mediumLoss} ${moneda}*.`,
-    `📸 Te chantajearon con fotos tuyas en acción. Tuviste que pagar *-${bigLoss} ${moneda}*.`,
-    `👻 Resultó ser un espíritu. Te quitó tu energía vital y *-${mediumLoss} ${moneda}*.`,
-    `🎃 Participaste en una orgía de Halloween que terminó en caos. Perdiste *-${bigLoss} ${moneda}*.`,
-    `📉 Crisis económica: tu cliente se quedó sin fondos. Te dejó *sin nada*. *-${mediumLoss} ${moneda}*.`,
-    `🧛 Te mordió un vampiro durante el acto y ahora necesitas medicinas. *-${mediumLoss} ${moneda}*.`,
-    `🧟‍♂️ Era un zombie. Fuiste su cena. Gastaste *-${mediumLoss} ${moneda}* en reconstruirte.`
-  ]
+  let accion = acciones[Math.floor(Math.random() * acciones.length)]
+  let monto = Math.floor(Math.random() * (accion.max - accion.min + 1)) + accion.min
 
-  const esGanancia = Math.random() < 0.4 // 40% de ganar, 60% perder
-  const resultado = esGanancia
-    ? gananciaTextos[Math.floor(Math.random() * gananciaTextos.length)]
-    : perdidaTextos[Math.floor(Math.random() * perdidaTextos.length)]
-
-  const cantidad = resultado.includes('+')
-    ? parseInt(resultado.match(/\+(\d+)/)?.[1] || 0)
-    : parseInt(resultado.match(/-(\d+)/)?.[1] || 0)
-
-  if (esGanancia) {
-    users[senderId].coin += cantidad
-    users[randomUserId].coin -= cantidad
-    await conn.sendMessage(m.chat, {
-      text: `💋 *PROSTITUCIÓN EXITOSA*\n\n${resultado}\n\n✨ *${senderName} ahora tiene más dinero!*`,
+  if (accion.ganar) {
+    users[senderId].coin += monto
+    users[randomUserId].coin -= Math.min(randomUserCoin, monto)
+    conn.sendMessage(m.chat, {
+      text: accion.texto.replace('{monto}', `${monto} ${moneda}`).replace('@usuario', `@${randomUserId.split('@')[0]}`),
       contextInfo: { mentionedJid: [randomUserId] }
     }, { quoted: m })
   } else {
-    users[senderId].coin -= cantidad
-    await conn.sendMessage(m.chat, {
-      text: `💀 *FRACASO TOTAL*\n\n${resultado}\n\n😭 *${senderName} ha perdido ${cantidad} ${moneda}...*`,
-      contextInfo: { mentionedJid: [randomUserId] }
-    }, { quoted: m })
+    users[senderId].coin = Math.max(0, senderCoin - monto)
+    conn.reply(m.chat, accion.texto.replace('{monto}', `${monto} ${moneda}`).replace('@usuario', `@${randomUserId.split('@')[0]}`), m)
   }
 
   global.db.write()
@@ -94,7 +65,8 @@ handler.group = true
 export default handler
 
 function segundosAHMS(segundos) {
-  let min = Math.floor(segundos / 60)
-  let sec = segundos % 60
-  return `${min} minuto(s) y ${sec} segundo(s)`
+  let horas = Math.floor(segundos / 3600)
+  let minutos = Math.floor((segundos % 3600) / 60)
+  let segundosRestantes = segundos % 60
+  return `${minutos} minutos y ${segundosRestantes} segundos`
 }
