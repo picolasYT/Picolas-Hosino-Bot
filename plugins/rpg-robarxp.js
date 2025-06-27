@@ -24,7 +24,7 @@ const handler = async (m, { conn, usedPrefix, command }) => {
   }
 
   const targetUser = global.db.data.users[target];
-  const robAmount = Math.floor(Math.random() * (40000 - 10000 + 1)) + 10000; // entre 10k y 40k
+  const robAmount = Math.floor(Math.random() * (40000 - 10000 + 1)) + 10000;
 
   if (targetUser.coin < robAmount) {
     return conn.reply(m.chat, `${emoji2} @${target.split("@")[0]} *no tiene suficientes ${moneda} fuera del banco como para que valga la pena robarle.*`, m, { mentions: [target] });
