@@ -137,7 +137,7 @@ global.taguser = '@' + m.sender.split("@")[0]
 var more = String.fromCharCode(8206)
 global.readMore = more.repeat(850)
 
-global.packsticker = `⏜͜⌒᳝︵໋۪۪۪۪۪᳝֔࣪⡳۟︵໋۪۪۪᳝֔࣪⌒꒰🍥꒱︵᳝࣪⡳۪۟︵໋۪۪۪᳝֔⌒⏜\n\n𑁯ᰰᘘ᷒ᰰ ༝⃟ꪆ 𓈒꫶⭑⃕ 𝑷𝑨𝑪𝑲 𝑺𝑻𝑰𝑪𝑲𝑬𝑹 𖹭⭑⃕ ꫶𓈒 ༝⃟ꪆ ᘘ᷒ᰰ𑁯\n\n⌯⃝⃕ 🧸 𝐔𝐒𝐔𝐀𝐑𝐈𝐎:${nombre}\n⌯⃝⃕ 🩷 𝐁𝐎𝐓:⏤̛̣̣̣̣̣̣̣̣̣̣̣͟͟͞͞⏤͟͟͞͞🍭𝐑υׁׅ𝐛𝐲 𝐇ᨵׁׅׅ𝐬𝐡𝐢𝐧ᨵׁׅׅ`;
+global.packsticker = `⏜͜⌒᳝︵໋۪۪۪۪۪᳝֔࣪⡳۟︵໋۪۪۪᳝֔࣪⌒꒰🍥꒱︵᳝࣪⡳۪۟︵໋۪۪۪᳝֔⌒⏜\n\n𑁯ᰰᘘ᷒ᰰ ༝⃟ꪆ 𓈒꫶⭑⃕ 𝑷𝑨𝑪𝑲 𝑺𝑻𝑰𝑪𝑲𝑬𝑹 𖹭⭑⃕ ꫶𓈒 ༝⃟ꪆ ᘘ᷒ᰰ𑁯\n\n⌯⃝⃕ 🧸 𝐔𝐒𝐔𝐀𝐑𝐈𝐎:${nombre}⌯⃝⃕ 🩷
 
 
 // rcanaɭ con icono como buffer
