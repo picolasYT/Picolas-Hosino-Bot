@@ -1,4 +1,4 @@
-rt { promises as fs } from 'fs'
+import { promises as fs } from 'fs'
 
 const charactersFilePath = './src/database/characters.json'
 const cooldowns = {}
