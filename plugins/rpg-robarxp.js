@@ -1,64 +1,43 @@
-const handler = async (m, { conn, usedPrefix, command }) => {
-  const cooldown = 2 * 60 * 60 * 1000; // 2 horas
-  const now = new Date();
-  const user = global.db.data.users[m.sender];
-
-  if (user.lastrob && now - user.lastrob < cooldown) {
-    const time = msToTime(user.lastrob + cooldown - now);
-    return conn.reply(m.chat, `❌ 𝙴𝚂𝙿𝙴𝚁𝙰 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁\n⏳ Ya robaste XP recientemente\n🕒 Vuelve en: *${time}*`, m);
+const ro = 3000;
+const handler = async (m, {conn, usedPrefix, command}) => {
+  const time = global.db.data.users[m.sender].lastrob + 7200000;
+  if (new Date - global.db.data.users[m.sender].lastrob < 7200000) {
+  conn.reply(m.chat, `${emoji3} Debes esperar ${msToTime(time - new Date())} para usar #robxp de nuevo.`, m);
+  return;
   }
-
-  let target;
-  if (m.isGroup) {
-    target = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : null;
-  } else {
-    target = m.chat;
+  let who;
+  if (m.isGroup) who = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : false;
+  else who = m.chat;
+  if (!who) {
+  conn.reply(m.chat, `${emoji} Debes mencionar a alguien para intentar robarle XP.`, m)
+  return;
+    };
+  if (!(who in global.db.data.users)) { 
+  conn.reply(m.chat, `${emoji2} El usuario no se encuentra en mi base de datos.`, m)
+return;
   }
-
-  if (!target) {
-    return conn.reply(m.chat, `💬 *Debes mencionar a alguien para intentar robarle XP.*`, m);
-  }
-
-  if (!(target in global.db.data.users)) {
-    return conn.reply(m.chat, `⚠️ *El usuario no está en la base de datos.*`, m);
-  }
-
-  const targetUser = global.db.data.users[target];
-  const maxXP = 8000;
-  const robXP = Math.floor(Math.random() * (maxXP - 3000 + 1)) + 3000; // entre 3000 y 8000 XP
-
-  if (targetUser.exp < robXP) {
-    return conn.reply(m.chat, `⚠️ @${target.split("@")[0]} no tiene suficiente XP para que valga la pena robarle.\n🔸 Necesita al menos *${robXP} XP*`, m, { mentions: [target] });
-  }
-
-  user.exp += robXP;
-  targetUser.exp -= robXP;
-  user.lastrob = now * 1;
-
-  let frases = [
-    `「✧」Has ejecutado un *robo de XP* perfectamente planeado.\n🔮 Recolectaste *+${robXP.toLocaleString()} XP* de @${target.split("@")[0]}`,
-    `⚔️ 𝚂𝚞𝚛𝚐𝚎𝚜 𝚍𝚎 𝚕𝚊𝚜 𝚜𝚘𝚖𝚋𝚛𝚊𝚜 𝚢 𝚜𝚊𝚚𝚞𝚎𝚊𝚜 *${robXP.toLocaleString()} XP* a @${target.split("@")[0]}`,
-    `😈 Robaste el conocimiento de @${target.split("@")[0]} como un ladrón de almas: *+${robXP.toLocaleString()} XP*`,
-    `🧠 Robaste secretos ancestrales y le quitaste *+${robXP.toLocaleString()} XP* a @${target.split("@")[0]}`
-  ];
-
-  await conn.reply(m.chat, pickRandom(frases), m, { mentions: [target] });
+  const users = global.db.data.users[who];
+  const rob = Math.floor(Math.random() * ro);
+  if (users.exp < rob) return conn.reply(m.chat, `${emoji2} @${who.split`@`[0]} no tiene suficiente *${ro} XP* como para que valga la pena intentar robar.":`, m, {mentions: [who]});
+  global.db.data.users[m.sender].exp += rob;
+  global.db.data.users[who].exp -= rob;
+  conn.reply(m.chat, `${emoji} Le robaste ${rob} XP a @${who.split`@`[0]}`, m, {mentions: [who]});
+  global.db.data.users[m.sender].lastrob = new Date * 1;
 };
-
-handler.help = ['robxp'];
-handler.tags = ['rpg'];
+handler.help = ['rob'];
+handler.tags = ['economy'];
 handler.command = ['robxp', 'robarxp'];
 handler.group = true;
 handler.register = true;
 
 export default handler;
-
-function pickRandom(list) {
-  return list[Math.floor(Math.random() * list.length)];
-}
-
 function msToTime(duration) {
+  const milliseconds = parseInt((duration % 1000) / 100);
+  let seconds = Math.floor((duration / 1000) % 60);
   let minutes = Math.floor((duration / (1000 * 60)) % 60);
   let hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
-  return `${hours} Hora(s) ${minutes} Minuto(s)`;
+  hours = (hours < 10) ? '0' + hours : hours;
+  minutes = (minutes < 10) ? '0' + minutes : minutes;
+  seconds = (seconds < 10) ? '0' + seconds : seconds;
+  return hours + ' Hora(s) ' + minutes + ' Minuto(s)';
 }
