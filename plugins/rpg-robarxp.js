@@ -3,9 +3,9 @@ const handler = async (m, { conn, usedPrefix, command }) => {
   const now = new Date();
   const user = global.db.data.users[m.sender];
 
-  if (user.lastrob2 && now - user.lastrob2 < cooldown) {
-    const time = msToTime(user.lastrob2 + cooldown - now);
-    return conn.reply(m.chat, `${emoji3} ✿ ¡Ya intentaste un robo! ✿\n⏳ Vuelve en *${time}* para hacerlo de nuevo.`, m);
+  if (user.lastrob && now - user.lastrob < cooldown) {
+    const time = msToTime(user.lastrob + cooldown - now);
+    return conn.reply(m.chat, `❌ 𝙴𝚂𝙿𝙴𝚁𝙰 𝙿𝙾𝚁 𝙵𝙰𝚅𝙾𝚁\n⏳ Ya robaste XP recientemente\n🕒 Vuelve en: *${time}*`, m);
   }
 
   let target;
@@ -16,37 +16,38 @@ const handler = async (m, { conn, usedPrefix, command }) => {
   }
 
   if (!target) {
-    return conn.reply(m.chat, `${emoji2} *Debes mencionar a alguien para intentar robarle.*`, m);
+    return conn.reply(m.chat, `💬 *Debes mencionar a alguien para intentar robarle XP.*`, m);
   }
 
   if (!(target in global.db.data.users)) {
-    return conn.reply(m.chat, `${emoji2} *Ese usuario no está registrado en la base de datos.*`, m);
+    return conn.reply(m.chat, `⚠️ *El usuario no está en la base de datos.*`, m);
   }
 
   const targetUser = global.db.data.users[target];
-  const robAmount = Math.floor(Math.random() * (40000 - 10000 + 1)) + 10000;
+  const maxXP = 8000;
+  const robXP = Math.floor(Math.random() * (maxXP - 3000 + 1)) + 3000; // entre 3000 y 8000 XP
 
-  if (targetUser.coin < robAmount) {
-    return conn.reply(m.chat, `${emoji2} @${target.split("@")[0]} *no tiene suficientes ${moneda} fuera del banco como para que valga la pena robarle.*`, m, { mentions: [target] });
+  if (targetUser.exp < robXP) {
+    return conn.reply(m.chat, `⚠️ @${target.split("@")[0]} no tiene suficiente XP para que valga la pena robarle.\n🔸 Necesita al menos *${robXP} XP*`, m, { mentions: [target] });
   }
 
-  user.coin += robAmount;
-  targetUser.coin -= robAmount;
-  user.lastrob2 = now * 1;
+  user.exp += robXP;
+  targetUser.exp -= robXP;
+  user.lastrob = now * 1;
 
   let frases = [
-    `✿ ¡𝚁𝚘𝚋𝚘 𝙴𝚇𝙸𝚃𝙾𝚂𝙾! ✿\nHas saqueado a @${target.split("@")[0]} y te llevaste *¥${robAmount.toLocaleString()} ${moneda}* 💸`,
-    `✿ Tu operación fue silenciosa y eficaz...\n¡Robaste *¥${robAmount.toLocaleString()} ${moneda}* a @${target.split("@")[0]}!`,
-    `✿ Te pusiste la capucha y sin ser visto robaste *¥${robAmount.toLocaleString()}* a @${target.split("@")[0]} 😈`,
-    `✿ 🏃 Escapaste por los callejones oscuros tras robar *¥${robAmount.toLocaleString()} ${moneda}* de @${target.split("@")[0]}`
+    `「✧」Has ejecutado un *robo de XP* perfectamente planeado.\n🔮 Recolectaste *+${robXP.toLocaleString()} XP* de @${target.split("@")[0]}`,
+    `⚔️ 𝚂𝚞𝚛𝚐𝚎𝚜 𝚍𝚎 𝚕𝚊𝚜 𝚜𝚘𝚖𝚋𝚛𝚊𝚜 𝚢 𝚜𝚊𝚚𝚞𝚎𝚊𝚜 *${robXP.toLocaleString()} XP* a @${target.split("@")[0]}`,
+    `😈 Robaste el conocimiento de @${target.split("@")[0]} como un ladrón de almas: *+${robXP.toLocaleString()} XP*`,
+    `🧠 Robaste secretos ancestrales y le quitaste *+${robXP.toLocaleString()} XP* a @${target.split("@")[0]}`
   ];
 
   await conn.reply(m.chat, pickRandom(frases), m, { mentions: [target] });
 };
 
-handler.help = ['rob'];
+handler.help = ['robxp'];
 handler.tags = ['rpg'];
-handler.command = ['robar', 'steal', 'rob'];
+handler.command = ['robxp', 'robarxp'];
 handler.group = true;
 handler.register = true;
 
