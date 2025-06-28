@@ -22,7 +22,7 @@ async function saveCharacters(characters) {
 
 const solicitudes = {} // Guarda las solicitudes activas: { receptorId: { emisorId, personajeEmisor, personajeReceptor, timeoutId } }
 
-let handler = async (m, { conn, args }) => {
+let handler = async (m, { conn, usedPrefix }) => {
   const senderId = m.sender
   const chatId = m.chat
 
@@ -80,7 +80,7 @@ let handler = async (m, { conn, args }) => {
 
   // Enviar solicitud al receptor
   let mensaje = `
-‌​​​​‌​​‍‌‌​‌‌‌​‌‍‌​​​‌​‌‌‍‌‌​‌‌‌​‌‍‌‌​​​‌​‌‍‌‌​‌‌‌​‌‍‌​​​‌​‌‌‍‌​​​‌‌​‌‍‌​​‌‌‌‌​‍‌​​‌‌​‌‌‍‌​​‌‌​‌​‍‌‌​‌‌‌​‌‍‌‌​‌​​‌‌‍‌‌​‌‌‌​‌‍‌​​‌​‌‌​‍‌‌​‌‌‌​‌‍‌‌​​​‌​‌‍‌‌​‌‌‌​‌‍‌​​‌‌‌​​‍‌‌​​‌‌​‌‍‌‌​​‌‌‌‌‍‌​​‌‌​​‌‍‌‌​​‌‌‌‌‍‌​​‌‌​‌‌‍‌​​‌‌‌​​‍‌‌​​‌​‌​‍‌‌​‌‌‌​‌‍‌​​​​​‌​「✐」@${senderId.split('@')[0]}, @${receptorId.split('@')[0]} te ha enviado una solicitud de intercambio.
+‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‍‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‍‌‌「✐」@${senderId.split('@')[0]}, @${receptorId.split('@')[0]} te ha enviado una solicitud de intercambio.
 
 ✦ [@${senderId.split('@')[0]}] *${senderChar.name}* (${senderChar.value})
 ✦ [@${receptorId.split('@')[0]}] *${targetChar.name}* (${targetChar.value})
