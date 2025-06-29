@@ -436,11 +436,7 @@ continue
 fail('admin', m, this)
 continue
 }
-if (plugin.group && !m.isGroup) { 
-fail('group', m, this)
-continue
-}
-if (plugin.private && m.isGroup) {
+(plugin.private && m.isGroup) {
 fail('private', m, this)
 continue
 }
