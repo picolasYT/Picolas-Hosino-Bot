@@ -1,119 +1,112 @@
-import { promises as fs } from 'fs'
+import fs from 'fs';
+const charactersFilePath = './src/database/characters.json';
 
-const charactersFilePath = './src/database/characters.json'
-const haremFilePath = './src/database/harem.json'
+let activeTrades = {};
 
-// Utilidades para cargar y guardar personajes
-async function loadCharacters() {
-    const data = await fs.readFile(charactersFilePath, 'utf-8')
-    {
-    await fs.writeFile(charactersFilePath, JSON.stringify(characters, null, 2), 'utf-8')
-}
-async function loadHarem() {
-    try {
-        const data = await fs.readFile(haremFilePath, 'utf-8')
-        return JSON.parse(data)
-    } catch { return [] }
-}
-async function saveHarem(harem) {
-    await fs.writeFile(haremFilePath, JSON.stringify(harem, null, 2), 'utf-8')
-}
+let handler = async (m, { conn, args, usedPrefix }) => {
+    // VALIDACIÓN DE ARGUMENTOS
+    if (!m.isGroup) return;
+    if (!args[0] || !args[1] || m.mentionedJid.length === 0) {
+        return conn.reply(m.chat,
+`《✧》Debes especificar dos personajes para intercambiarlos.
 
-// Control de solicitudes activas
-const activeTrades = {}
-
-// Handler principal
-let handler = async (m, { conn, args, participants }) => {
-    // Validación de sintaxis
-    if (!args[0] || !args[1] || !m.mentionedJid?.[0]) {
-        return conn.reply(m.chat, `《✧》Debes especificar dos personajes para intercambiarlos.\n\n> ✐ Ejemplo: *#intercambiar Personaje1 / Personaje2*\n> Donde "Personaje1" es el personaje que quieres intercambiar y "Personaje2" es el personaje que quieres recibir`, m)
+> ✐ Ejemplo: *${usedPrefix}intercambiar @usuario Personaje1 / Personaje2*
+> Donde "Personaje1" es el tuyo y "Personaje2" el del usuario mencionado.`, m);
     }
 
-    // Parseo de argumentos
-    const [rawA, , rawB] = args.join(' ').split(/[/|\\\-]/).map(a => a.trim())
-    const userA = m.sender
-    const userB = m.mentionedJid[0]
+    // OBTENER USUARIOS Y NOMBRES
+    const userA = m.sender;
+    const userB = m.mentionedJid[0];
+    if (userA === userB) return conn.reply(m.chat, '❀ No puedes intercambiar contigo mismo.', m);
+
+    let txt = args.join(' ').replace('@' + userB.replace(/@s\.whatsapp\.net$/, ''), '').trim();
+    let [rawA, rawB] = txt.split(/\s*\/\s*/).map(v => v.trim());
 
     if (!rawA || !rawB) {
-        return conn.reply(m.chat, `《✧》Debes especificar dos personajes para intercambiarlos.\n\n> ✐ Ejemplo: *#intercambiar Personaje1 / Personaje2*\n> Donde "Personaje1" es el personaje que quieres intercambiar y "Personaje2" es el personaje que quieres recibir`, m)
+        return conn.reply(m.chat,
+`《✧》Debes especificar dos personajes para intercambiarlos.
+
+> ✐ Ejemplo: *${usedPrefix}intercambiar @usuario Personaje1 / Personaje2*`, m);
     }
 
-    // Cargar datos
-    const characters = await loadCharacters()
+    // VALIDAR SOLICITUDES ACTIVAS
+    if (activeTrades[userA] || activeTrades[userB])
+        return conn.reply(m.chat, '❀ Ya hay una solicitud de intercambio activa para uno de los usuarios.', m);
 
-    // Buscar personajes
-    const charA = characters.find(c => c.name.toLowerCase() === rawA.toLowerCase() && c.user === userA)
-    if (!charA) return conn.reply(m.chat, `❀ No posees a *${rawA}* en tu colección.`, m)
-    const charB = characters.find(c => c.name.toLowerCase() === rawB.toLowerCase())
-    if (!charB) return conn.reply(m.chat, `❀ No existe ningún personaje llamado *${rawB}*.`, m)
-    if (!charB.user) return conn.reply(m.chat, `❀ *${rawB}* no pertenece a nadie.`, m)
-    if (charB.user !== userB) return conn.reply(m.chat, `❀ *${rawB}* no pertenece al usuario que mencionaste.`, m)
-    if (charA.user !== userA) return conn.reply(m.chat, `❀ *${rawA}* no te pertenece.`, m)
-    if (userA === userB) return conn.reply(m.chat, `❀ No puedes intercambiar personajes contigo mismo.`, m)
+    // CARGAR PERSONAJES
+    if (!fs.existsSync(charactersFilePath)) return conn.reply(m.chat, '❀ No se encontró la base de datos de personajes.', m);
+    let characters = JSON.parse(fs.readFileSync(charactersFilePath, 'utf-8'));
 
-    // Validar solicitudes activas
-    if (activeTrades[userA] || activeTrades[userB]) {
-        return conn.reply(m.chat, `❀ Ya hay una solicitud de intercambio activa para uno de los usuarios.`, m)
-    }
+    let charA = characters.find(c => c.name.toLowerCase() === rawA.toLowerCase() && c.user === userA);
+    if (!charA) return conn.reply(m.chat, `❀ No posees a *${rawA}* en tu colección.`, m);
 
-    // Mensaje de solicitud de intercambio
-    const tradeMsg = `‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‍‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍')[0]} te ha enviado una solicitud de intercambio.
+    let charB = characters.find(c => c.name.toLowerCase() === rawB.toLowerCase());
+    if (!charB) return conn.reply(m.chat, `❀ No existe ningún personaje llamado *${rawB}*.`, m);
+    if (!charB.user) return conn.reply(m.chat, `❀ *${rawB}* no pertenece a nadie.`, m);
+    if (charB.user !== userB) return conn.reply(m.chat, `❀ *${rawB}* no pertenece al usuario mencionado.`, m);
+
+    // ENVIAR SOLICITUD
+    let nameA = conn.getName(userA), nameB = conn.getName(userB);
+    let msg = `‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‍‌‌「✐」@${userA.split('@')[0]}, @${userB.split('@')[0]} te ha enviado una solicitud de intercambio.
 
 ✦ [@${userB.split('@')[0]}] *${charB.name}* (${charB.value})
 ✦ [@${userA.split('@')[0]}] *${charA.name}* (${charA.value})
 
-✐ Para aceptar el intercambio responde a este mensaje con "Aceptar", la solicitud expira en 60 segundos.`
+✐ Para aceptar el intercambio responde a este mensaje con "Aceptar", la solicitud expira en 60 segundos.`;
 
-    const respMsg = await conn.reply(m.chat, tradeMsg, m, {
-        mentions: [userA, userB]
-    })
+    let sent = await conn.reply(m.chat, msg, m, { mentions: [userA, userB] });
 
-    // Marcar la solicitud como activa
-    activeTrades[userA] = { userA, userB, charA, charB, msgId: respMsg.key.id }
-    activeTrades[userB] = activeTrades[userA]
+    // GUARDAR SOLICITUD ACTIVA
+    activeTrades[userA] = { userA, userB, charA: charA.name, charB: charB.name };
+    activeTrades[userB] = activeTrades[userA];
 
-    // Esperar respuesta
-    let accepted = false
-
-    conn.ev.once('messages.upsert', async ({ messages }) => {
-        const reply = messages[0]
+    // ESPERAR RESPUESTA
+    let accepted = false;
+    let handlerAccept = async (msgAccept) => {
         if (
-            reply.key.fromMe === false &&
-            reply.key.remoteJid === m.chat &&
-            reply.message?.conversation?.toLowerCase() === 'aceptar' &&
-            reply.messageContextInfo?.stanzaId === respMsg.key.id &&
-            reply.key.participant === userB
+            msgAccept.isGroup &&
+            msgAccept.quoted &&
+            msgAccept.quoted.id === sent.key.id &&
+            msgAccept.sender === userB &&
+            (msgAccept.text || '').trim().toLowerCase() === 'aceptar'
         ) {
-            accepted = true
+            accepted = true;
 
-            // Intercambiar dueños
-            charA.user = userB
-            charB.user = userA
-            await saveCharacters(characters)
+            // INTERCAMBIO
+            let idxA = characters.findIndex(c => c.name === charA.name && c.user === userA);
+            let idxB = characters.findIndex(c => c.name === charB.name && c.user === userB);
+            if (idxA === -1 || idxB === -1) return;
 
-            // Limpiar solicitudes
-            delete activeTrades[userA]
-            delete activeTrades[userB]
+            characters[idxA].user = userB;
+            characters[idxB].user = userA;
+            fs.writeFileSync(charactersFilePath, JSON.stringify(characters, null, 2));
 
-            // Notificar éxito
-            const doneMsg = `「✐」Intercambio aceptado!\n\n✦ @${userB.split('@')[0]} » *${charA.name}*\n✦ @${userA.split('@')[0]} » *${charB.name}*`
-            await conn.reply(m.chat, doneMsg, m, { mentions: [userA, userB] })
+            delete activeTrades[userA];
+            delete activeTrades[userB];
+
+            let msgDone = `「✐」Intercambio aceptado!
+
+✦ @${userB.split('@')[0]} » *${charA.name}*
+✦ @${userA.split('@')[0]} » *${charB.name}*`;
+            await conn.reply(m.chat, msgDone, m, { mentions: [userA, userB] });
         }
-    })
+    };
+    conn.ev.on('messages.upsert', handlerAccept);
 
-    // Expirar solicitud a los 60 segundos
+    // EXPIRAR SOLICITUD
     setTimeout(() => {
         if (!accepted) {
-            delete activeTrades[userA]
-            delete activeTrades[userB]
-            conn.reply(m.chat, `⏳ La solicitud de intercambio ha expirado.`, m)
+            delete activeTrades[userA];
+            delete activeTrades[userB];
+            conn.reply(m.chat, '⏳ La solicitud de intercambio ha expirado.', m);
         }
-    }, 60_000)
-}
+        conn.ev.off('messages.upsert', handlerAccept);
+    }, 60000);
+};
 
-handler.help = ['intercambiar @usuario Personaje1 / Personaje2']
-handler.tags = ['anime']
-handler.command = ['intercambiar']
-handler.group = true
+handler.help = ['intercambiar @usuario Personaje1 / Personaje2'];
+handler.tags = ['anime'];
+handler.command = ['intercambiar'];
+handler.group = true;
 
-export default handler
+export default handler;
