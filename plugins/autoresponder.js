@@ -1,176 +1,126 @@
 import { promises as fs } from 'fs'
 
-const charactersFilePath = './src/database/characters.json'
-const cooldowns = {}
+// Ruta de la base de datos de personajes
+const DB_PATH = './src/database/characters.json'
 
-async function loadCharacters() {
+// Estructura de solicitudes activas
+const activeTrades = {}
+
+// Utilidad para leer personajes
+async function getCharacters() {
   try {
-    const data = await fs.readFile(charactersFilePath, 'utf-8')
+    const data = await fs.readFile(DB_PATH, 'utf-8')
     return JSON.parse(data)
-  } catch (e) {
-    throw new Error(`❀ No se pudo cargar el archivo characters.json.\n\nError: ${e.message}`)
+  } catch (err) {
+    throw new Error(`⛔ No se pudo leer la base de datos de personajes.\n${err.message}`)
   }
 }
 
-async function saveCharacters(characters) {
+// Utilidad para guardar personajes
+async function setCharacters(chars) {
   try {
-    await fs.writeFile(charactersFilePath, JSON.stringify(characters, null, 2), 'utf-8')
-  } catch (e) {
-    throw new Error(`❀ No se pudo guardar el archivo characters.json.\n\nError: ${e.message}`)
+    await fs.writeFile(DB_PATH, JSON.stringify(chars, null, 2), 'utf-8')
+  } catch (err) {
+    throw new Error(`⛔ No se pudo guardar la base de datos de personajes.\n${err.message}`)
   }
 }
 
-const solicitudes = {} // Guarda las solicitudes activas: { receptorId: { emisorId, personajeEmisor, personajeReceptor, timeoutId } }
+// Enviar ayuda
+function sendHelp(conn, chatId, prefix, m) {
+  return conn.reply(chatId,
+    `🌸 Debes indicar los personajes para intercambiar.\n\n` +
+    `Ejemplo: *${prefix}trade PersonajeA / PersonajeB*\n` +
+    `Donde "PersonajeA" es tuyo y "PersonajeB" es el que deseas recibir.`, m)
+}
 
+// Handler principal
 let handler = async (m, { conn, args, usedPrefix }) => {
   try {
-    // DEBUG para saber si el comando se ejecuta
-    // await conn.reply(m.chat, 'DEBUG: handler intercambiar ejecutado', m)
-
-    const senderId = m.sender
-    const chatId = m.chat
     const prefix = usedPrefix || '.'
+    const [rawA, rawB] = (args.join(' ') || '').split('/').map(v => v && v.trim())
 
-    if (args.length === 0 || !args.join(' ').includes('/')) {
-      return conn.reply(chatId, 
-`《✧》Debes especificar dos personajes para intercambiarlos.
+    if (!rawA || !rawB) return sendHelp(conn, m.chat, prefix, m)
 
-> ✐ Ejemplo: *${prefix}intercambiar Personaje1 / Personaje2*
-> Donde "Personaje1" es el personaje que quieres intercambiar y "Personaje2" es el personaje que quieres recibir`, m)
-    }
+    const chars = await getCharacters()
+    const myChars = chars.filter(c => c.user === m.sender)
+    const charA = myChars.find(c => c.name.toLowerCase() === rawA.toLowerCase())
+    if (!charA) return conn.reply(m.chat, `❀ No posees a *${rawA}* en tu colección.`, m)
 
-    let [p1Raw, p2Raw] = args.join(' ').split('/').map(s => s.trim())
-    if (!p1Raw || !p2Raw) {
-      return conn.reply(chatId,
-`《✧》Debes especificar dos personajes para intercambiarlos.
+    const charB = chars.find(c => c.name.toLowerCase() === rawB.toLowerCase())
+    if (!charB) return conn.reply(m.chat, `❀ No existe ningún personaje llamado *${rawB}*.`, m)
+    if (!charB.user) return conn.reply(m.chat, `❀ *${rawB}* no pertenece a nadie.`, m)
+    if (charB.user === m.sender) return conn.reply(m.chat, `❀ No puedes intercambiar contigo mismo.`, m)
 
-> ✐ Ejemplo: *${prefix}intercambiar Personaje1 / Personaje2*
-> Donde "Personaje1" es el personaje que quieres intercambiar y "Personaje2" es el personaje que quieres recibir`, m)
-    }
+    // Verifica solicitudes activas
+    if (activeTrades[charB.user] || activeTrades[m.sender])
+      return conn.reply(m.chat, `❀ Ya hay una solicitud de intercambio activa para uno de los usuarios.`, m)
 
-    // Carga personajes
-    const characters = await loadCharacters()
+    // Solicitud y timeout
+    const tradeMsg = 
+      `🌸 @${m.sender.split('@')[0]} quiere intercambiar:\n` +
+      `• *${charA.name}* (${charA.value})\n` +
+      `por el personaje de @${charB.user.split('@')[0]}:\n` +
+      `• *${charB.name}* (${charB.value})\n\n` +
+      `Responde con "aceptar" en 60 segundos para realizar el intercambio.`
 
-    // Personajes del emisor (quien pide)
-    const senderChars = characters.filter(c => c.user === senderId)
-    const senderChar = senderChars.find(c => c.name.toLowerCase() === p1Raw.toLowerCase())
-
-    if (!senderChar) {
-      return conn.reply(chatId, `❀ No tienes al personaje *${p1Raw}* en tu colección.`, m)
-    }
-
-    // Buscamos al otro usuario que tiene el personaje que quieres recibir (p2Raw)
-    const targetChar = characters.find(c => c.name.toLowerCase() === p2Raw.toLowerCase())
-    if (!targetChar) {
-      return conn.reply(chatId, `❀ No existe ningún personaje llamado *${p2Raw}* en la base de datos.`, m)
-    }
-
-    if (targetChar.user === senderId) {
-      return conn.reply(chatId, `❀ Ya tienes ese personaje *${p2Raw}* en tu colección. No puedes intercambiarlo contigo mismo.`, m)
-    }
-
-    // Usuario receptor (dueño del personaje p2Raw)
-    const receptorId = targetChar.user
-    if (!receptorId) {
-      return conn.reply(chatId, `❀ El personaje *${p2Raw}* está libre y no puede ser intercambiado.`, m)
-    }
-
-    // Validar que no haya solicitud activa del receptor o del emisor
-    if (solicitudes[receptorId]) {
-      return conn.reply(chatId, `❀ @${receptorId.split('@')[0]} ya tiene una solicitud pendiente. Espera a que responda.`, m, { mentions: [receptorId] })
-    }
-    if (solicitudes[senderId]) {
-      return conn.reply(chatId, `❀ Ya tienes una solicitud activa. Espera a que sea respondida o expire.`, m)
-    }
-
-    // Enviar solicitud al receptor
-    let mensaje = `
-「✐」@${senderId.split('@')[0]}, @${receptorId.split('@')[0]} te ha enviado una solicitud de intercambio.
-
-✦ [@${senderId.split('@')[0]}] *${senderChar.name}* (${senderChar.value})
-✦ [@${receptorId.split('@')[0]}] *${targetChar.name}* (${targetChar.value})
-
-✐ Para aceptar el intercambio responde a este mensaje con "Aceptar", la solicitud expira en 60 segundos.
-`
-
-    const sentMsg = await conn.sendMessage(chatId, { text: mensaje, mentions: [senderId, receptorId] }, { quoted: m })
-
-    // Guardar solicitud con timeout para expirar
-    solicitudes[receptorId] = {
-      emisorId: senderId,
-      personajeEmisor: senderChar.name,
-      personajeReceptor: targetChar.name,
-      chatId,
-      messageId: sentMsg.key.id,
-      timeoutId: setTimeout(() => {
-        delete solicitudes[receptorId]
-        conn.sendMessage(chatId, `❀ La solicitud de intercambio entre @${senderId.split('@')[0]} y @${receptorId.split('@')[0]} ha expirado.`, { mentions: [senderId, receptorId] })
+    const sent = await conn.sendMessage(m.chat, { text: tradeMsg, mentions: [m.sender, charB.user] }, { quoted: m })
+    activeTrades[charB.user] = {
+      requester: m.sender,
+      offered: charA.name,
+      requested: charB.name,
+      chat: m.chat,
+      timeout: setTimeout(() => {
+        delete activeTrades[charB.user]
+        conn.sendMessage(m.chat, `❀ La solicitud de intercambio expiró.`, { mentions: [m.sender, charB.user] })
       }, 60000)
     }
   } catch (e) {
-    await m.reply(`❀ Ocurrió un error al intentar hacer el intercambio.\n\nError: ${e.message}`)
+    await m.reply(`❀ Ocurrió un error procesando el intercambio:\n${e.message}`)
   }
 }
 
-// Captura el "Aceptar" en cualquier mensaje para cerrar el intercambio
+// Handler para aceptar el intercambio
 handler.before = async (m, { conn }) => {
   try {
-    const senderId = m.sender
-    const text = (m.text || '').toLowerCase()
-    if (text !== 'aceptar') return true
+    if ((m.text || '').toLowerCase() !== 'aceptar') return true
+    const trade = activeTrades[m.sender]
+    if (!trade) return true
 
-    // Buscar si el usuario es receptor de alguna solicitud
-    if (!solicitudes[senderId]) return true
+    const chars = await getCharacters()
+    const offered = chars.find(c => c.name === trade.offered && c.user === trade.requester)
+    const requested = chars.find(c => c.name === trade.requested && c.user === m.sender)
 
-    const { emisorId, personajeEmisor, personajeReceptor, chatId, timeoutId } = solicitudes[senderId]
-
-    clearTimeout(timeoutId)
-    delete solicitudes[senderId]
-
-    // Cargar personajes
-    const characters = await loadCharacters()
-
-    // Validar que ambos personajes sigan con sus dueños originales
-    const emisorChar = characters.find(c => c.name === personajeEmisor && c.user === emisorId)
-    const receptorChar = characters.find(c => c.name === personajeReceptor && c.user === senderId)
-
-    if (!emisorChar) {
-      await conn.reply(chatId, `❀ @${emisorId.split('@')[0]} ya no tiene el personaje *${personajeEmisor}* y no se puede realizar el intercambio.`, null, { mentions: [emisorId] })
+    if (!offered || !requested) {
+      await conn.reply(trade.chat, `❀ Uno de los personajes ya no está disponible.`, null)
+      clearTimeout(trade.timeout)
+      delete activeTrades[m.sender]
       return false
     }
 
-    if (!receptorChar) {
-      await conn.reply(chatId, `❀ @${senderId.split('@')[0]} ya no tiene el personaje *${personajeReceptor}* y no se puede realizar el intercambio.`, null, { mentions: [senderId] })
-      return false
-    }
+    // Intercambio
+    offered.user = m.sender
+    requested.user = trade.requester
+    await setCharacters(chars)
 
-    // Realizar intercambio
-    characters.forEach(c => {
-      if (c.name === personajeEmisor && c.user === emisorId) c.user = senderId
-      else if (c.name === personajeReceptor && c.user === senderId) c.user = emisorId
+    await conn.sendMessage(trade.chat, {
+      text: `✨ ¡Intercambio realizado!\n\n` +
+        `@${trade.requester.split('@')[0]} ahora tiene *${trade.requested}*.\n` +
+        `@${m.sender.split('@')[0]} ahora tiene *${trade.offered}*.`,
+      mentions: [trade.requester, m.sender]
     })
 
-    await saveCharacters(characters)
-
-    // Mensaje de confirmación
-    const confirmMsg = `
-「✐」Intercambio aceptado!
-
-✦ @${emisorId.split('@')[0]} » *${personajeReceptor}*
-✦ @${senderId.split('@')[0]} » *${personajeEmisor}*
-`
-    await conn.sendMessage(chatId, { text: confirmMsg, mentions: [emisorId, senderId] })
-
+    clearTimeout(trade.timeout)
+    delete activeTrades[m.sender]
     return false
   } catch (e) {
-    await m.reply(`❀ Ocurrió un error al aceptar el intercambio.\n\nError: ${e.message}`)
+    await m.reply(`❀ Error al aceptar el intercambio:\n${e.message}`)
     return false
   }
 }
 
-handler.help = ['intercambiar Personaje1 / Personaje2']
+handler.help = ['trade PersonajeA / PersonajeB']
 handler.tags = ['gacha', 'anime']
-handler.command = ['intercambiar']
+handler.command = ['trade', 'intercambiar2']
 handler.group = true
 handler.register = true
 
