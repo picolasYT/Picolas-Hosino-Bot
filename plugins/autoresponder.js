@@ -1,83 +1,85 @@
-const exchangeRequests = {}  // Para controlar solicitudes activas
+import { promises as fs } from 'fs'
 
-let handler = async (m, { conn, args, usedPrefix }) => {
-  const [rawA, rawB] = args.join(' ').split('/').map(s => s?.trim())
-  if (!rawA || !rawB) {
-    return conn.reply(m.chat,
-`《✧》Debes especificar dos personajes para intercambiarlos.
+const charactersFilePath = './src/database/characters.json'
+let intercambiosActivos = {}
 
-> ✐ Ejemplo: *${usedPrefix}intercambiar Personaje1 / Personaje2*
-> Donde "Personaje1" es el que tienes y "Personaje2" el que quieres recibir.`, m)
-  }
-
-  const characters = await loadCharacters()
-  const charA = characters.find(c => 
-    c.name.toLowerCase() === rawA.toLowerCase() &&
-    c.user === m.sender)
-  if (!charA) return conn.reply(m.chat,
-    `❀ No posees a *${rawA}* en tu colección.`, m)
-
-  const charB = characters.find(c =>
-    c.name.toLowerCase() === rawB.toLowerCase())
-  if (!charB) return conn.reply(m.chat,
-    `❀ No existe ningún personaje llamado *${rawB}*.`, m)
-  if (!charB.user) return conn.reply(m.chat,
-    `❀ *${rawB}* no pertenece a nadie.`, m)
-
-  if (exchangeRequests[m.sender] || exchangeRequests[charB.user]) {
-    return conn.reply(m.chat, `❀ Ya hay una solicitud activa de intercambio para uno de los usuarios.`, m)
-  }
-
-  // Crear y enviar solicitud
-  exchangeRequests[m.sender] = {
-    to: charB.user,
-    give: charA,
-    receive: charB,
-    timestamp: Date.now()
-  }
-
-  let msg = 
-`‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‌‍‌‌‌‌‌‍‌‌‌‌‌‍‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‍‌‌「✐」@${m.sender.split('@')[0]}, @${charB.user.split('@')[0]} te ha enviado una solicitud de intercambio.
-
-✦ [@${m.sender.split('@')[0]}] *${charA.name}* (${charA.value})
-✦ [@${charB.user.split('@')[0]}] *${charB.name}* (${charB.value})
-
-✐ Para aceptar responde a este mensaje con “Aceptar” en 60 segundos.`
-  
-  conn.sendMessage(m.chat, { text: msg, mentions: [m.sender, charB.user] }, { quoted: m })
-
-  // Esperar respuesta
-  setTimeout(() => {
-    delete exchangeRequests[m.sender]
-  }, 60000)
+async function loadCharacters() {
+  const data = await fs.readFile(charactersFilePath, 'utf-8')
+  return JSON.parse(data)
 }
 
-handler.before = async (m, { conn }) => {
-  if (m.text === 'Aceptar') {
-    const req = Object.values(exchangeRequests).find(r => r.to === m.sender)
-    if (!req) return
+async function saveCharacters(characters) {
+  await fs.writeFile(charactersFilePath, JSON.stringify(characters, null, 2), 'utf-8')
+}
 
-    // Realizar intercambio
-    const characters = await loadCharacters()
-    for (let c of characters) {
-      if (c.id === req.give.id) c.user = req.to
-      if (c.id === req.receive.id) c.user = req.from
-    }
+let handler = async (m, { conn, args, usedPrefix, command }) => {
+  if (!args[0] || !args[0].includes('/')) {
+    return m.reply(`《✧》Debes especificar dos personajes para intercambiarlos.\n\n> ✐ Ejemplo: *${usedPrefix + command} Android 16 / Tsumiki Fushiguro*`)
+  }
+
+  const [rawA, rawB] = args.join(' ').split('/').map(v => v.trim())
+  const characters = await loadCharacters()
+
+  const charA = characters.find(c => c.name.toLowerCase() === rawA.toLowerCase())
+  const charB = characters.find(c => c.name.toLowerCase() === rawB.toLowerCase())
+
+  if (!charA) return m.reply(`❀ No posees a *${rawA}* en tu colección.`)
+  if (!charB) return m.reply(`❀ No existe ningún personaje llamado *${rawB}*.`)
+  if (!charB.user) return m.reply(`❀ *${rawB}* no pertenece a nadie.`)
+  if (charA.user !== m.sender) return m.reply(`❀ *${charA.name}* no te pertenece.`)
+  if (charB.user === m.sender) return m.reply(`❀ Ambos personajes ya son tuyos.`)
+
+  const receptor = charB.user
+  const solicitante = m.sender
+
+  if (intercambiosActivos[solicitante] || intercambiosActivos[receptor]) {
+    return m.reply(`❀ Ya hay una solicitud de intercambio activa para uno de los usuarios.`)
+  }
+
+  intercambiosActivos[solicitante] = true
+  intercambiosActivos[receptor] = true
+
+  const mensaje = `「✐」@${solicitante.split('@')[0]}, @${receptor.split('@')[0]} te ha enviado una solicitud de intercambio.
+
+✦ [@${receptor.split('@')[0]}] *${charB.name}* (${charB.value})
+✦ [@${solicitante.split('@')[0]}] *${charA.name}* (${charA.value})
+
+✐ Para aceptar el intercambio responde a este mensaje con *Aceptar*, la solicitud expira en *60 segundos*.`
+
+  const confirm = await conn.sendMessage(m.chat, { text: mensaje, mentions: [solicitante, receptor] }, { quoted: m })
+
+  const collector = m.chat + confirm.key.id
+
+  conn.ev.once(`messages.upsert`, async ({ messages }) => {
+    const respuesta = messages[0]
+    if (!respuesta || respuesta.key.remoteJid !== m.chat) return
+    if (respuesta.key.fromMe) return
+    if (respuesta.message?.conversation?.toLowerCase() !== 'aceptar') return
+    if (respuesta.key.participant !== receptor && respuesta.key.remoteJid !== receptor) return
+
+    // Intercambio aprobado
+    charA.user = receptor
+    charB.user = solicitante
     await saveCharacters(characters)
 
-    conn.sendMessage(m.chat, { text:
-`「✐」Intercambio aceptado!
+    delete intercambiosActivos[solicitante]
+    delete intercambiosActivos[receptor]
 
-✦ @${req.to.split('@')[0]} » *${req.give.name}*
-✦ @${req.give.user.split('@')[0]} » *${req.receive.name}*`, mentions: [req.to, req.give.user] }, { quoted: m })
+    await conn.reply(m.chat, `「✐」Intercambio aceptado!\n\n✦ @${receptor.split('@')[0]} » *${charA.name}*\n✦ @${solicitante.split('@')[0]} » *${charB.name}*`, m, {
+      mentions: [receptor, solicitante]
+    })
+  })
 
-    delete exchangeRequests[req.from]
-  }
+  setTimeout(() => {
+    delete intercambiosActivos[solicitante]
+    delete intercambiosActivos[receptor]
+  }, 60_000)
 }
 
-handler.help = ['intercambiar Personaje1 / Personaje2']
-handler.tags = ['gacha']
-handler.command = ['intercambiar']
+handler.command = ['intercambiar', 'trade']
+handler.tags = ['anime']
+handler.help = ['intercambiar <TuPersonaje> / <PersonajeDeseado>']
 handler.group = true
 handler.register = true
+
 export default handler
