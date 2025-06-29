@@ -4,7 +4,7 @@ const charactersFilePath = './src/database/characters.json';
 let activeTrades = {};
 
 function normalizeName(str) {
-(/\s+/g, ' ').trim();
+    return (str || '').toLowerCase().replace(/\s+/g, ' ').replace(/@\S+/g, '').trim();
 }
 
 let handler = async (m, { conn, args, usedPrefix }) => {
@@ -19,8 +19,8 @@ let handler = async (m, { conn, args, usedPrefix }) => {
 > Donde "Personaje1" es el tuyo y "Personaje2" el del usuario mencionado.`, m);
     }
 
-    // Quita todas las menciones tipo @1234567890 o @nombre
-    let cleanArgs = args.join(' ').replace(/@\S+/g, '').trim();
+    // Extrae y limpia nombres (quita menciones y espacios extra)
+trim();
     let [rawA, rawB] = cleanArgs.split(/\s*\/\s*/).map(v => v.trim());
 
     const userA = m.sender;
@@ -31,7 +31,7 @@ let handler = async (m, { conn, args, usedPrefix }) => {
         return conn.reply(m.chat,
 `《✧》Debes especificar dos personajes para intercambiarlos.
 
-> ✐ Ejintercambiar @usuario Personaje1 / Personaje2*`, m);
+> ✐ Ejemplo: *${usedPrefix}intercambiar @usuario Personaje1 / Personaje2*`, m);
     }
 
     // Validar solicitudes activas
@@ -39,7 +39,7 @@ let handler = async (m, { conn, args, usedPrefix }) => {
         return conn.reply(m.chat, '❀ Ya hay una solicitud de intercambio activa para uno de los usuarios.', m);
 
     // Cargar personajes
-    if (!fs.existsSync(charactersFilePath))
+    if (!fs.exists))
         return conn.reply(m.chat, '❀ No se encontró la base de datos de personajes.', m);
     let characters = JSON.parse(fs.readFileSync(charactersFilePath, 'utf-8'));
 
@@ -55,7 +55,7 @@ let handler = async (m, { conn, args, usedPrefix }) => {
     );
     if (!charB)
         return conn.reply(m.chat, `❀ No existe ningún personaje llamado *${rawB}*.`, m);
-    if (!charB.user)
+    if (!charB.user || charB.user === "" || charB.user == null)
         return conn.reply(m.chat, `❀ *${rawB}* no pertenece a nadie.`, m);
     if (charB.user !== userB)
         return conn.reply(m.chat, `❀ *${rawB}* no pertenece al usuario mencionado.`, m);
@@ -64,7 +64,7 @@ let handler = async (m, { conn, args, usedPrefix }) => {
     let nameA = conn.getName(userA), nameB = conn.getName(userB);
     let msg = `‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‍‌‌「✐」@${userA.split('@')[0]}, @${userB.split('@')[0]} te ha enviado una solicitud de intercambio.
 
-})
+${charB.name}* (${charB.value})
 ✦ [@${userA.split('@')[0]}] *${charA.name}* (${charA.value})
 
 ✐ Para aceptar el intercambio responde a este mensaje con "Aceptar", la solicitud expira en 60 segundos.`;
@@ -85,9 +85,7 @@ let handler = async (m, { conn, args, usedPrefix }) => {
             msgAccept.sender === userB &&
             (msgAccept.text || '').trim().toLowerCase() === 'aceptar'
         ) {
-            accepted = true;
-
-            // Intercambiar dueños
+            accepted Intercambiar dueños
             let idxA = characters.findIndex(c => normalizeName(c.name) === normalizeName(charA.name) && c.user === userA);
             let idxB = characters.findIndex(c => normalizeName(c.name) === normalizeName(charB.name) && c.user === userB);
             if (idxA === -1 || idxB === -1) return;
@@ -97,7 +95,7 @@ let handler = async (m, { conn, args, usedPrefix }) => {
             fs.writeFileSync(charactersFilePath, JSON.stringify(characters, null, 2));
 
             delete activeTrades[userA];
-            delete activeTrades[userB];
+            delete];
 
             let msgDone = `「✐」Intercambio aceptado!
 
