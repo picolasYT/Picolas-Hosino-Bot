@@ -23,25 +23,29 @@ async function saveCharacters(characters) {
 const solicitudes = {} // Guarda las solicitudes activas: { receptorId: { emisorId, personajeEmisor, personajeReceptor, timeoutId } }
 
 let handler = async (m, { conn, args, usedPrefix }) => {
-  try { // Manejo de error
+  try {
+    // DEBUG para saber si el comando se ejecuta
+    // await conn.reply(m.chat, 'DEBUG: handler intercambiar ejecutado', m)
+
     const senderId = m.sender
     const chatId = m.chat
+    const prefix = usedPrefix || '.'
 
     if (args.length === 0 || !args.join(' ').includes('/')) {
       return conn.reply(chatId, 
-  `《✧》Debes especificar dos personajes para intercambiarlos.
+`《✧》Debes especificar dos personajes para intercambiarlos.
 
-  > ✐ Ejemplo: *${usedPrefix}intercambiar Personaje1 / Personaje2*
-  > Donde "Personaje1" es el personaje que quieres intercambiar y "Personaje2" es el personaje que quieres recibir`, m)
+> ✐ Ejemplo: *${prefix}intercambiar Personaje1 / Personaje2*
+> Donde "Personaje1" es el personaje que quieres intercambiar y "Personaje2" es el personaje que quieres recibir`, m)
     }
 
     let [p1Raw, p2Raw] = args.join(' ').split('/').map(s => s.trim())
     if (!p1Raw || !p2Raw) {
       return conn.reply(chatId,
-  `《✧》Debes especificar dos personajes para intercambiarlos.
+`《✧》Debes especificar dos personajes para intercambiarlos.
 
-  > ✐ Ejemplo: *${usedPrefix}intercambiar Personaje1 / Personaje2*
-  > Donde "Personaje1" es el personaje que quieres intercambiar y "Personaje2" es el personaje que quieres recibir`, m)
+> ✐ Ejemplo: *${prefix}intercambiar Personaje1 / Personaje2*
+> Donde "Personaje1" es el personaje que quieres intercambiar y "Personaje2" es el personaje que quieres recibir`, m)
     }
 
     // Carga personajes
@@ -81,7 +85,7 @@ let handler = async (m, { conn, args, usedPrefix }) => {
 
     // Enviar solicitud al receptor
     let mensaje = `
-‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‍‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‍‌‌‌‌‌‍‌‌‌‌‍‌‌‌‌‍‌‌‌‌‌‌‍‌‌「✐」@${senderId.split('@')[0]}, @${receptorId.split('@')[0]} te ha enviado una solicitud de intercambio.
+「✐」@${senderId.split('@')[0]}, @${receptorId.split('@')[0]} te ha enviado una solicitud de intercambio.
 
 ✦ [@${senderId.split('@')[0]}] *${senderChar.name}* (${senderChar.value})
 ✦ [@${receptorId.split('@')[0]}] *${targetChar.name}* (${targetChar.value})
@@ -103,14 +107,14 @@ let handler = async (m, { conn, args, usedPrefix }) => {
         conn.sendMessage(chatId, `❀ La solicitud de intercambio entre @${senderId.split('@')[0]} y @${receptorId.split('@')[0]} ha expirado.`, { mentions: [senderId, receptorId] })
       }, 60000)
     }
-  } catch (e) { // Manejo de error
+  } catch (e) {
     await m.reply(`❀ Ocurrió un error al intentar hacer el intercambio.\n\nError: ${e.message}`)
   }
 }
 
+// Captura el "Aceptar" en cualquier mensaje para cerrar el intercambio
 handler.before = async (m, { conn }) => {
-  try { // Manejo de error
-    // Aquí se capturan los "Aceptar" para la solicitud
+  try {
     const senderId = m.sender
     const text = (m.text || '').toLowerCase()
     if (text !== 'aceptar') return true
@@ -118,7 +122,7 @@ handler.before = async (m, { conn }) => {
     // Buscar si el usuario es receptor de alguna solicitud
     if (!solicitudes[senderId]) return true
 
-    const { emisorId, personajeEmisor, personajeReceptor, chatId, messageId, timeoutId } = solicitudes[senderId]
+    const { emisorId, personajeEmisor, personajeReceptor, chatId, timeoutId } = solicitudes[senderId]
 
     clearTimeout(timeoutId)
     delete solicitudes[senderId]
@@ -155,10 +159,10 @@ handler.before = async (m, { conn }) => {
 ✦ @${emisorId.split('@')[0]} » *${personajeReceptor}*
 ✦ @${senderId.split('@')[0]} » *${personajeEmisor}*
 `
-    await conn.sendMessage(chatId, confirmMsg, { mentions: [emisorId, senderId] })
+    await conn.sendMessage(chatId, { text: confirmMsg, mentions: [emisorId, senderId] })
 
     return false
-  } catch (e) { // Manejo de error
+  } catch (e) {
     await m.reply(`❀ Ocurrió un error al aceptar el intercambio.\n\nError: ${e.message}`)
     return false
   }
