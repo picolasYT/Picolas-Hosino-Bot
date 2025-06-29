@@ -22,7 +22,7 @@ async function saveCharacters(characters) {
 
 const solicitudes = {} // Guarda las solicitudes activas: { receptorId: { emisorId, personajeEmisor, personajeReceptor, timeoutId } }
 
-let handler = async (m, { conn, usedPrefix }) => {
+let handler = async (m, { conn, args, usedPrefix }) => {
   const senderId = m.sender
   const chatId = m.chat
 
