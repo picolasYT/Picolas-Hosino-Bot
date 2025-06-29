@@ -440,6 +440,10 @@ continue
 fail('private', m, this)
 continue
 }
+if (plugin.group && !m.isGroup) { 
+fail('group', m, this)
+continue
+}
 if (plugin.register == true && _user.registered == false) { 
 fail('unreg', m, this)
 continue
