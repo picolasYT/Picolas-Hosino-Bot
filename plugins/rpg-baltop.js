@@ -1,40 +1,48 @@
 let handler = async (m, { conn, args, participants }) => {
-    const groupJids = participants.map(p => p.id);
+  const groupJids = participants.map(p => p.id)
 
-    const users = Object.entries(global.db.data.users)
-        .filter(([jid]) => groupJids.includes(jid))
-        .map(([key, value]) => ({ ...value, jid: key }));
+  const users = Object.entries(global.db.data.users)
+    .filter(([jid]) => groupJids.includes(jid))
+    .map(([key, value]) => ({ ...value, jid: key }))
 
-    const sortedLim = users.sort((a, b) => {
-        const totalA = (a.coin || 0) + (a.bank || 0);
-        const totalB = (b.coin || 0) + (b.bank || 0);
-        return totalB - totalA;
-    });
+  const sorted = users.sort((a, b) => {
+    const totalA = (a.coin || 0) + (a.bank || 0)
+    const totalB = (b.coin || 0) + (b.bank || 0)
+    return totalB - totalA
+  })
 
-    const len = args[0] && !isNaN(args[0]) ? Math.min(10, Math.max(parseInt(args[0]), 1)) : Math.min(10, sortedLim.length);
+  const page = args[0] && !isNaN(args[0]) ? parseInt(args[0]) : 1
+  const perPage = 10
+  const start = (page - 1) * perPage
+  const end = start + perPage
+  const totalPages = Math.ceil(sorted.length / perPage)
 
-    let text = `「💰」Los usuarios con más *¥${moneda}* son:\n\n`;
+  const iconos = ['👑', '🥈', '🥉']
+  let texto = `「✿」Los usuarios con más *¥ Yenes* son:\n\n`
 
-    for (let i = 0; i < len; i++) {
-        const { jid, coin, bank } = sortedLim[i];
-        const total = (coin || 0) + (bank || 0);
-        const name = await conn.getName(jid);
+  for (let i = start; i < Math.min(end, sorted.length); i++) {
+    const { jid, coin = 0, bank = 0 } = sorted[i]
+    const total = coin + bank
+    const nombre = await conn.getName(jid)
+    const icono = iconos[i] || '✰'
+    const yenes = `¥${total.toLocaleString()} Yenes`
 
-        text += `✰ ${i + 1} » *${name}*\n`;
-        text += `  Total → *¥${total} ${moneda}*\n\n`;
-    }
+    texto += `${icono} ${i + 1} » *${nombre}:*\n`
+    texto += `\t\t Total→ *${yenes}*\n`
+  }
 
-    await conn.reply(m.chat, text.trim(), m, {
-        mentions: sortedLim.slice(0, len).map(u => u.jid)
-    });
-};
+  texto += `\n> • Página *${page}* de *${totalPages}*`
 
-handler.help = ['baltop'];
-handler.tags = ['rpg'];
-handler.command = ['baltop', 'eboard'];
-handler.group = true;
-handler.register = true;
-handler.fail = null;
-handler.exp = 0;
+  await conn.reply(m.chat, texto.trim(), m, {
+    mentions: sorted.slice(start, end).map(u => u.jid)
+  })
+}
 
-export default handler;
+handler.help = ['baltop']
+handler.tags = ['rpg']
+handler.command = ['baltop', 'eboard']
+handler.group = true
+handler.register = true
+handler.exp = 0
+
+export default handler
