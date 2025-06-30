@@ -1,54 +1,46 @@
 import fetch from 'node-fetch'
 import cheerio from 'cheerio'
 
-let handler = async (m, { conn, text, args, usedPrefix, command }) => {
-  if (!text) return m.reply(`🎀 Usa: *${usedPrefix + command} [nombre del personaje]*\n\nEjemplo:\n*${usedPrefix + command} Ruby Hoshino*`)
+let handler = async (m, { conn, args, usedPrefix, command, text }) => {
+  if (!text) return m.reply(`📦 Usa: *${usedPrefix + command} [url del pack]*\n\nEjemplo:\n${usedPrefix + command} https://www.sigstick.com/pack/ckaf7SCUYSt5fS0lZPvD`)
 
-  let nombre = text.trim().toLowerCase().replace(/ /g, '+')
-  let searchUrl = `https://www.sigstick.com/search?q=${nombre}`
+  if (!text.includes('sigstick.com/pack/')) return m.reply('❌ Esa URL no es válida. Asegúrate de que sea un link de *sigstick.com*')
 
-  m.reply(`🔎 Buscando pack de stickers para *${text}*...`)
+  let res = await fetch(text)
+  if (!res.ok) return m.reply('⚠️ Error al acceder a la página.')
 
-  // Buscar el primer resultado
-  let res = await fetch(searchUrl)
   let html = await res.text()
   let $ = cheerio.load(html)
-  let firstResult = $('a[href*="/pack/"]').attr('href')
+  let imgList = []
 
-  if (!firstResult) return m.reply(`❌ No encontré ningún pack de *${text}* en sigstick.com.`)
-
-  let packUrl = `https://www.sigstick.com${firstResult}`
-  let packPage = await fetch(packUrl)
-  let packHtml = await packPage.text()
-  let $$ = cheerio.load(packHtml)
-
-  let stickers = []
-  $$('img[src*="webp"]').each((i, el) => {
-    let src = $$(el).attr('src')
-    if (src) stickers.push(src.startsWith('http') ? src : 'https://www.sigstick.com' + src)
+  $('img').each((i, el) => {
+    let src = $(el).attr('src')
+    if (src && src.includes('/_next/image?url=')) {
+      let match = src.match(/url=([^&]+)/)
+      if (match && match[1]) imgList.push(decodeURIComponent(match[1]))
+    }
   })
 
-  if (!stickers.length) return m.reply(`😿 No se encontraron stickers válidos en el pack.`)
+  if (imgList.length === 0) return m.reply('❌ No se encontraron stickers en el pack.')
 
-  m.reply(`✨ Encontrado: *${packUrl}*\nEnviando ${stickers.length} stickers de *${text}*...`)
+  m.reply(`🌟 Enviando *${imgList.length} stickers* del pack...\n💫 Fuente: sigstick.com`)
 
-  for (let i = 0; i < Math.min(stickers.length, 10); i++) {
-    let url = stickers[i]
+  for (let url of imgList) {
     try {
       let res = await fetch(url)
       let buffer = await res.buffer()
       await conn.sendFile(m.chat, buffer, 'sticker.webp', '', m, { asSticker: true })
+      await new Promise(r => setTimeout(r, 1000)) // delay entre stickers
     } catch (e) {
-      console.error(`❌ Error con el sticker ${i + 1}`, e)
+      console.log('❌ Error con sticker:', e)
     }
-    await new Promise(r => setTimeout(r, 1000))
   }
 
-  m.reply(`✅ Pack de *${text}* enviado completo.`)
+  m.reply(`✅ Pack enviado completo.`)
 }
 
-handler.help = ['packsticker <personaje>']
+handler.help = ['packsticker <url>']
 handler.tags = ['sticker']
-handler.command = ['packsticker', 'stickersig', 'stickers']
+handler.command = ['packsticker', 'stickersig']
 
 export default handler
