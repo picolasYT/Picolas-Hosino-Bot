@@ -1,42 +1,40 @@
-import db from '../lib/database.js'
+import { xpRange } from '../lib/levelling.js'
 
 let handler = async (m, { conn, args }) => {
-  let page = args[0] ? parseInt(args[0]) : 1;
-  if (isNaN(page) || page < 1) page = 1;
+  let users = Object.entries(global.db.data.users)
+    .filter(([_, u]) => u.exp > 0 && u.level >= 0)
+    .map(([jid, u]) => ({ ...u, jid }));
 
-  const pageSize = 10;
-  const users = Object.entries(global.db.data.users)
-    .filter(([_, u]) => u.exp > 0)
-    .map(([jid, u]) => ({ ...u, jid }))
-    .sort((a, b) => b.exp - a.exp || b.level - a.level);
+  users.sort((a, b) => b.exp - a.exp);
 
-  const totalPages = Math.ceil(users.length / pageSize);
-  const start = (page - 1) * pageSize;
-  const end = start + pageSize;
-  const showUsers = users.slice(start, end);
+  const page = args[0] && !isNaN(args[0]) ? parseInt(args[0]) : 1;
+  const usersPerPage = 10;
+  const totalPages = Math.ceil(users.length / usersPerPage);
+  const startIndex = (page - 1) * usersPerPage;
+  const endIndex = Math.min(startIndex + usersPerPage, users.length);
+  const rankOffset = startIndex + 1;
 
-  let text = `◢✿ Top de usuarios con más experiencia ✿◤\n\n`;
+  let text = `◢✿ *Top de usuarios con más experiencia* ✿◤\n\n`;
 
-  for (let i = 0; i < showUsers.length; i++) {
-    let user = showUsers[i];
-    let name = await conn.getName(user.jid) || 'Desconocido';
-    let position = start + i + 1;
-    text += `✰ ${position} » *${name}*\n`;
-    text += `  ❖ XP » *${user.exp.toLocaleString()}*  ❖ LVL » *${user.level || 0}*\n`;
+  for (let i = startIndex; i < endIndex; i++) {
+    let u = users[i];
+    let name = await conn.getName(u.jid) || 'Desconocido';
+    text += `✰ ${i + 1} » *${name}*\n`;
+    text += `  ❖ XP » *${u.exp.toLocaleString()}*  ❖ LVL » *${u.level}*\n`;
   }
 
   text += `\n> • Página *${page}* de *${totalPages}*`;
-  if (page < totalPages) {
-    text += `\n> Para ver la siguiente página » *#leaderboard ${page + 1}*`;
-  }
+  if (page < totalPages) text += `\n> Para ver la siguiente página » *#leaderboard ${page + 1}*`;
 
-  await conn.reply(m.chat, text.trim(), m);
+  await conn.reply(m.chat, text, m, {
+    mentions: users.slice(startIndex, endIndex).map(u => u.jid),
+  });
 };
 
-handler.help = ['leaderboard [número]'];
+handler.help = ['leaderboard [página]'];
 handler.tags = ['rpg'];
-handler.command = ['leaderboard', 'topxp', 'xplevel'];
-handler.register = true;
+handler.command = ['leaderboard', 'topxp', 'toplevel'];
 handler.group = true;
+handler.register = true;
 
 export default handler;
