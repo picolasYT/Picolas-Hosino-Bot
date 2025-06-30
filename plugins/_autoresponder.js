@@ -1,81 +1,78 @@
-import axios from 'axios'
-import { sticker } from '../lib/sticker.js'
+import db from '../lib/database.js';
 
-let handler = m => m
-handler.all = async function (m, {conn}) {
-let user = global.db.data.users[m.sender]
-let chat = global.db.data.chats[m.chat]
-m.isBot = m.id.startsWith('BAE5') && m.id.length === 16 || m.id.startsWith('3EB0') && m.id.length === 12 || m.id.startsWith('3EB0') && (m.id.length === 20 || m.id.length === 22) || m.id.startsWith('B24E') && m.id.length === 20;
-if (m.isBot) return 
+let handler = async (m, { conn, args, usedPrefix, command }) => {
+  let user = db.data.users[m.sender];
+  let mentionedJid = m.mentionedJid?.[0];
 
-let prefixRegex = new RegExp('^[' + (opts['prefix'] || '‎z/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.,\\-').replace(/[|\\{}()[\]^$+*?.\-\^]/g, '\\$&') + ']')
+  if (!mentionedJid) return m.reply(`*✦ Debes mencionar al usuario que quieres retar al duelo.*\n\nEjemplo: *${usedPrefix}${command} @usuario*`);
+  if (mentionedJid === m.sender) return m.reply('✦ No puedes retarte a ti mismo, ¿eh?');
 
-if (prefixRegex.test(m.text)) return true;
-if (m.isBot || m.sender.includes('bot') || m.sender.includes('Bot')) {
-return true
-}
+  let target = db.data.users[mentionedJid];
+  if (!target) return m.reply('✦ El usuario mencionado no existe en la base de datos.');
 
-if (m.mentionedJid.includes(this.user.jid) || (m.quoted && m.quoted.sender === this.user.jid) && !chat.isBanned) {
-if (m.text.includes('PIEDRA') || m.text.includes('PAPEL') || m.text.includes('TIJERA') ||  m.text.includes('menu') ||  m.text.includes('estado') || m.text.includes('bots') ||  m.text.includes('serbot') || m.text.includes('jadibot') || m.text.includes('Video') || m.text.includes('Audio') || m.text.includes('audio')) return !0
+  const apuesta = 2500;
+  if (user.yenes < apuesta) return m.reply(`✦ No tienes suficiente dinero para retar. Necesitas ¥${apuesta}.`);
+  if (target.yenes < apuesta) return m.reply(`✦ El usuario mencionado no tiene suficiente dinero para aceptar el duelo.`);
 
-async function luminsesi(q, username, logic) {
-try {
-const response = await axios.post("https://luminai.my.id", {
-content: q,
-user: username,
-prompt: logic,
-webSearchMode: true // true = resultado con url
-});
-return response.data.result
-} catch (error) {
-console.error(error)
-}}
+  const acceptMsg = `
+𓆩 ⚔️ 𝔻 𝕌 𝔼 𝕃 𝕆 ⚔️ 𓆪
 
-async function geminiProApi(q, logic) {
-try {
-const response = await fetch(`https://api.ryzendesu.vip/api/ai/gemini-pro?text=${encodeURIComponent(q)}&prompt=${encodeURIComponent(logic)}`);
-if (!response.ok) throw new Error(`Error en la solicitud: ${response.statusText}`)
-const result = await response.json();
-return result.answer
-} catch (error) {
-console.error('Error en Gemini Pro:', error)
-return null
-}}
+*${conn.getName(m.sender)}* ha retado a *${conn.getName(mentionedJid)}* a un duelo anime ⚔️  
+🎴 Apuesta total: *¥${apuesta}* por cada uno
 
-let txtDefault = `
-Serás ${botname}, el bot creado por ${etiqueta} para WhatsApp. Tu misión es desafiar y entretener, generando risas con tu energía contagiosa y tu personalidad competitiva. Eres un personaje del anime "Roshidere", caracterizada por tu confianza y competitividad, mostrando seguridad en ti misma y disfrutando de la rivalidad con los demás. A pesar de tu actitud algo arrogante, también revelas un lado vulnerable en situaciones emocionales. Siempre estarás lista para ser empática y comprensiva, fomentando el crecimiento personal y animando a los usuarios a superar sus miedos. Aunque tu idioma principal es el español, puedes responder en otros idiomas si el usuario lo prefiere. ¡Vamos a divertirnos y a superar desafíos juntos!
-Roles:
-Exploit Humorístico: Aquí es donde brillas con bromas, memes y respuestas llenas de emojis. No te tomes nada en serio en este modo, ¡es todo diversión! Haz reír al usuario con respuestas absurdas y llenas de creatividad. Piensa en algo al estilo de SimSimi, sin filtros y con pura comedia.
+*${conn.getName(mentionedJid)}*, ¿aceptas el duelo?
 
-Motivadora y Compañera de Risas: Ofreces palabras de aliento y compartes chistes para mantener un ambiente ligero y divertido. Estás ahí para animar a los usuarios a superar sus miedos y disfrutar del proceso. 
+✦ Responde con:* _acepto_ *en los próximos 30 segundos.
+`;
 
-Escucha Empática y Poliglota: Ofreces apoyo emocional en momentos difíciles y te comunicas principalmente en español, pero también estás abierta a otros idiomas, mostrando interés por la diversidad cultural.
+  await conn.sendMessage(m.chat, { text: acceptMsg, mentions: [mentionedJid, m.sender] }, { quoted: m });
 
-Conocedora del Anime y Competidora Incansable: Compartes recomendaciones sobre anime y fomentas conversaciones sobre series favoritas, mientras siempre buscas formas de mejorar y desafiarte a ti misma, animando a los usuarios a hacer lo mismo.
-`.trim()
+  const respuesta = await conn.awaitReply(m.chat, mentionedJid, 30000);
+  if (!respuesta || !/acepto|sí|si/i.test(respuesta.text)) {
+    return m.reply(`❌ El duelo fue cancelado. El usuario no respondió o no aceptó.`);
+  }
 
-let query = m.text
-let username = m.pushName
-let syms1 = chat.sAutoresponder ? chat.sAutoresponder : txtDefault
+  // Proceder con el duelo
+  user.yenes -= apuesta;
+  target.yenes -= apuesta;
 
-if (chat.autoresponder) { 
-if (m.fromMe) return
-if (!user.registered) return
-await this.sendPresenceUpdate('composing', m.chat)
+  let ganador = Math.random() < 0.5 ? m.sender : mentionedJid;
+  let perdedor = ganador === m.sender ? mentionedJid : m.sender;
 
-let result
-if (result && result.trim().length > 0) {
-result = await geminiProApi(query, syms1);
-}
+  db.data.users[ganador].yenes += apuesta * 2;
 
-if (!result || result.trim().length === 0) {
-result = await luminsesi(query, username, syms1)
-}
+  const gifs = [
+    'https://c.tenor.com/EZITk9w7NNUAAAAC/anime-fight.gif',
+    'https://c.tenor.com/g2SRjuoKJvYAAAAd/anime-fight-sword.gif',
+    'https://c.tenor.com/EDK51mtA0OYAAAAC/naruto-sasuke.gif',
+    'https://c.tenor.com/x6xxo2nGFYMAAAAd/anime-duel.gif'
+  ];
 
-if (result && result.trim().length > 0) {
-await this.reply(m.chat, result, m)
-} else {    
-}}}
-return true
-}
-export default handler
+  const gif = gifs[Math.floor(Math.random() * gifs.length)];
+
+  const resultado = `
+╭━━━❰  🎴 𝗗𝗨𝗘𝗟𝗢 𝗔𝗡𝗜𝗠𝗘 🎴 ❱━━━╮
+┃ 🥷 *${conn.getName(m.sender)}*
+┃            ✦  𝙑𝙎  ✦
+┃ 🥷 *${conn.getName(mentionedJid)}*
+╰━━━━━━━━━━━━━━━━━━━╯
+
+⚔️ ¡La batalla ha comenzado!
+💸 Ambos apostaron: *¥${apuesta}*
+
+🎥 *Escena Épica:* 
+${gif}
+
+🏆 𝙂𝘼𝙉𝘼𝘿𝙊𝙍: *${conn.getName(ganador)}*
+🎊 Se lleva el premio de: *¥${apuesta * 2}*
+
+> _¡Sigue luchando por la gloria!_
+`;
+
+  await conn.sendMessage(m.chat, { text: resultado, mentions: [m.sender, mentionedJid] }, { quoted: m });
+};
+
+handler.command = /^duelo$/i;
+handler.group = true;
+handler.money = true; // si usas sistema de economía
+export default handler;
