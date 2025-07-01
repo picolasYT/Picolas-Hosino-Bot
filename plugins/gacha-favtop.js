@@ -25,7 +25,7 @@ let handler = async (m) => {
 
 handler.help = ['favtop'];
 handler.tags = ['anime'];
-handler.command = ['favtop', 'topfav'];
+handler.command = ['favtop', 'favoritetop'];
 handler.group = true;
 handler.register = true;
 
