@@ -303,6 +303,8 @@ Aquí tienes mi lista de comandos
 > ✦ Ver el top de personajes del rollwaifu favoritos.
 ├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#givechar • #givewaifu • #regalar*
 > ✦ Regalar un personaje a otro usuario.
+├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#setfav • #setfavorito*
+> ✦ poner de favorito a un personaje.
 ├ׁ̟̇˚₊· ͟͟͞͞➳❥  ੈ₊˚༅༴│.ᰔᩚ *#vote • #votar*
 > ✦ Votar por un personaje para subir su valor.
 ├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#waifusboard • #waifustop • #topwaifus*
