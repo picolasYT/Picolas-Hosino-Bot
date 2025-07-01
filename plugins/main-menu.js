@@ -299,6 +299,8 @@ Aquí tienes mi lista de comandos
 > ✦ Ver una imagen aleatoria de un personaje.
 ├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#charinfo • #winfo • #waifuinfo*
 > ✦ Ver información de un personaje.
+₊· ͟͟͞͞➳❥ *#favtop • #topfav*
+> ✦ Ver información.
 ├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#givechar • #givewaifu • #regalar*
 > ✦ Regalar un personaje a otro usuario.
 ├ׁ̟̇˚₊· ͟͟͞͞➳❥  ੈ₊˚༅༴│.ᰔᩚ *#vote • #votar*
