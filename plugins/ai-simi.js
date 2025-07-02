@@ -1,47 +1,26 @@
-import { promises as fs } from 'fs';
+import fetch from 'node-fetch';
 
-const charactersFilePath = './src/database/characters.json';
+let handler = async (m, { conn, text, command }) => {
+  if (!text) throw `🔎 Ejemplo de uso:\n${command} conejito blanco`;
 
-async function loadCharacters() {
-  const data = await fs.readFile(charactersFilePath, 'utf-8');
-  return JSON.parse(data);
-}
+  let res = await fetch(`https://zenzxz.dpdns.org/search/stickerlysearch?query=${encodeURIComponent(text)}`);
+  if (!res.ok) throw '❌ Error al buscar stickers.';
+  
+  let json = await res.json();
+  if (!json.status || !json.data || json.data.length === 0) throw '❌ No se encontraron stickers con ese nombre.';
 
-async function saveCharacters(characters) {
-  await fs.writeFile(charactersFilePath, JSON.stringify(characters, null, 2), 'utf-8');
-}
+  let resultados = json.data.slice(0, 5); // máximo 5
+  for (let result of resultados) {
+    let { name, author, stickerCount, viewCount, exportCount, thumbnailUrl, url } = result;
 
-let handler = async (m, { conn, participants }) => {
-  let mentioned = m.mentionedJid?.[0];
-  let sender = m.sender;
+    let mensaje = `*🎨 Paquete:* ${name}\n👤 *Autor:* ${author}\n🧩 *Stickers:* ${stickerCount}\n👁️ *Vistas:* ${viewCount}\n📤 *Exportados:* ${exportCount}\n🔗 *Link:* ${url}`;
 
-  if (!mentioned) return m.reply('✿ Debes mencionar a alguien para regalarle todas tus waifus.');
-
-  if (mentioned === sender) return m.reply('✿ No puedes regalarte tus propias waifus.');
-
-  const characters = await loadCharacters();
-
-  const myWaifus = characters.filter(c => c.user === sender);
-  if (myWaifus.length === 0) return m.reply('✿ No tienes waifus para regalar.');
-
-  for (let waifu of myWaifus) {
-    waifu.user = mentioned;
-    waifu.status = "Reclamado";
+    await conn.sendFile(m.chat, thumbnailUrl, 'sticker.jpg', mensaje, m);
   }
-
-  await saveCharacters(characters);
-
-  const names = myWaifus.map(w => `• ${w.name}`).join('\n');
-
-  await conn.reply(m.chat, `✿ Le regalaste *${myWaifus.length} waifus* a @${mentioned.split('@')[0]} ✦\n\n${names}`, m, {
-    mentions: [mentioned]
-  });
 };
 
-handler.help = ['giveallharem @user'];
-handler.tags = ['gacha'];
-handler.command = ['giveallharem', 'regalarharem'];
-handler.group = true;
-handler.register = true;
+handler.help = ['stickerly <texto>'];
+handler.tags = ['sticker'];
+handler.command = /^stickerly$/i;
 
 export default handler;
