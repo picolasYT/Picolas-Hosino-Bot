@@ -13,7 +13,6 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 const normalizeJid = jid => jid?.replace(/[^0-9]/g, '')
 const cleanJid = jid => jid?.split(':')[0] || ''
 
-// ===== Cola optimizada y global =====
 global._msgQueue = global._msgQueue || []
 global._processingQueue = global._processingQueue || false
 async function _processQueue(conn) {
@@ -34,17 +33,14 @@ export async function handler(chatUpdate) {
   1]
   if (!m) return
 
-  // Multi-bot en grupo
   if (m.isGroup && global.conns && global.conns.length > 1) {
     let botsEnGrupo = global.conns.filter(c => c.user && c.user.jid && c.ws && c.ws.socket && c.ws.socket.readyState !== 3)
     let elegido = botsEnGrupo[Math.floor(Math.random() * botsEnGrupo.length)]
     if (this.user.jid !== elegido.user.jid) return
   }
 
-  // Carga la base de datos solo si falta
   if (global.db.data == null) await global.loadDatabase()
 
-  // Cola solo para usuarios que no son mods ni prems (más rápido)
   let user = global.db.data.users[m.sender]
   let isMod = global.owner.some(([n]) => n == m.sender) || (global.mods || []).includes(m.sender)
   let isPrem = user?.premium
@@ -57,8 +53,7 @@ export async function handler(chatUpdate) {
   }
 }
 
-// =======================
-// ======= LÓGICA PRINCIPAL DEL HANDLER =======
+
 async function handleMessage(chatUpdate) {
   let m = chatUpdate.messages[chatUpdate.messages.length - 1]
   if (!m) return
@@ -73,7 +68,6 @@ async function handleMessage(chatUpdate) {
   let chat = chats[m.chat]
   let setting = settings[this.user.jid]
 
-  // Inicialización rápida de datos de usuario/chat/setting
   Object.assign(user, {
     exp: user.exp ?? 0,
     coin: user.coin ?? 10,
@@ -151,7 +145,6 @@ async function handleMessage(chatUpdate) {
   m.exp = 0
   m.coin = false
 
-  // --- Roles y permisos
   const mainBot = global.conn.user.jid
   const allowedBots = chat.per || []
   if (!allowedBots.includes(mainBot)) allowedBots.push(mainBot)
@@ -181,8 +174,6 @@ async function handleMessage(chatUpdate) {
   const isMods = isOwner || global.mods.map(v => v.replace(/[^0-9]/g, '')).includes(senderNum)
   const isPrems = isROwner || global.prems.map(v => v.replace(/[^0-9]/g, '')).includes(senderNum) || _user.premium == true
 
-  // ======= COLA OPTIMIZADA: NO setInterval, NO delay largo =======
-  // (Ya no es necesario aquí, lo hace el handler de arriba)
 
   if (m.isBaileys) return
   m.exp += Math.ceil(Math.random() * 10)
