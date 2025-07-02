@@ -56,7 +56,7 @@ let handler = async (m, { conn }) => {
       contextInfo: { mentionedJid: [victimId] }
     }, { quoted: m })
   } else {
-    // 30% de fallo
+ 
     let real = Math.min(cantidad, senderCoin)
     users[senderId].coin -= real
     m.reply(`🥀 ${pickRandom(frasesFracaso)} y perdiste *¥${real.toLocaleString()} ${moneda}*...\n> Tu saldo ahora es *¥${users[senderId].coin.toLocaleString()}*.`)
