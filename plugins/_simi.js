@@ -1,53 +1,45 @@
-import fetch from 'node-fetch'
-import { Sticker } from 'wa-sticker-formatter'
+// Código creado por Destroy wa.me/584120346669
 
-let handler = async (m, { conn, text, command }) => {
-  if (!text) return m.reply(`Ejemplo: .${command} Barboza`) 
+import fetch from 'node-fetch';
+import { Sticker } from 'wa-sticker-formatter';
+
+let handler = async (m, { conn, text, usedPrefix, command }) => {
+  if (!text) throw `🔍 *Ejemplo de uso:* ${usedPrefix + command} gato cute`;
+
+  m.react('🔎');
 
   try {
-    const searchRes = await fetch(`https://zenzxz.dpdns.org/search/stickerlysearch?query=${encodeURIComponent(text)}`)
-    const searchJson = await searchRes.json()
+    let res = await fetch(`https://zenzxz.dpdns.org/search/stickerlysearch?query=${encodeURIComponent(text)}`);
+    if (!res.ok) throw '❌ Error al conectar con la API.';
+    let json = await res.json();
 
-    if (!searchJson.status || !Array.isArray(searchJson.data) || searchJson.data.length === 0) {
-      return m.reply('No hay stickers aquí')
+    if (!json.status || !json.data || json.data.length === 0) {
+      throw '😿 No se encontraron stickers con esa búsqueda.';
     }
 
-    const pick = searchJson.data[Math.floor(Math.random() * searchJson.data.length)]
-
-    const detailUrl = `https://zenzxz.dpdns.org/tools/stickerlydetail?url=${encodeURIComponent(pick.url)}`
-    const detailRes = await fetch(detailUrl)
-    const detailJson = await detailRes.json()
-
-    if (!detailJson.status || !detailJson.data || !Array.isArray(detailJson.data.stickers) || detailJson.data.stickers.length === 0) {
-      return m.reply('Error al tomar los stickers')
-    }
-
-    const packName = detailJson.data.name
-    const authorName = detailJson.data.author?.name || 'unknown'
-
-    m.reply(`Encontré 5 stickers`)
-
-    let maxSend = 5
-    for (let i = 0; i < Math.min(detailJson.data.stickers.length, maxSend); i++) {
-      const img = detailJson.data.stickers[i]
-      let sticker = new Sticker(img.imageUrl, {
-        pack: wm,
-        author: '',
+    let resultados = json.data.slice(0, 5); // Solo 5 resultados
+    for (let sticker of resultados) {
+      const stiker = new Sticker(sticker.thumbnailUrl, {
+        pack: sticker.name,
+        author: sticker.author,
         type: 'full',
-        categories: ['😏'],
-        id: 'zenzxd'
-      })
-      let buffer = await sticker.toBuffer()
-      await conn.sendMessage(m.chat, { sticker: buffer }, { quoted: m })
+        categories: ['🤖'],
+        id: `stickerly-${Date.now()}`,
+        quality: 80
+      });
+
+      await conn.sendMessage(m.chat, { sticker: await stiker.toBuffer() }, { quoted: m });
     }
 
   } catch (e) {
-    console.error(e)
-    m.reply('Error al procesar los stickers')
+    console.error(e);
+    throw '❌ Hubo un error al buscar o enviar los stickers.';
   }
-}
+};
 
-handler.help = ['stikerly *<consulta>*']
-handler.tags = ['sticker']
-handler.command = /^stikerly$/i
-export default handler
+handler.help = ['stickerly <texto>'];
+handler.tags = ['sticker', 'internet'];
+handler.command = ['stickerly', 'stickerpack', 'stickersearch'];
+handler.limit = true;
+
+export default handler;
