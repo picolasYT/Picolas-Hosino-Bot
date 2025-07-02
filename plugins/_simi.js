@@ -1,10 +1,18 @@
 import fetch from 'node-fetch';
 import { Sticker } from 'wa-sticker-formatter';
 
-let handler = async (m, { conn, text, usedPrefix, command }) => {
-  if (!text) throw `🔍 *Ejemplo de uso:* ${usedPrefix + command} gato cute`;
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
 
-  m.react('🔎');
+let handler = async (m, { conn, text, usedPrefix, command }) => {
+  if (!text) throw `🔍 *Ejemplo de uso:* ${usedPrefix + command} hatsune miku`;
+
+  m.react('🎴');
 
   try {
     let res = await fetch(`https://zenzxz.dpdns.org/search/stickerlysearch?query=${encodeURIComponent(text)}`);
@@ -15,13 +23,15 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
       throw '😿 No se encontraron stickers con esa búsqueda.';
     }
 
-    let resultados = json.data.slice(0, 5); // Solo 5 resultados
-    for (let sticker of resultados) {
+    let resultados = shuffleArray(json.data); // Mezclar resultados
+    let seleccion = resultados.slice(0, 5); // Elegir 5 aleatorios
+
+    for (let sticker of seleccion) {
       const stiker = new Sticker(sticker.thumbnailUrl, {
         pack: sticker.name,
         author: sticker.author,
         type: 'full',
-        categories: ['🤖'],
+        categories: ['🔎'],
         id: `stickerly-${Date.now()}`,
         quality: 80
       });
