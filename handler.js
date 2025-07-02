@@ -21,7 +21,7 @@ async function _processQueue(conn) {
   while (global._msgQueue.length) {
     const fn = global._msgQueue.shift()
     await fn()
-    await delay(400) // Puedes ajustar entre 200 y 700ms si quieres
+    await delay(400)
   }
   global._processingQueue = false
 }
