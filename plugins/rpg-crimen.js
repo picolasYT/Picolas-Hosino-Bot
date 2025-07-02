@@ -129,7 +129,19 @@ const frasesMixto = [
   'Vendiste una taza con forma de Pikachu por',
   'Robaste una mochila olvidada que solo tenía',
   'Cometiste fraude leve y obtuviste',
-  'Te colaste en un evento y vendiste boletos falsos, ganaste'
+  'Te colaste en un evento y vendiste boletos falsos, ganaste',
+  'Robaste una máquina de chicles y lograste venderlos por',
+  'Hackeaste una cuenta de Roblox y obtuviste',
+  'Engañaste a un influencer novato y te pagó',
+  'Conseguiste sobornar a un niño rico y te dio',
+  'Vendiste spoilers falsos de anime y cobraste',
+  'Hackeaste un juego online y te pagaron en centavos',
+  'Hiciste una app que robaba datos pero nadie la descargó',
+  'Vendiste aire enlatado de "Japón" por',
+  'Estafaste con cursos falsos y solo te pagaron',
+  'Robaste propinas de un streamer y ganaste',
+  'Fuiste parte de una estafa piramidal y saliste con',
+  'Te disfrazaste de youtuber famoso y engañaste por'
 ]
 
 const frasesPolicia = [
