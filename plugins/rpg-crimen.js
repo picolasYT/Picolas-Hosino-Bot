@@ -152,5 +152,17 @@ const frasesPolicia = [
   '📷 Una cámara del semáforo te grabó robando',
   '🐕‍🦺 Un perro policía olfateó tus billetes y fuiste arrestado',
   '🧠 Usaste el WiFi público del parque y fuiste localizado',
-  '👓 Un testigo te reconoció y llamó al 911'
+  '👓 Un testigo te reconoció y llamó al 911',
+  '📱 Publicaste el botín en redes y te rastrearon',
+  '🎥 El noticiero local transmitió tu crimen en vivo',
+  '💳 Dejaste tu tarjeta de crédito en la escena del crimen',
+  '🛒 Robaste en una tienda con reconocimiento facial',
+  '🗣️ Confesaste el crimen por accidente en un audio de WhatsApp',
+  '📍Compartiste tu ubicación sin querer y te encontraron',
+  '🎮 Un niño te venció en un videojuego y te denunció',
+  '🛵 Te siguieron con drones y te atraparon',
+  '🔊 El Google Home te delató con su micrófono',
+  '📺 Saliste en las noticias como el ladrón más torpe',
+  '📡 Hackearon tus mensajes y encontraron el plan criminal',
+  '🧤 Dejaste tus huellas en un sándwich que mordiste durante el robo'
 ]
