@@ -60,14 +60,19 @@ const trabajosBuenos = [
 ]
 
 const trabajosMalos = [
-  "El jefe se quedó con tu paga, perdiste",
-  "Se te cayó la mercancía, perdiste",
-  "Una paloma te robó el dinero, perdiste",
-  "Te estafaron mientras vendías cosas",
-  "Te confundieron con un criminal y te multaron",
-  "Arruinaste un cosplay y te lo descontaron",
+  "Se te cayó toda la mercancía en la calle y perdiste",
+  "Te estafaron mientras vendías cosas y perdiste",
+  "El jefe se quedó con tu paga y perdiste",
+  "Te tropezaste con una abuela millonaria y tuviste que pagarle",
+  "Confundiste el pedido y te descontaron",
+  "Una paloma te robó la bolsa con el dinero, perdiste",
+  "Un cliente se fue sin pagar y perdiste",
+  "Te confundieron con un criminal y te multaron con",
+  "Fuiste despedido por llegar tarde y perdiste",
+  "Tuviste que pagar los daños del cosplay que arruinaste, perdiste",
+  "Te caíste en una fuente y te cobraron por romperla",
+  "Perdiste el dinero jugando piedra, papel o tijera",
+  "Confundiste dólares con VANI-COINS y saliste perdiendo",
   "Invertiste en una estafa piramidal y perdiste",
-  "Tu jefe te descontó por llegar tarde",
-  "Pagaste la cuenta de todos sin querer",
-  "Confundiste yenes con darkos y perdiste",
+  "Le pagaste de más a un cliente por error y perdiste",
 ]
