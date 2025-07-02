@@ -7,8 +7,8 @@ let handler = async (m, { conn }) => {
   let senderName = conn.getName(senderId)
   let senderCoin = users[senderId].coin || 0
 
-  const cooldown = 5 * 60 * 1000 // 5 minutos
-  const jailCooldown = 60 * 60 * 1000 // 1 hora
+  const cooldown = 5 * 60 * 1000
+  const jailCooldown = 60 * 60 * 1000
 
   if (jail[senderId] && Date.now() < jail[senderId]) {
     const restante = segundosAHMS(Math.ceil((jail[senderId] - Date.now()) / 1000))
