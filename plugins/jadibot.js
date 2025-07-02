@@ -83,7 +83,7 @@ let handler = async (m, { conn: _envio, command, usedPrefix, args, text, isOwner
           const nombre = connBot.user?.name || 'Sub-Bot';
           const uptime = connBot.uptime ? convertirMsADiasHorasMinutosSegundos(Date.now() - connBot.uptime) : 'Desconocido';
           return `
-> ✧ Bot » ${nombre}
+✧ Bot » ${nombre}
 > 🜸 Uptime » ${uptime}`.trim();
         }).join('\n\n');
 
