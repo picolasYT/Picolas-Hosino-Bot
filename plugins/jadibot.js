@@ -3,7 +3,6 @@ const fs = { ...fsPromises, existsSync };
 import path, { join } from 'path';
 import ws from 'ws';
 
-let dev = 'by Crosby Batin ✧' // Personalízalo si quieres
 
 let handler = async (m, { conn: _envio, command, usedPrefix, args, text, isOwner }) => {
   const isDeleteSession = /^(deletesesion|deletebot|deletesession|deletesesaion)$/i.test(command);
