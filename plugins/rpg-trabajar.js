@@ -3,16 +3,18 @@ let cooldowns = {}
 let handler = async (m, { conn }) => {
   let user = global.db.data.users[m.sender]
   let tiempo = 5 * 60
+
   if (cooldowns[m.sender] && Date.now() - cooldowns[m.sender] < tiempo * 1000) {
     const tiempo2 = segundosAHMS(Math.ceil((cooldowns[m.sender] + tiempo * 1000 - Date.now()) / 1000))
-    conn.reply(m.chat, `🤠 Debes esperar *${tiempo2}* para usar *#chamba* de nuevo.`, m)
-    return
+    return conn.reply(m.chat, `🤠 Debes esperar *${tiempo2}* para usar *#chamba* de nuevo.`, m)
   }
 
   cooldowns[m.sender] = Date.now()
 
-  const ganar = Math.random() < 0.5
-  const monto = Math.floor(Math.random() * (10000 - 500 + 1)) + 500 // entre ¥500 y ¥10,000
+  const ganar = Math.random() < 0.60
+  const monto = ganar
+    ? Math.floor(Math.random() * (12000 - 1000 + 1)) + 1000
+    : Math.floor(Math.random() * (6000 - 800 + 1)) + 800
 
   let mensaje = ''
   if (ganar) {
@@ -47,41 +49,56 @@ function pickRandom(list) {
 }
 
 const trabajosBuenos = [
-  "Trabajaste para el gran sistema capitalista y fuiste recompensado con",
-  "Vendiste empanadas en la calle y ganaste",
-  "Programaste un bot exitoso y te pagaron",
-  "Cuidaste gatitos en una mansión de millonarios y te dieron",
-  "Ganaste un concurso de karaoke y recibiste",
-  "Editaste videos de anime y te pagaron",
-  "Trabajaste en un crucero de lujo y ganaste",
-  "Vendiste NFTs de Pikachu y ganaste",
-  "Fuiste traductor en un evento otaku y te recompensaron con",
-  "Limpiaste la casa de una idol japonesa y encontraste",
-  "Fuiste actor de doblaje en un hentai muy popular y cobraste",
-  "Cazaste fantasmas en la noche y uno te dejó de propina",
-  "Ayudaste a un anciano a cruzar y él te dio",
-  "Participaste en una obra de teatro escolar y ganaste",
-  "Disfrazado de dinosaurio en un cumple infantil, ganaste",
-  "Fuiste animador en una fiesta de anime y te pagaron",
-  "Vendes galletas con chips y ganas",
-  "Salvaste un perrito y su dueña te recompensó con",
-  "Arreglaste una computadora vieja y te dieron",
+  "Vendiste helados en un día soleado y ganaste",
+  "Limpiando ventanas de rascacielos recibiste propina de",
+  "Programaste un bot para una empresa y te dieron",
+  "Le hiciste una ilustración a una VTuber famosa y cobraste",
+  "Fuiste doble de riesgo en una película y ganaste",
+  "Hiciste delivery en bicicleta y te pagaron",
+  "Ganaste un torneo de Genshin Impact y obtuviste",
+  "Tu canal de YouTube se hizo viral y te pagaron",
+  "Vendiste stickers en una convención anime y ganaste",
+  "Condujiste un taxi todo el día y lograste",
+  "Actuaste en un comercial de fideos y te pagaron",
+  "Ganaste un concurso de cocina y recibiste",
+  "Vendiste peluches de waifus y ganaste",
+  "Ayudaste a reparar computadoras y cobraste",
+  "Llevaste delivery en patineta y ganaste",
+  "Hiciste dibujos por comisión y recibiste",
+  "Cuidaste gatos en un café y te dieron",
+  "Fuiste guía de un museo y recibiste",
+  "Repartiste volantes todo el día y ganaste",
+  "Condujiste Uber durante la lluvia y lograste",
+  "Subiste un meme viral y te donaron",
+  "Participaste como actor de doblaje en una serie indie y cobraste",
+  "Vendiste ramen en la calle y tuviste éxito con",
+  "Ganaste un reto de TikTok y recibiste",
+  "Organizaste una rifa y te quedaste con",
+  "Participaste en una banda de covers y ganaste",
+  "Ayudaste a tu vecina a mudarse y te dio",
+  "Fuiste extra en un dorama y cobraste",
+  "Editaste un AMV que se hizo viral y te pagaron"
 ]
 
 const trabajosMalos = [
-  "Se te cayó toda la mercancía en la calle y perdiste",
-  "Te estafaron mientras vendías cosas y perdiste",
-  "El jefe se quedó con tu paga y perdiste",
-  "Te tropezaste con una abuela millonaria y tuviste que pagarle",
-  "Confundiste el pedido y te descontaron",
-  "Una paloma te robó la bolsa con el dinero, perdiste",
-  "Un cliente se fue sin pagar y perdiste",
-  "Te confundieron con un criminal y te multaron con",
-  "Fuiste despedido por llegar tarde y perdiste",
-  "Tuviste que pagar los daños del cosplay que arruinaste, perdiste",
-  "Te caíste en una fuente y te cobraron por romperla",
-  "Perdiste el dinero jugando piedra, papel o tijera",
-  "Confundiste dólares con VANI-COINS y saliste perdiendo",
-  "Invertiste en una estafa piramidal y perdiste",
-  "Le pagaste de más a un cliente por error y perdiste",
+  "Tropezaste y arruinaste todo el pedido, perdiste",
+  "Tu jefe se fue sin pagarte, perdiste",
+  "Compraste mercancía falsa y nadie te compró, perdiste",
+  "Llegaste tarde y te descontaron",
+  "Tuviste que pagar por romper una silla del evento",
+  "Te estafaron con billetes falsos, perdiste",
+  "Tuviste que pagar el delivery por adelantado y no te reembolsaron",
+  "Te confundieron con otro repartidor y perdiste el pedido",
+  "Una tormenta arruinó todo lo que vendías",
+  "Un cliente se enojó y no quiso pagarte",
+  "Tu teléfono se mojó y tuviste que repararlo",
+  "La policía te multó por vender en zona prohibida",
+  "Se te cayó el café encima del cosplay de un cliente, perdiste",
+  "Olvidaste el cambio y tuviste que cubrirlo tú",
+  "Rompiste el monitor de un cliente y lo pagaste",
+  "Te robaron tu bicicleta del delivery y perdiste dinero",
+  "La computadora se quemó mientras trabajabas y tuviste que reponerla",
+  "El cliente canceló a último minuto y perdiste inversión",
+  "No entendiste el encargo y tuviste que devolver el dinero",
+  "Te enfermaste en medio del trabajo y no pudiste terminar",
 ]
