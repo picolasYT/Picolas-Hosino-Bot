@@ -1,98 +1,67 @@
 let cooldowns = {}
+let jail = {}
 
-let handler = async (m, { conn, text, command, usedPrefix }) => {
+let handler = async (m, { conn }) => {
   let users = global.db.data.users
   let senderId = m.sender
   let senderName = conn.getName(senderId)
+  let senderCoin = users[senderId].coin || 0
 
-  let tiempo = 5 * 60 // 5 minutos
-  if (cooldowns[m.sender] && Date.now() - cooldowns[m.sender] < tiempo * 1000) {
-    let tiempo2 = segundosAHMS(Math.ceil((cooldowns[m.sender] + tiempo * 1000 - Date.now()) / 1000))
-    m.reply(`${emoji3} Ya has cometido un crimen recientemente.\n⏱️ Espera *${tiempo2}* para volver a intentarlo.`)
+  const cooldown = 5 * 60 * 1000 // 5 minutos
+  const jailCooldown = 60 * 60 * 1000 // 1 hora
+
+  if (jail[senderId] && Date.now() < jail[senderId]) {
+    const restante = segundosAHMS(Math.ceil((jail[senderId] - Date.now()) / 1000))
+    m.reply(`🚔 Estás en la cárcel por *actividades criminales fallidas*.\n🧊 Tiempo restante: *${restante}* para salir.`)
     return
   }
 
-  cooldowns[m.sender] = Date.now()
-
-  let senderCoin = users[senderId].coin || 0
-  let randomUserId = Object.keys(users)[Math.floor(Math.random() * Object.keys(users).length)]
-  while (randomUserId === senderId) {
-    randomUserId = Object.keys(users)[Math.floor(Math.random() * Object.keys(users).length)]
+  if (cooldowns[senderId] && Date.now() - cooldowns[senderId] < cooldown) {
+    let tiempo2 = segundosAHMS(Math.ceil((cooldowns[senderId] + cooldown - Date.now()) / 1000))
+    m.reply(`🕓 Ya has cometido un crimen recientemente.\n⏱️ Espera *${tiempo2}* para volver a intentarlo.`)
+    return
   }
 
-  let randomUserCoin = users[randomUserId].coin || 0
+  cooldowns[senderId] = Date.now()
 
-  let successCrimes = [
-    'Hiciste evasión de impuestos y ganaste',
-    'Hackeaste un cajero automático y robaste',
-    'Falsificaste billetes con éxito y obtuviste',
-    'Robaste una joyería durante la noche y conseguiste',
-    'Vendiste órganos en el mercado negro por',
-    'Estafaste a un político corrupto y ganaste',
-    'Robaste criptomonedas desde una laptop olvidada y ganaste',
-    'Atracaste un banco disfrazado de payaso y lograste obtener',
-    'Estafaste con NFTs falsos y te dieron',
-    'Hackeaste la cuenta de OnlyFans de alguien y lograste robar',
-    'Vendiste humo con coaching de éxito y cobraste',
-    'Cometiste phishing por correo y ganaste'
-  ]
+  const atrapado = Math.random() < 0.1
+  if (atrapado) {
+    jail[senderId] = Date.now() + jailCooldown
+    const mensaje = pickRandom(frasesPolicia)
+    return m.reply(`🚓 ${mensaje}\n🔒 Has sido enviado a la cárcel por 1 hora.`)
+  }
 
-  let failCrimes = [
-    'Te atraparon robando una tienda de donas',
-    'Tropezaste durante una huida y fuiste arrestado',
-    'Te delató tu cómplice y perdiste toda tu ganancia',
-    'Intentaste hackear un banco y se te bloqueó la IP',
-    'Fuiste descubierto por cámaras mientras robabas',
-    'Usaste tu propia cuenta para estafar y te congelaron',
-    'Una anciana te golpeó con su bastón durante un atraco',
-    'Confesaste sin querer durante una entrevista de trabajo',
-    'La policía te rastreó por usar el WiFi gratis del parque',
-    'Intentaste vender drogas a un policía encubierto',
-    'Tu máscara se cayó durante un atraco en vivo'
-  ]
+  // Elegir víctima
+  let victimId = Object.keys(users).filter(u => u !== senderId)[Math.floor(Math.random() * (Object.keys(users).length - 1))]
+  let victimCoin = users[victimId].coin || 0
 
-  let mixedCrimes = [
-    'Robaste una cartera, pero solo tenía',
-    'Hackeaste una cuenta de Steam, pero solo sacaste',
-    'Cometiste un crimen menor y escapaste con',
-    'Le vendiste una taza a un coleccionista por',
-    'Rompiste una ventana y encontraste solo',
-    'Robaste un camión, pero estaba vacío. Te llevaste',
-  ]
+  const cantidad = Math.floor(Math.random() * (10000 - 1000 + 1)) + 1000 // ¥1,000 - ¥10,000
+  const tipo = Math.floor(Math.random() * 3) // 0: éxito, 1: fracaso, 2: mixto
 
-  let option = Math.floor(Math.random() * 3)
-  let amount = Math.floor(Math.random() * (20000 - 3000 + 1)) + 3000 // entre 3000 y 20000
-
-  switch (option) {
-    case 0: { 
-      users[senderId].coin += amount
-      users[randomUserId].coin -= amount
-      conn.sendMessage(m.chat, {
-        text: `✿ ${pickRandom(successCrimes)} *¥${amount.toLocaleString()} ${moneda}*\n> Crimen cometido con éxito, ¡felicidades ${senderName}!`,
-        contextInfo: {
-          mentionedJid: [randomUserId],
-        }
-      }, { quoted: m })
-      break
-    }
-    case 1: {
-      let loss = Math.min(amount, senderCoin)
-      users[senderId].coin -= loss
-      conn.reply(m.chat, `🥀 ${pickRandom(failCrimes)} y perdiste *¥${loss.toLocaleString()} ${moneda}*...`, m)
-      break
-    }
-    case 2: {
-      let partial = Math.min(amount, randomUserCoin)
-      users[senderId].coin += partial
-      users[randomUserId].coin -= partial
-      conn.sendMessage(m.chat, {
-        text: `✿ ${pickRandom(mixedCrimes)} *¥${partial.toLocaleString()} ${moneda}*\n> No fue mucho, pero algo es algo.`,
-        contextInfo: {
-          mentionedJid: [randomUserId],
-        }
-      }, { quoted: m })
-      break
-    }
+  if (tipo === 0) {
+    let real = Math.min(cantidad, victimCoin)
+    users[senderId].coin += real
+    users[victimId].coin -= real
+    conn.sendMessage(m.chat, {
+      text: `✿ ${pickRandom(frasesExito)} *¥${real.toLocaleString()} ${moneda}*\n> ¡Buen trabajo, ${senderName}! Ahora tienes *¥${users[senderId].coin.toLocaleString()}*.`,
+      contextInfo: {
+        mentionedJid: [victimId],
+      }
+    }, { quoted: m })
+  } else if (tipo === 1) {
+    let real = Math.min(cantidad, senderCoin)
+    users[senderId].coin -= real
+    m.reply(`🥀 ${pickRandom(frasesFracaso)} y perdiste *¥${real.toLocaleString()} ${moneda}*...\n> Te quedan *¥${users[senderId].coin.toLocaleString()}*.`)
+  } else {
+    let real = Math.min(cantidad, victimCoin)
+    users[senderId].coin += real
+    users[victimId].coin -= real
+    conn.sendMessage(m.chat, {
+      text: `✿ ${pickRandom(frasesMixto)} *¥${real.toLocaleString()} ${moneda}*\n> No fue mucho, pero algo es algo.\n> Ahora tienes *¥${users[senderId].coin.toLocaleString()}*.`,
+      contextInfo: {
+        mentionedJid: [victimId],
+      }
+    }, { quoted: m })
   }
 
   global.db.write()
@@ -107,7 +76,7 @@ handler.group = true
 export default handler
 
 function segundosAHMS(segundos) {
-  let minutos = Math.floor((segundos % 3600) / 60)
+  let minutos = Math.floor(segundos / 60)
   let segundosRestantes = segundos % 60
   return `${minutos} minutos y ${segundosRestantes} segundos`
 }
@@ -115,3 +84,51 @@ function segundosAHMS(segundos) {
 function pickRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)]
 }
+
+const frasesExito = [
+  'Hackeaste un cajero automático y obtuviste',
+  'Robaste una joyería y ganaste',
+  'Estafaste con NFTs falsos y cobraste',
+  'Hackeaste OnlyFans y robaste',
+  'Vendiste datos filtrados y conseguiste',
+  'Engañaste a un magnate millonario y obtuviste',
+  'Hiciste phishing y lograste',
+  'Robaste un convoy blindado y sacaste',
+  'Clonaste una tarjeta de crédito y ganaste',
+  'Robaste criptomonedas desde un café internet y conseguiste'
+]
+
+const frasesFracaso = [
+  'Te atraparon robando donas en un 24h',
+  'Tropezaste durante una huida y te arrestaron',
+  'Tu cómplice te traicionó y se llevó todo',
+  'Fuiste grabado en vivo por TikTok y te descubrieron',
+  'La cámara facial te reconoció al instante',
+  'La víctima resultó ser policía encubierto',
+  'Intentaste escapar en bicicleta y te caíste',
+  'Te congelaron la cuenta por estafa',
+  'Olvidaste apagar el GPS durante el robo',
+  'El crimen fue tan torpe que te hiciste viral'
+]
+
+const frasesMixto = [
+  'Robaste una cartera pero solo tenía',
+  'Hackeaste una cuenta de Steam y lograste',
+  'Atracaste un puesto de jugos y sacaste',
+  'Interceptaste una transferencia pero era mínima: ganaste',
+  'Vendiste una taza con forma de Pikachu por',
+  'Robaste una mochila olvidada que solo tenía',
+  'Cometiste fraude leve y obtuviste',
+  'Te colaste en un evento y vendiste boletos falsos, ganaste'
+]
+
+const frasesPolicia = [
+  '🚨 La policía te atrapó justo antes de escapar',
+  '👮 Una patrulla te vio en plena acción',
+  '🧠 Olvidaste cubrir tus huellas y te rastrearon',
+  '🕵️ Un detective anónimo te identificó por tus crímenes pasados',
+  '📷 Una cámara del semáforo te grabó robando',
+  '🐕‍🦺 Un perro policía olfateó tus billetes y fuiste arrestado',
+  '🧠 Usaste el WiFi público del parque y fuiste localizado',
+  '👓 Un testigo te reconoció y llamó al 911'
+]
