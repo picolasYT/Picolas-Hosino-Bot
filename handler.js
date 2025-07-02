@@ -173,9 +173,7 @@ chat.autosticker = false
 if (!('autoRechazar' in chat))
 chat.autoRechazar = false
 if (!('autoresponder' in chat))
-chat.autoresponder = false
-if (!('isBanned' in chat)) 
-chat.isBanned = false         
+chat.autoresponder = false    
 if (!('detect' in chat))
 chat.detect = true
 if (!('antiBot' in chat))
@@ -204,7 +202,6 @@ if (!('per' in chat))
 chat.per = []
 } else
 global.db.data.chats[m.chat] = {
-isBanned: false,
 sAutoresponder: '',
 welcome: true,
 isBanned: false,
