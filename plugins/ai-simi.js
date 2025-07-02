@@ -1,37 +1,47 @@
-import translate from '@vitalets/google-translate-api';
-import axios from 'axios';
-import fetch from 'node-fetch';
+import { promises as fs } from 'fs';
 
-const handler = async (m, {conn, text, command, args, usedPrefix}) => {
+const charactersFilePath = './src/database/characters.json';
 
-if (!text) conn.reply(m.chat, `${emoji} Te faltó el texto para hablar con la *Bot*`, m);
-try {
-// await m.react(emojis)
-const resSimi = await simitalk(text);
-conn.sendMessage(m.chat, { text: resSimi.resultado.simsimi }, { quoted: m });
-} catch {
-throw `${msm} Ocurrió un error.`;
-}};
+async function loadCharacters() {
+  const data = await fs.readFile(charactersFilePath, 'utf-8');
+  return JSON.parse(data);
+}
 
-handler.help = ['simi', 'bot'];
-handler.tags = ['fun'];
+async function saveCharacters(characters) {
+  await fs.writeFile(charactersFilePath, JSON.stringify(characters, null, 2), 'utf-8');
+}
+
+let handler = async (m, { conn, participants }) => {
+  let mentioned = m.mentionedJid?.[0];
+  let sender = m.sender;
+
+  if (!mentioned) return m.reply('✿ Debes mencionar a alguien para regalarle tus waifus.');
+
+  if (mentioned === sender) return m.reply('✿ No puedes regalarte tus propias waifus.');
+
+  const characters = await loadCharacters();
+
+  const myWaifus = characters.filter(c => c.user === sender);
+  if (myWaifus.length === 0) return m.reply('✿ No tienes waifus para regalar.');
+
+  for (let waifu of myWaifus) {
+    waifu.user = mentioned;
+    waifu.status = "Reclamado";
+  }
+
+  await saveCharacters(characters);
+
+  const names = myWaifus.map(w => `• ${w.name}`).join('\n');
+
+  await conn.reply(m.chat, `✿ Le regalaste *${myWaifus.length} waifus* a @${mentioned.split('@')[0]} ✦\n\n${names}`, m, {
+    mentions: [mentioned]
+  });
+};
+
+handler.help = ['giveallharem @user'];
+handler.tags = ['gacha'];
+handler.command = ['giveallharem', 'regalarharem'];
 handler.group = true;
-handler.register = true
-handler.command = ['Ruby', 'Ruby']
+handler.register = true;
 
 export default handler;
-
-async function simitalk(ask, apikeyyy = "iJ6FxuA9vxlvz5cKQCt3", language = "es") {
-if (!ask) return { status: false, resultado: { msg: "Debes ingresar un texto para hablar con simsimi." }};
-try {
-const response1 = await axios.get(`https://delirius-apiofc.vercel.app/tools/simi?text=${encodeURIComponent(ask)}`);
-const trad1 = await translate(`${response1.data.data.message}`, {to: language, autoCorrect: true});
-if (trad1.text == 'indefinida' || response1 == '' || !response1.data) trad1 = XD // Se usa "XD" para causar error y usar otra opción.  
-return { status: true, resultado: { simsimi: trad1.text }};        
-} catch {
-try {
-const response2 = await axios.get(`https://anbusec.xyz/api/v1/simitalk?apikey=${apikeyyy}&ask=${ask}&lc=${language}`);
-return { status: true, resultado: { simsimi: response2.data.message }};       
-} catch (error2) {
-return { status: false, resultado: { msg: "Todas las API's fallarón. Inténtalo de nuevo más tarde.", error: error2.message }};
-}}}
