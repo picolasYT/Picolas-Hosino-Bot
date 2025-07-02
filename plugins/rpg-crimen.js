@@ -95,7 +95,17 @@ const frasesExito = [
   'Hiciste phishing y lograste',
   'Robaste un convoy blindado y sacaste',
   'Clonaste una tarjeta de crédito y ganaste',
-  'Robaste criptomonedas desde un café internet y conseguiste'
+  'Robaste criptomonedas desde un café internet y conseguiste',
+  'Vendiste una app falsa que se volvió viral y ganaste',
+  'Falsificaste billetes y lograste colarlos',
+  'Hackeaste el sistema de apuestas y ganaste',
+  'Te infiltraste en una subasta ilegal y te llevaste',
+  'Robaste una mansión disfrazado de plomero y obtuviste',
+  'Vendiste arte robado en la deep web y ganaste',
+  'Secuestraste un dron de Amazon y obtuviste',
+  'Hackeaste un banco virtual y te llevaste',
+  'Conseguiste sobornar al guardia y robaste',
+  'Robaste un camión de bebidas energéticas y revendiste por'
 ]
 
 const frasesFracaso = [
