@@ -15,7 +15,7 @@ let handler = async (m, { conn, participants }) => {
   let mentioned = m.mentionedJid?.[0];
   let sender = m.sender;
 
-  if (!mentioned) return m.reply('✿ Debes mencionar a alguien para regalarle tus waifus.');
+  if (!mentioned) return m.reply('✿ Debes mencionar a alguien para regalarle todas tus waifus.');
 
   if (mentioned === sender) return m.reply('✿ No puedes regalarte tus propias waifus.');
 
