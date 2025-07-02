@@ -1,5 +1,3 @@
-// Código creado por Destroy wa.me/584120346669
-
 import fetch from 'node-fetch';
 import { Sticker } from 'wa-sticker-formatter';
 
