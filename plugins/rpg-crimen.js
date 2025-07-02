@@ -12,56 +12,54 @@ let handler = async (m, { conn }) => {
 
   if (jail[senderId] && Date.now() < jail[senderId]) {
     const restante = segundosAHMS(Math.ceil((jail[senderId] - Date.now()) / 1000))
-    m.reply(`🚔 Estás en la cárcel por *actividades criminales fallidas*.\n🧊 Tiempo restante: *${restante}* para salir.`)
-    return
+    return m.reply(`🚔 Estás en la cárcel por crímenes fallidos.\n🧊 Tiempo restante: *${restante}*.`)
   }
 
   if (cooldowns[senderId] && Date.now() - cooldowns[senderId] < cooldown) {
     let tiempo2 = segundosAHMS(Math.ceil((cooldowns[senderId] + cooldown - Date.now()) / 1000))
-    m.reply(`🕓 Ya has cometido un crimen recientemente.\n⏱️ Espera *${tiempo2}* para volver a intentarlo.`)
-    return
+    return m.reply(`🕓 Ya cometiste un crimen hace poco.\n⏱️ Espera *${tiempo2}* antes de intentarlo de nuevo.`)
   }
 
   cooldowns[senderId] = Date.now()
 
-  const atrapado = Math.random() < 0.1
-  if (atrapado) {
+  const rand = Math.random()
+  const jailChance = 0.1
+  const failChance = 0.3
+  const successChance = 0.6
+
+  if (rand < jailChance) {
     jail[senderId] = Date.now() + jailCooldown
-    const mensaje = pickRandom(frasesPolicia)
-    return m.reply(`🚓 ${mensaje}\n🔒 Has sido enviado a la cárcel por 1 hora.`)
+    return m.reply(`🚓 ${pickRandom(frasesPolicia)}\n🔒 Estás detenido por 1 hora.`)
   }
 
-  // Elegir víctima
   let victimId = Object.keys(users).filter(u => u !== senderId)[Math.floor(Math.random() * (Object.keys(users).length - 1))]
   let victimCoin = users[victimId].coin || 0
 
-  const cantidad = Math.floor(Math.random() * (10000 - 1000 + 1)) + 1000 // ¥1,000 - ¥10,000
-  const tipo = Math.floor(Math.random() * 3) // 0: éxito, 1: fracaso, 2: mixto
+  const cantidad = Math.floor(Math.random() * (10000 - 1000 + 1)) + 1000
 
-  if (tipo === 0) {
+  if (rand < jailChance + successChance * 0.6) {
+
     let real = Math.min(cantidad, victimCoin)
     users[senderId].coin += real
     users[victimId].coin -= real
     conn.sendMessage(m.chat, {
-      text: `✿ ${pickRandom(frasesExito)} *¥${real.toLocaleString()} ${moneda}*\n> ¡Buen trabajo, ${senderName}! Ahora tienes *¥${users[senderId].coin.toLocaleString()}*.`,
-      contextInfo: {
-        mentionedJid: [victimId],
-      }
+      text: `✿ ${pickRandom(frasesExito)} *¥${real.toLocaleString()} ${moneda}*\n> ¡Bien hecho, ${senderName}! Ahora tienes *¥${users[senderId].coin.toLocaleString()}*.`,
+      contextInfo: { mentionedJid: [victimId] }
     }, { quoted: m })
-  } else if (tipo === 1) {
+  } else if (rand < jailChance + successChance) {
+
+    let real = Math.min(cantidad, victimCoin)
+    users[senderId].coin += real
+    users[victimId].coin -= real
+    conn.sendMessage(m.chat, {
+      text: `✿ ${pickRandom(frasesMixto)} *¥${real.toLocaleString()} ${moneda}*\n> No fue mucho, pero te sirve.\n> Tu saldo ahora es *¥${users[senderId].coin.toLocaleString()}*.`,
+      contextInfo: { mentionedJid: [victimId] }
+    }, { quoted: m })
+  } else {
+    // 30% de fallo
     let real = Math.min(cantidad, senderCoin)
     users[senderId].coin -= real
-    m.reply(`🥀 ${pickRandom(frasesFracaso)} y perdiste *¥${real.toLocaleString()} ${moneda}*...\n> Te quedan *¥${users[senderId].coin.toLocaleString()}*.`)
-  } else {
-    let real = Math.min(cantidad, victimCoin)
-    users[senderId].coin += real
-    users[victimId].coin -= real
-    conn.sendMessage(m.chat, {
-      text: `✿ ${pickRandom(frasesMixto)} *¥${real.toLocaleString()} ${moneda}*\n> No fue mucho, pero algo es algo.\n> Ahora tienes *¥${users[senderId].coin.toLocaleString()}*.`,
-      contextInfo: {
-        mentionedJid: [victimId],
-      }
-    }, { quoted: m })
+    m.reply(`🥀 ${pickRandom(frasesFracaso)} y perdiste *¥${real.toLocaleString()} ${moneda}*...\n> Tu saldo ahora es *¥${users[senderId].coin.toLocaleString()}*.`)
   }
 
   global.db.write()
@@ -91,88 +89,44 @@ const frasesExito = [
   'Estafaste con NFTs falsos y cobraste',
   'Hackeaste OnlyFans y robaste',
   'Vendiste datos filtrados y conseguiste',
-  'Engañaste a un magnate millonario y obtuviste',
-  'Hiciste phishing y lograste',
-  'Robaste un convoy blindado y sacaste',
+  'Estafaste a un político corrupto y obtuviste',
+  'Robaste criptomonedas desde una laptop olvidada y ganaste',
+  'Atracaste un banco disfrazado de payaso y obtuviste',
   'Clonaste una tarjeta de crédito y ganaste',
-  'Robaste criptomonedas desde un café internet y conseguiste',
-  'Vendiste una app falsa que se volvió viral y ganaste',
-  'Falsificaste billetes y lograste colarlos',
-  'Hackeaste el sistema de apuestas y ganaste',
-  'Te infiltraste en una subasta ilegal y te llevaste',
-  'Robaste una mansión disfrazado de plomero y obtuviste',
-  'Vendiste arte robado en la deep web y ganaste',
-  'Secuestraste un dron de Amazon y obtuviste',
-  'Hackeaste un banco virtual y te llevaste',
-  'Conseguiste sobornar al guardia y robaste',
-  'Robaste un camión de bebidas energéticas y revendiste por'
+  'Hiciste phishing por correo y lograste'
 ]
 
 const frasesFracaso = [
-  'Te atraparon robando donas en un 24h',
-  'Tropezaste durante una huida y te arrestaron',
+  'Tropezaste durante una huida y fuiste arrestado',
+  'Te atraparon robando una tienda de donas',
   'Tu cómplice te traicionó y se llevó todo',
-  'Fuiste grabado en vivo por TikTok y te descubrieron',
+  'Fuiste grabado en TikTok en plena acción',
   'La cámara facial te reconoció al instante',
-  'La víctima resultó ser policía encubierto',
-  'Intentaste escapar en bicicleta y te caíste',
-  'Te congelaron la cuenta por estafa',
+  'Intentaste vender humo y te desenmascararon',
   'Olvidaste apagar el GPS durante el robo',
-  'El crimen fue tan torpe que te hiciste viral',
-  'Intentaste hackear usando un tostador',
-  'Te quedaste dormido en medio del atraco',
-  'El cajero automático te escupió tinta azul en la cara',
-  'Usaste tu cuenta personal para vender productos robados',
-  'Te caíste por una alcantarilla mientras huías',
-  'Llamaste a emergencias por error durante el robo',
-  'Tu máscara se rompió y te reconocieron',
-  'Intentaste pagar soborno con tarjeta de crédito',
-  'Un loro te delató durante el robo',
-  'Fuiste a celebrar y olvidaste esconder el botín'
+  'Confundiste al cliente con un policía encubierto',
+  'Usaste tu cuenta real para estafar y te congelaron',
+  'Intentaste robar criptos pero era una trampa'
 ]
 
 const frasesMixto = [
   'Robaste una cartera pero solo tenía',
-  'Hackeaste una cuenta de Steam y lograste',
-  'Atracaste un puesto de jugos y sacaste',
-  'Interceptaste una transferencia pero era mínima: ganaste',
+  'Hackeaste una cuenta y lograste obtener',
+  'Cometiste fraude menor y escapaste con',
   'Vendiste una taza con forma de Pikachu por',
+  'Rompiste una ventana y hallaste solo',
+  'Interceptaste una transferencia pero era mínima',
   'Robaste una mochila olvidada que solo tenía',
-  'Cometiste fraude leve y obtuviste',
-  'Te colaste en un evento y vendiste boletos falsos, ganaste',
-  'Robaste una máquina de chicles y lograste venderlos por',
-  'Hackeaste una cuenta de Roblox y obtuviste',
-  'Engañaste a un influencer novato y te pagó',
-  'Conseguiste sobornar a un niño rico y te dio',
-  'Vendiste spoilers falsos de anime y cobraste',
-  'Hackeaste un juego online y te pagaron en centavos',
-  'Hiciste una app que robaba datos pero nadie la descargó',
-  'Vendiste aire enlatado de "Japón" por',
-  'Estafaste con cursos falsos y solo te pagaron',
-  'Robaste propinas de un streamer y ganaste',
-  'Fuiste parte de una estafa piramidal y saliste con',
-  'Te disfrazaste de youtuber famoso y engañaste por'
+  'Clonaste una app falsa y te pagaron apenas',
 ]
 
 const frasesPolicia = [
-  '🚨 La policía te atrapó justo antes de escapar',
+  '🚨 Te atraparon justo antes de huir',
   '👮 Una patrulla te vio en plena acción',
-  '🧠 Olvidaste cubrir tus huellas y te rastrearon',
-  '🕵️ Un detective anónimo te identificó por tus crímenes pasados',
+  '🧠 Te rastrearon por tus huellas digitales',
   '📷 Una cámara del semáforo te grabó robando',
-  '🐕‍🦺 Un perro policía olfateó tus billetes y fuiste arrestado',
-  '🧠 Usaste el WiFi público del parque y fuiste localizado',
-  '👓 Un testigo te reconoció y llamó al 911',
-  '📱 Publicaste el botín en redes y te rastrearon',
-  '🎥 El noticiero local transmitió tu crimen en vivo',
-  '💳 Dejaste tu tarjeta de crédito en la escena del crimen',
-  '🛒 Robaste en una tienda con reconocimiento facial',
-  '🗣️ Confesaste el crimen por accidente en un audio de WhatsApp',
-  '📍Compartiste tu ubicación sin querer y te encontraron',
-  '🎮 Un niño te venció en un videojuego y te denunció',
-  '🛵 Te siguieron con drones y te atraparon',
-  '🔊 El Google Home te delató con su micrófono',
-  '📺 Saliste en las noticias como el ladrón más torpe',
-  '📡 Hackearon tus mensajes y encontraron el plan criminal',
-  '🧤 Dejaste tus huellas en un sándwich que mordiste durante el robo'
+  '🐕‍🦺 Un perro policía olfateó tus billetes marcados',
+  '🔍 Un detective te investigaba desde hace días',
+  '🧠 Usaste WiFi público y te localizaron',
+  '👓 Un testigo te reconoció y te delató',
 ]
