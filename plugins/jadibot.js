@@ -3,8 +3,7 @@ const fs = { ...fsPromises, existsSync };
 import path, { join } from 'path';
 import ws from 'ws';
 
-let handler = async (m, { conn: _envio, command, usedPrefix, args, text, isOwner }) => {
-  const isDeleteSession = /^(deletesesion|deletebot|deletesession|deletesesaion)$/i.test(command);
+let handler = async (m, { conn: _envio, command, usedPrefix, args, text,i.test(command);
   const isPauseBot = /^(stop|pausarai|pausarbot)$/i.test(command);
   const isShowBots = /^(bots|sockets|socket)$/i.test(command);
 
@@ -59,53 +58,51 @@ let handler = async (m, { conn: _envio, command, usedPrefix, args, text, isOwner
     }
 
     case isShowBots: {
+      // Sockets activos
       const users = [...new Set([...global.conns.filter(conn => conn.user && conn.ws.socket && conn.ws.socket.readyState !== ws.CLOSED)])];
 
-      const convertirMsADiasHorasMinutosSegundos = (ms) => {
+      // Principal = global.conn, Subs = global.conns menos el principal
+      const principal = global.conn;
+      const subs = users.filter(u => u.user.jid !== principal.user.jid);
+
+      // En este grupo: cuántos bots hay en el grupo actual
+      const botsEnGrupo = users.filter(c =>
+        c.chats && c.chats[m.chat]
+      );
+
+      // Formato de tiempo
+      const convertirMsAHorasMinutosSegundos = (ms) => {
         let segundos = Math.floor(ms / 1000);
         let minutos = Math.floor(segundos / 60);
         let horas = Math.floor(minutos / 60);
-        let días = Math.floor(horas / 24);
         segundos %= 60;
         minutos %= 60;
         horas %= 24;
-
         return [
-          días ? `${días} día(s)` : '',
-          horas ? `${horas} hora(s)` : '',
-          minutos ? `${minutos} minuto(s)` : '',
-          segundos ? `${segundos} segundo(s)` : '',
+          horas ? `${horas} hora${horas !== 1 ? 's' : ''}` : '',
+          minutos ? `${minutos} minuto${minutos !== 1 ? 's' : ''}` : '',
+          segundos ? `${segundos} segundo${segundos !== 1 ? 's' : ''}` : ''
         ].filter(Boolean).join(', ');
       };
 
-      const listaSubBots = users.map((v, i) => 
-`🌟 *SUB-BOT #${i + 1}*
-📱 Número: https://wa.me/${v.user.jid.replace(/[^0-9]/g, '')}?text=${usedPrefix}estado
-👤 Nombre: ${v.user.name || 'Sub-Bot'}
-🕒 En línea hace: ${v.uptime ? convertirMsADiasHorasMinutosSegundos(Date.now() - v.uptime) : 'Desconocido'}`)
-      .join('\n\n───────────────\n\n');
+      // Lista de sub-bots en este grupo (excluye principal)
+      const listaSubBots = botsEnGrupo
+        .filter(v => v.user.jid !== principal.user.jid)
+        .map((v, i) =>
+          `ꕥ @${v.user.name || v.user.jid.split('@')[0]}\n> ✧ Bot » Sub-Bot\n> 🜸 Uptime » ${v.uptime ? convertirMsAHorasMinutosSegundos(Date.now() - v.uptime) : 'Desconocido'}\n\n> *${typeof dev !== 'undefined' ? dev : 'Desarrollador'}*`
+        ).join('\n\n');
 
-      const finalMessage = listaSubBots.length === 0
-        ? '💤 No hay Sub-Bots activos por ahora... intenta más tarde.'
-        : listaSubBots;
+      const msg = `*ꕥ Números de Sockets Activos*\n
+❀ Principal » *${principal ? 1 : 0}*
+✿ Subs » *${subs.length}*
 
-      const msg = `
-${emoji} 𝐋𝐈𝐒𝐓𝐀 𝐃𝐄 𝐒𝐔𝐁-𝐁𝐎𝐓𝐒 𝐀𝐂𝐓𝐈𝐕𝐎𝐒 💫
+❏ En este grupo » *${botsEnGrupo.length}* bots
 
-ㅤㅤㅤㅤㅤㅤֹㅤ¿𝐐𝐮𝐢𝐞𝐫𝐞𝐬 𝐭𝐞𝐧𝐞𝐫 𝐮𝐧 𝐛𝐨𝐭 𝐞𝐧 𝐭𝐮 𝐠𝐫𝐮𝐩𝐨?
-ㅤ𝖯𝗎𝖾d𝖾𝗌 𝗉𝖾𝖽𝗂𝗋 𝗉𝖾𝗋𝗆𝗂𝗌𝗈 𝖺 uno de estos para unirlo 𝗌𝗂𝗇 probrema!
-
-${emoji2} 𝐀𝐃𝐕𝐄𝐑𝐓𝐄𝐍𝐂𝐈𝐀:
-⚠️ ֹ𝖤𝖫 𝖴𝖲𝖮 𝖣𝖤 𝖫𝖮𝖲 𝖲𝖴𝖡-𝖡𝖮𝖳𝖲 𝖤𝖲 𝖱𝖤𝖲𝖯𝖮𝖭𝖲𝖠𝖡𝖨𝖫𝖨𝖣𝖠𝖣 𝖣𝖤 𝖢𝖠𝖣𝖠 𝖴𝖲𝖴𝖠𝖱𝖨𝖮
-𝖤𝗅 𝗇𝗎𝗆𝖾𝗋𝗈 𝗉𝗋𝗂𝗇𝖼𝗂𝗉𝖺𝗅 𝗇𝗈 𝗌𝖾 𝗁𝖺𝖼𝖾 𝗋𝖾𝗌𝗉𝗈𝗇𝗌𝖺𝖻𝗅𝖾 𝗉𝗈𝗋 𝖾𝗅 𝗆𝖺𝗅 𝗎𝗌𝗈 🚫
-
-🌐 𝐒𝐔𝐁-𝐁𝐎𝐓𝐒 𝐂𝐎𝐍𝐄𝐂𝐓𝐀𝐃𝐎𝐒: ${users.length || '0'}
-
-${finalMessage}`.trim();
+${listaSubBots || 'No hay sub-bots en este grupo.'}`;
 
       await _envio.sendMessage(m.chat, {
         text: msg,
-        mentions: _envio.parseMention(msg)
+        mentions: botsEnGrupo.map(v => v.user.jid)
       }, { quoted: m });
       break;
     }
