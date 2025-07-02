@@ -3,12 +3,15 @@ const fs = { ...fsPromises, existsSync };
 import path, { join } from 'path';
 import ws from 'ws';
 
-let handler = async (m, { conn: _envio, command, usedPrefix, args, text,i.test(command);
+let dev = 'by Crosby Batin ✧' // Personalízalo si quieres
+
+let handler = async (m, { conn: _envio, command, usedPrefix, args, text, isOwner }) => {
+  const isDeleteSession = /^(deletesesion|deletebot|deletesession|deletesesaion)$/i.test(command);
   const isPauseBot = /^(stop|pausarai|pausarbot)$/i.test(command);
   const isShowBots = /^(bots|sockets|socket)$/i.test(command);
 
   const reportError = async (e) => {
-    await m.reply(`⚠️ Ocurrió un error inesperado, lo siento mucho...`)
+    await m.reply(`⚠️ Ocurrió un error inesperado, lo siento mucho...`);
     console.error(e);
   };
 
@@ -58,52 +61,53 @@ let handler = async (m, { conn: _envio, command, usedPrefix, args, text,i.test(c
     }
 
     case isShowBots: {
-      // Sockets activos
-      const users = [...new Set([...global.conns.filter(conn => conn.user && conn.ws.socket && conn.ws.socket.readyState !== ws.CLOSED)])];
+      try {
+        const allConnections = [...new Set([...global.conns.filter(conn => conn.user && conn.ws.socket && conn.ws.socket.readyState !== ws.CLOSED)])];
+        const cantidadSubBots = allConnections.length;
 
-      // Principal = global.conn, Subs = global.conns menos el principal
-      const principal = global.conn;
-      const subs = users.filter(u => u.user.jid !== principal.user.jid);
+        const metadata = await _envio.groupMetadata(m.chat);
+        const participantes = metadata.participants || [];
+        const botsEnEsteGrupo = participantes.filter(p => global.db.data.users[p.id]?.isBot).length;
 
-      // En este grupo: cuántos bots hay en el grupo actual
-      const botsEnGrupo = users.filter(c =>
-        c.chats && c.chats[m.chat]
-      );
+        const convertirMsADiasHorasMinutosSegundos = (ms) => {
+          let segundos = Math.floor(ms / 1000);
+          let minutos = Math.floor(segundos / 60);
+          let horas = Math.floor(minutos / 60);
+          segundos %= 60;
+          minutos %= 60;
+          horas %= 24;
+          return `${horas} horas, ${minutos} minutos, ${segundos} segundos`;
+        };
 
-      // Formato de tiempo
-      const convertirMsAHorasMinutosSegundos = (ms) => {
-        let segundos = Math.floor(ms / 1000);
-        let minutos = Math.floor(segundos / 60);
-        let horas = Math.floor(minutos / 60);
-        segundos %= 60;
-        minutos %= 60;
-        horas %= 24;
-        return [
-          horas ? `${horas} hora${horas !== 1 ? 's' : ''}` : '',
-          minutos ? `${minutos} minuto${minutos !== 1 ? 's' : ''}` : '',
-          segundos ? `${segundos} segundo${segundos !== 1 ? 's' : ''}` : ''
-        ].filter(Boolean).join(', ');
-      };
+        const detallesBots = allConnections.map((connBot) => {
+          const numero = connBot.user?.jid?.split('@')[0] || 'Desconocido';
+          const nombre = connBot.user?.name || 'Sub-Bot';
+          const uptime = connBot.uptime ? convertirMsADiasHorasMinutosSegundos(Date.now() - connBot.uptime) : 'Desconocido';
+          return `
+ꕥ @${numero}
+> ✧ Bot » ${nombre}
+> 🜸 Uptime » ${uptime}`.trim();
+        }).join('\n\n');
 
-      // Lista de sub-bots en este grupo (excluye principal)
-      const listaSubBots = botsEnGrupo
-        .filter(v => v.user.jid !== principal.user.jid)
-        .map((v, i) =>
-          `ꕥ @${v.user.name || v.user.jid.split('@')[0]}\n> ✧ Bot » Sub-Bot\n> 🜸 Uptime » ${v.uptime ? convertirMsAHorasMinutosSegundos(Date.now() - v.uptime) : 'Desconocido'}\n\n> *${typeof dev !== 'undefined' ? dev : 'Desarrollador'}*`
-        ).join('\n\n');
+        const textoFinal = `
+*ꕥ Números de Sockets Activos*
 
-      const msg = `*ꕥ Números de Sockets Activos*\n
-❀ Principal » *${principal ? 1 : 0}*
-✿ Subs » *${subs.length}*
+❀ Principal » *1*
+✿ Subs » *${cantidadSubBots}*
 
-❏ En este grupo » *${botsEnGrupo.length}* bots
+❏ En este grupo » *${botsEnEsteGrupo}* bots
 
-${listaSubBots || 'No hay sub-bots en este grupo.'}`;
+${detallesBots}
 
-      await _envio.sendMessage(m.chat, {
-        text: msg,
-        mentions: botsEnGrupo.map(v => v.user.jid)
-      }, { quoted: m });
+> *${dev}*`.trim();
+
+        await _envio.sendMessage(m.chat, {
+          text: textoFinal,
+          mentions: [...allConnections.map(v => v.user?.jid), m.sender].filter(Boolean)
+        }, { quoted: m });
+      } catch (e) {
+        reportError(e);
+      }
       break;
     }
   }
