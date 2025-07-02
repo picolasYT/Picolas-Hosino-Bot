@@ -108,7 +108,17 @@ const frasesFracaso = [
   'Intentaste escapar en bicicleta y te caíste',
   'Te congelaron la cuenta por estafa',
   'Olvidaste apagar el GPS durante el robo',
-  'El crimen fue tan torpe que te hiciste viral'
+  'El crimen fue tan torpe que te hiciste viral',
+  'Intentaste hackear usando un tostador',
+  'Te quedaste dormido en medio del atraco',
+  'El cajero automático te escupió tinta azul en la cara',
+  'Usaste tu cuenta personal para vender productos robados',
+  'Te caíste por una alcantarilla mientras huías',
+  'Llamaste a emergencias por error durante el robo',
+  'Tu máscara se rompió y te reconocieron',
+  'Intentaste pagar soborno con tarjeta de crédito',
+  'Un loro te delató durante el robo',
+  'Fuiste a celebrar y olvidaste esconder el botín'
 ]
 
 const frasesMixto = [
