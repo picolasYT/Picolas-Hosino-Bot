@@ -89,7 +89,7 @@ const trabajosMalos = [
   "Te estafaron con billetes falsos, perdiste",
   "Tuviste que pagar el delivery por adelantado y no te reembolsaron",
   "Te confundieron con otro repartidor y perdiste el pedido",
-  "Una tormenta arruinó todo lo que vendías",
+  "Una tormenta arruinó todo lo que vendías y perdiste",
   "Un cliente se enojó y no quiso pagarte",
   "Tu teléfono se mojó y tuviste que repararlo",
   "La policía te multó por vender en zona prohibida",
