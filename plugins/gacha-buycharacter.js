@@ -38,7 +38,7 @@ let handler = async (m, { conn, args }) => {
   const precio = parseInt(venta.precio);
 
   if (user.coin < precio) {
-    return m.reply(`✘ No tienes suficientes *${moneda}*. Necesitas *¥${precio.toLocaleString()} ᴅᴀʀᴋᴏs*.`);
+    return m.reply(`✘ No tienes suficientes *${moneda}*. Necesitas *¥${precio.toLocaleString()} ${moneda}*.`);
   }
 
   const waifu = characters.find(c => c.name.toLowerCase() === nombre);
@@ -60,11 +60,11 @@ let handler = async (m, { conn, args }) => {
 
   // Mensaje privado al vendedor
   let nombreComprador = await conn.getName(userId);
-  let textoPrivado = `✿ Tu waifu *${waifu.name}* fue comprada por *${nombreComprador}*.\nGanaste *¥${precio.toLocaleString()} ᴅᴀʀᴋᴏs*.`;
+  let textoPrivado = `✿ Tu waifu *${waifu.name}* fue comprada por *${nombreComprador}*.\nGanaste *¥${precio.toLocaleString()} ${moneda}*.`;
   await conn.sendMessage(vendedorId, { text: textoPrivado }, { quoted: m });
 
   // Confirmación al comprador
-  m.reply(`✿ Has comprado a *${waifu.name}* por *¥${precio.toLocaleString()} ᴅᴀʀᴋᴏs* exitosamente!\nAhora es parte de tu harem.`);
+  m.reply(`✿ Has comprado a *${waifu.name}* por *¥${precio.toLocaleString()} ${moneda}* exitosamente!\nAhora es parte de tu harem.`);
 };
 
 handler.help = ['comprarwaifu <nombre>'];
