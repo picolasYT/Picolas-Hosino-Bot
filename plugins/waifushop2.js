@@ -1,23 +1,50 @@
-let handler = async (m, { conn }) => {
-    const chars = await loadCharacters();
-    const market = await loadMarket();
+import { promises as fs } from 'fs'
 
-    if (market.length === 0) return m.reply('✿ No hay waifus en venta actualmente.');
+const waifusEnVentaFile = './src/database/waifusVenta.json'
 
-    let txt = `◢✿ *Waifus en Venta* ✿◤\n\n`;
-    for (let venta of market.slice(0, 10)) {
-        const waifu = chars.find(c => c.id === venta.characterId);
-        if (!waifu) continue;
-        const name = waifu.name;
-        const id = waifu.id;
-        txt += `✰ *${name}*\n`;
-        txt += `  • ID: *${id}*\n`;
-        txt += `  • Precio: *¥${venta.price.toLocaleString()} ${moneda}*\n\n`;
+async function loadVentas() {
+    try {
+        const data = await fs.readFile(waifusEnVentaFile, 'utf-8')
+        return JSON.parse(data)
+    } catch {
+        return []
     }
-    return m.reply(txt.trim());
-};
+}
 
-handler.help = ['waifusenventa'];
-handler.command = ['waifusenventa', 'waifusmarket'];
-handler.group = true;
-export default handler;
+let handler = async (m, { conn, args }) => {
+    const ventas = await loadVentas()
+    if (!ventas.length) {
+        return m.reply('✧ No hay waifus en venta actualmente.')
+    }
+
+    // Paginación
+    const page = args[0] ? parseInt(args[0]) : 1
+    const pageSize = 10
+    const totalPages = Math.ceil(ventas.length / pageSize)
+    if (page < 1 || page > totalPages) {
+        return m.reply(`✧ Página inválida. Solo hay *${totalPages}* página(s).`)
+    }
+
+    const inicio = (page - 1) * pageSize
+    const fin = inicio + pageSize
+    const waifusPagina = ventas.slice(inicio, fin)
+
+    let texto = `◢✿ *Waifus en venta* ✿◤\n\n`
+    waifusPagina.forEach((waifu, index) => {
+        const i = inicio + index + 1
+        texto += `✰ ${i} » *${waifu.name}*\n`
+        texto += `  🛒 Precio: *¥${waifu.precio.toLocaleString()} ᴅᴀʀᴋᴏs*\n`
+        texto += `  👤 Vendedor: @${waifu.vendedor.split('@')[0]}\n\n`
+    })
+
+    texto += `> Página *${page}* de *${totalPages}*\n`
+    texto += `> Para ver otra página usa: *#waifusventa 2*`
+
+    conn.reply(m.chat, texto.trim(), m, {
+        mentions: waifusPagina.map(w => w.vendedor)
+    })
+}
+
+handler.help = ['waifusventa [página]']
+handler.tags = ['waifus']
+handler.command = ['waifusenventa', 'waifusventa', 'ventasw]()
