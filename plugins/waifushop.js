@@ -24,28 +24,41 @@ async function saveVentas(ventas) {
 
 let handler = async (m, { args, conn }) => {
     const userId = m.sender;
-    const precio = parseInt(args[1] || args[0]);
+    const texto = args.join(' ').trim();
 
-    if (!precio || isNaN(precio) || precio < 1) {
-        return m.reply('✧ Ingresa un precio válido.\n> Ejemplo: *#venderwaifu 25000* o *#venderwaifu Miku 50000*');
-    }
-
-    const characters = await loadCharacters();
-    const ventas = await loadVentas();
     let personaje = null;
+    let precio = null;
 
     if (m.quoted?.text) {
+        // Si está citando un personaje
         const idMatch = m.quoted.text.match(/𝙄𝘿:\s*\*([^\*]+)\*/i);
         if (!idMatch) return m.reply('✧ No se pudo encontrar el ID del personaje citado.');
         const id = idMatch[1].trim();
+        const characters = await loadCharacters();
         personaje = characters.find(c => c.id === id);
-    } else if (args.length >= 2) {
-        const nombre = args.slice(0, -1).join(' ').toLowerCase();
+        precio = parseInt(args[0]);
+    } else {
+        const precioDetectado = args.find(a => !isNaN(a));
+        if (!precioDetectado) {
+            return m.reply('✧ Ingresa un precio válido.\n> Ejemplo: *#venderwaifu Miku Nakano 40000*');
+        }
+
+        precio = parseInt(precioDetectado);
+        if (isNaN(precio) || precio < 1) {
+            return m.reply('✧ El precio debe ser un número válido mayor que 0.');
+        }
+
+        // Filtrar el nombre sin el precio
+        const nombre = args.filter(a => a !== precioDetectado).join(' ').toLowerCase();
+        const characters = await loadCharacters();
         personaje = characters.find(c => c.name.toLowerCase() === nombre);
+
+        if (!personaje) return m.reply(`✧ Personaje *"${nombre}"* no encontrado.`);
     }
 
-    if (!personaje) return m.reply('✧ Personaje no encontrado.');
     if (personaje.user !== userId) return m.reply('✧ Esta waifu no te pertenece.');
+
+    const ventas = await loadVentas();
 
     personaje.enVenta = true;
     personaje.precioVenta = precio;
@@ -58,7 +71,7 @@ let handler = async (m, { args, conn }) => {
         fecha: Date.now()
     });
 
-    await saveCharacters(characters);
+    await saveCharacters(await loadCharacters()); // Se vuelve a leer para guardar bien
     await saveVentas(ventas);
 
     m.reply(`✿ Has puesto en venta a *${personaje.name}* por *¥${precio.toLocaleString()} ᴅᴀʀᴋᴏs*.`);
