@@ -38,7 +38,7 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
   await conn.reply(m.chat, `🎲 Has apostado *¥${coin.toLocaleString()} ${moneda}* al color *${color}*.\n⏳ Espera 10 segundos para conocer el resultado...`, m)
 
   setTimeout(() => {
-    const resultado = Math.random() < 0.45 ? color : (color === 'red' ? 'black' : 'red')
+    const resultado = Math.random() < 0.50 ? color : (color === 'red' ? 'black' : 'red')
     const hasGanado = resultado === color
     const ganancia = Math.floor(coin * 2.5)
 
