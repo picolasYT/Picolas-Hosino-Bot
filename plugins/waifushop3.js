@@ -14,7 +14,7 @@ let handler = async (m, { conn, args }) => {
   const userId = m.sender;
 
   if (!args[0]) {
-    return m.reply('✿ Usa: *#removerwaifu <nombre de waifu>*');
+    return m.reply('✿ Usa: *#removerwaifu <nombre del personaje>*');
   }
 
   const nombre = args.join(' ').trim().toLowerCase();
@@ -38,7 +38,7 @@ let handler = async (m, { conn, args }) => {
 
 handler.help = ['removerwaifu <nombre>'];
 handler.tags = ['waifus'];
-handler.command = ['removerwaifu', 'quitarwaifu', 'retirarwaifu'];
+handler.command = ['removerwaifu', 'removerventa', 'removesale'];
 handler.group = true;
 handler.register = true;
 
