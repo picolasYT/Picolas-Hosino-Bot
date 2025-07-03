@@ -1,9 +1,17 @@
 import fs from 'fs';
 
+function formatoFecha(fechaMs) {
+  try {
+    const fecha = new Date(fechaMs);
+    return fecha.toLocaleDateString('es-MX', { year: 'numeric', month: 'short', day: 'numeric' });
+  } catch {
+    return '-';
+  }
+}
+
 let handler = async (m, { conn, args }) => {
   let ventas = [];
   try {
-    // Leer archivo y parsear
     ventas = JSON.parse(fs.readFileSync('./src/database/waifusVenta.json', 'utf-8'));
     if (!Array.isArray(ventas)) throw new Error('El archivo no contiene una lista válida.');
   } catch (e) {
@@ -14,7 +22,7 @@ let handler = async (m, { conn, args }) => {
     return m.reply('✿ Actualmente no hay waifus en venta.');
   }
 
-  // Paginación segura
+  // Manejo de página
   let page = 1;
   if (args[0] && !isNaN(args[0])) page = Math.max(1, parseInt(args[0]));
   const pageSize = 10;
@@ -31,11 +39,12 @@ let handler = async (m, { conn, args }) => {
 
   for (let i = 0; i < waifusPagina.length; i++) {
     try {
-      let { name, precio, vendedor } = waifusPagina[i];
-      let username = await conn.getName(vendedor).catch(() => `@${(vendedor || '').split('@')[0] || 'desconocido'}`);
+      let { name, precio, vendedor, fecha } = waifusPagina[i];
+      let username = await conn.getName?.(vendedor).catch(() => `@${(vendedor || '').split('@')[0] || 'desconocido'}`);
       texto += `✰ ${inicio + i + 1} » *${name || '-'}*\n`;
       texto += `  🛒 Precio: *¥${(precio || '-').toLocaleString()} ᴅᴀʀᴋᴏs*\n`;
-      texto += `  👤 Vendedor: @${(vendedor || '').split('@')[0]}\n\n`;
+      texto += `  👤 Vendedor: @${(vendedor || '').split('@')[0]}\n`;
+      texto += `  📅 Publicado: ${formatoFecha(fecha)}\n\n`;
       if (vendedor) mencionados.push(vendedor);
     } catch (err) {
       texto += `✘ Error al mostrar una waifu: ${err.message}\n\n`;
