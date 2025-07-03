@@ -293,6 +293,8 @@ Aquí tienes mi lista de comandos
 > ✦ Waifu o husbando aleatorio.
 ├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#claim • #c • #reclamar*
 > ✦ Reclamar un personaje.
+├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#buycharacter • #buychar • #comprarwaifu*
+> ✦ comprar un personaje en venta.
 ├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#harem • #waifus • #claims*
 > ✦ Ver tus personajes reclamados.
 ├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#charimage • #waifuimage • #wimage*
