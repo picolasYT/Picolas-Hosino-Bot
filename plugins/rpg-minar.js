@@ -20,7 +20,7 @@ let handler = async (m, { conn }) => {
       texto: '✨ Encontraste una veta gigante de esmeraldas!',
       cambios: () => ({
         exp: r(250, 500),
-        coin: r(300, 600),
+        coin: r(3000, 6000),
         emerald: r(5, 10),
         iron: r(20, 40),
         gold: r(10, 30),
@@ -32,7 +32,7 @@ let handler = async (m, { conn }) => {
       texto: '💰 Abriste un cofre abandonado lleno de recursos!',
       cambios: () => ({
         exp: r(300, 700),
-        coin: r(500, 999),
+        coin: r(5000, 2999),
         emerald: r(2, 6),
         iron: r(10, 25),
         gold: r(5, 15),
@@ -44,7 +44,7 @@ let handler = async (m, { conn }) => {
       texto: '💎 Descubriste una cueva secreta con riquezas antiguas!',
       cambios: () => ({
         exp: r(500, 900),
-        coin: r(1000, 2000),
+        coin: r(10000, 20000),
         emerald: r(10, 20),
         iron: r(30, 50),
         gold: r(20, 40),
@@ -56,7 +56,7 @@ let handler = async (m, { conn }) => {
       texto: '🔨 Tus golpes fueron precisos y extrajiste muchos minerales!',
       cambios: () => ({
         exp: r(100, 300),
-        coin: r(100, 300),
+        coin: r(1000, 3000),
         emerald: r(1, 3),
         iron: r(10, 20),
         gold: r(5, 10),
@@ -68,7 +68,7 @@ let handler = async (m, { conn }) => {
       texto: '🍀 Hoy fue tu día de suerte, encontraste un mineral raro!',
       cambios: () => ({
         exp: r(300, 600),
-        coin: r(600, 1000),
+        coin: r(6000, 10000),
         emerald: r(4, 8),
         iron: r(15, 30),
         gold: r(10, 20),
@@ -83,7 +83,7 @@ let handler = async (m, { conn }) => {
       texto: '💥 ¡Hubo una explosión dentro de la mina!',
       cambios: () => ({
         exp: r(50, 100),
-        coin: -r(100, 300),
+        coin: -r(1000, 2000),
         emerald: -r(1, 2),
         iron: -r(5, 10),
         gold: -r(3, 6),
@@ -95,7 +95,7 @@ let handler = async (m, { conn }) => {
       texto: '🥵 Te perdiste y no encontraste casi nada útil.',
       cambios: () => ({
         exp: r(30, 70),
-        coin: -r(50, 150),
+        coin: -r(500, 1500),
         emerald: 0,
         iron: r(1, 3),
         gold: 0,
@@ -107,7 +107,7 @@ let handler = async (m, { conn }) => {
       texto: '📉 Un derrumbe bloqueó el camino y perdiste parte del botín.',
       cambios: () => ({
         exp: r(70, 120),
-        coin: -r(200, 500),
+        coin: -r(2000, 2000),
         emerald: -r(2, 4),
         iron: -r(10, 20),
         gold: -r(5, 10),
