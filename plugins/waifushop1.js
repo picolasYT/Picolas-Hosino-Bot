@@ -1,40 +1,76 @@
+import fs from 'fs';
+
+const charactersFilePath = './src/database/characters.json';
+const ventaFilePath = './src/database/waifusVenta.json';
+
+async function loadCharacters() {
+  return JSON.parse(fs.readFileSync(charactersFilePath, 'utf-8'));
+}
+
+async function saveCharacters(characters) {
+  fs.writeFileSync(charactersFilePath, JSON.stringify(characters, null, 2), 'utf-8');
+}
+
+async function loadVentas() {
+  return JSON.parse(fs.readFileSync(ventaFilePath, 'utf-8'));
+}
+
+async function saveVentas(data) {
+  fs.writeFileSync(ventaFilePath, JSON.stringify(data, null, 2), 'utf-8');
+}
+
 let handler = async (m, { conn, args }) => {
-    const id = args[0];
-    if (!id) return m.reply('✿ Debes ingresar el ID de la waifu que deseas comprar.');
+  const userId = m.sender;
+  const user = global.db.data.users[userId];
 
-    const chars = await loadCharacters();
-    const market = await loadMarket();
-    const user = global.db.data.users[m.sender];
+  if (!args[0]) return m.reply('✿ Usa: *#comprarwaifu <nombre de waifu>*');
 
-    const waifu = chars.find(c => c.id === id);
-    const venta = market.find(e => e.characterId === id);
-    if (!waifu || !venta) return m.reply('✿ Waifu no encontrada o no está en venta.');
+  const nombre = args.join(' ').trim().toLowerCase();
 
-    if (user.coin < venta.price) return m.reply(`✿ No tienes suficiente dinero. Necesitas *¥${venta.price.toLocaleString()} ${moneda}*.`);
+  const ventas = await loadVentas();
+  const characters = await loadCharacters();
 
-    // Transacción
-    user.coin -= venta.price;
-    const seller = global.db.data.users[venta.seller];
-    seller.coin = (seller.coin || 0) + venta.price;
+  const venta = ventas.find(w => w.name.toLowerCase() === nombre);
+  if (!venta) return m.reply('✘ Esa waifu no está en venta.');
 
-    // Cambiar dueño
-    waifu.user = m.sender;
-    await saveCharacters(chars);
+  if (venta.vendedor === userId) return m.reply('✘ No puedes comprar tu propia waifu.');
 
-    // Eliminar del mercado
-    const index = market.indexOf(venta);
-    market.splice(index, 1);
-    await saveMarket(market);
+  const precio = parseInt(venta.precio);
 
-    // Notificar al vendedor
-    await conn.sendMessage(venta.seller, {
-        text: `✿ Tu waifu *${waifu.name}* fue vendida por *¥${venta.price.toLocaleString()} ${moneda}*!`
-    });
+  if (user.coin < precio) {
+    return m.reply(`✘ No tienes suficientes *${moneda}*. Necesitas *¥${precio.toLocaleString()} ᴅᴀʀᴋᴏs*.`);
+  }
 
-    return m.reply(`✿ Compraste a *${waifu.name}* exitosamente.`);
+  const waifu = characters.find(c => c.name.toLowerCase() === nombre);
+  if (!waifu) return m.reply('✘ No se encontró ese personaje en la base de datos.');
+
+  // Transferencia
+  user.coin -= precio;
+  const vendedorId = venta.vendedor;
+  global.db.data.users[vendedorId].coin += precio;
+
+  // Cambiar dueño
+  waifu.user = userId;
+  waifu.status = "Reclamado";
+
+  // Eliminar de waifus en venta
+  const nuevasVentas = ventas.filter(w => w.name.toLowerCase() !== nombre);
+  await saveVentas(nuevasVentas);
+  await saveCharacters(characters);
+
+  // Mensaje privado al vendedor
+  let nombreComprador = await conn.getName(userId);
+  let textoPrivado = `✿ Tu waifu *${waifu.name}* fue comprada por *${nombreComprador}*.\nGanaste *¥${precio.toLocaleString()} ᴅᴀʀᴋᴏs*.`;
+  await conn.sendMessage(vendedorId, { text: textoPrivado }, { quoted: m });
+
+  // Confirmación al comprador
+  m.reply(`✿ Has comprado a *${waifu.name}* por *¥${precio.toLocaleString()} ᴅᴀʀᴋᴏs* exitosamente!\nAhora es parte de tu harem.`);
 };
 
-handler.help = ['comprarwaifu <id>'];
-handler.command = ['comprarwaifu'];
+handler.help = ['comprarwaifu <nombre>'];
+handler.tags = ['waifus'];
+handler.command = ['comprarwaifu', 'buywaifu'];
 handler.group = true;
+handler.register = true;
+
 export default handler;
