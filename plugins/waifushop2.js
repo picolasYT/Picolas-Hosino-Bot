@@ -85,7 +85,7 @@ let handler = async (m, { conn, args }) => {
 
 handler.help = ['waifusventa [página]'];
 handler.tags = ['waifus'];
-handler.command = ['waifusventa', 'waifusenventa'];
+handler.command = ['haremshop', 'tiendawaifus', 'wshop'];
 handler.group = true;
 handler.register = true;
 
