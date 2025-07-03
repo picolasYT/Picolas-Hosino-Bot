@@ -79,7 +79,7 @@ let handler = async (m, { args, conn }) => {
 
 handler.help = ['venderwaifu'];
 handler.tags = ['waifus'];
-handler.command = ['venderwaifu'];
+handler.command = ['vender', 'sell'];
 handler.group = true;
 handler.register = true;
 
