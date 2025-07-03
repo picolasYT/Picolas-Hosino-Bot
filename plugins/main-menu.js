@@ -85,19 +85,19 @@ Aquí tienes mi lista de comandos
 ┃֪࣪ ╚═══════ • ° ❁⊕❁ ° • ═══════╝
 ┃֪࣪
 ┃֪࣪✨⊹ 𝐂𝐨𝐦𝐚𝐧𝐝𝐨𝐬 𝐩𝐚𝐫𝐚 𝐯𝐞𝐫 𝐞𝐬𝐭𝐚𝐝𝐨 𝐞 𝐢𝐧𝐟𝐨𝐫𝐦𝐚𝐜𝐢𝐨́𝐧 𝐝𝐞 𝐥𝐚 𝐁𝐨𝐭 ✨⊹
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#help • #menu*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#help • #menu*  
 > ✦ Ver la lista de comandos de la Bot.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#uptime • #runtime*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#uptime • #runtime*  
 > ✦ Ver tiempo activo o en línea de la Bot.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#sc • #script*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#sc • #script*  
 > ✦ Link del repositorio oficial de la Bot.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#staff • #colaboradores*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#staff • #colaboradores*  
 > ✦ Ver la lista de desarrolladores de la Bot.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#serbot • #serbot code*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#serbot • #serbot code*  
 > ✦ Crea una sesión de Sub-Bot.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#bots • #sockets*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#bots • #sockets*  
 > ✦ Ver la lista de Sub-Bots activos.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#creador*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#creador*  
 > ✦ Contacto del creador de la Bot.  
 ├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#status • #estado*  
 > ✦ Ver el estado actual de la Bot.  
