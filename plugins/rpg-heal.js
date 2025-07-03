@@ -5,7 +5,7 @@ let handler = async (m, { conn }) => {
         return conn.reply(m.chat, `✧⃝❛ El usuario no está registrado en la base de datos.`, m);
     }
 
-    const costoCura = 3500;
+    const costoCura = 1000;
     const cura = 75;
 
     if (user.coin < costoCura) {
