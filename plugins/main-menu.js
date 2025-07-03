@@ -297,6 +297,8 @@ Aquí tienes mi lista de comandos
 > ✦ comprar un personaje en venta.
 ├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#harem • #waifus • #claims*
 > ✦ Ver tus personajes reclamados.
+├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#sell • #vender + [nombre] [precio]*
+> ✦ poner un personaje a la venta.
 ├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#charimage • #waifuimage • #wimage*
 > ✦ Ver una imagen aleatoria de un personaje.
 ├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#charinfo • #winfo • #waifuinfo*
