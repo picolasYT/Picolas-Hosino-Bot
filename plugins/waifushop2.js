@@ -56,9 +56,8 @@ let handler = async (m, { conn, args }) => {
         username = `@${(vendedor || '').split('@')[0] || 'desconocido'}`;
       }
 
-      texto += `✰ ${inicio + i + 1} » *${name}*\n`;
+      texto += `✰ ${inicio + i + 1} » *${name}**${valorOriginal.toLocaleString()}*\n`;
       texto += `  🛒 Precio de venta: *¥${(precio || 0).toLocaleString()} ᴅᴀʀᴋᴏs*\n`;
-      texto += `  💎 Valor original: *¥${valorOriginal.toLocaleString()}*\n`;
       texto += `  🆔 ID: *${idPersonaje}*\n`;
       texto += `  👤 Vendedor: ${username}\n`;
       texto += `  📅 Publicado: ${formatoFecha(fecha)}\n\n`;
