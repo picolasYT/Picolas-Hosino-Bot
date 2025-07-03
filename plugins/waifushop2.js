@@ -70,7 +70,7 @@ let handler = async (m, { conn, args }) => {
 
   texto += `> Página *${page}* de *${totalPages}*\n`;
   if (page < totalPages) {
-    texto += `> Usa *#waifusventa ${page + 1}* para ver la siguiente página.\n`;
+    texto += `> Usa *#haremshop ${page + 1}* para ver la siguiente página.\n`;
   }
 
   try {
