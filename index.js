@@ -469,7 +469,7 @@ console.log(chalk.bold.red(`\n╭» ❍ ${jadi} ❍\n│→ OCURRIÓ UN ERROR\n�
 }}
 
 function purgeOldFiles() {
-const directories = [`./${sessions}/`, `./${jadi}/`]
+const directories = [`./${Rubysessions}/`, `./${jadi}/`]
 directories.forEach(dir => {
 readdirSync(dir, (err, files) => {
 if (err) throw err
