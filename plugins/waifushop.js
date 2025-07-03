@@ -40,7 +40,7 @@ let handler = async (m, { args, conn }) => {
     } else {
         const precioDetectado = args.find(a => !isNaN(a));
         if (!precioDetectado) {
-            return m.reply('✧ Ingresa un precio válido.\n> Ejemplo: *#venderwaifu Miku Nakano 40000*');
+            return m.reply('✧ Ingresa un precio válido.\n> Ejemplo: *#vender Miku Nakano 40000*');
         }
 
         precio = parseInt(precioDetectado);
