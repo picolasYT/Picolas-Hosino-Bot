@@ -40,7 +40,7 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
   setTimeout(() => {
     const resultado = Math.random() < 0.45 ? color : (color === 'red' ? 'black' : 'red')
     const hasGanado = resultado === color
-    const ganancia = Math.floor(coin * 1.5) // solo gana 1.5x lo apostado
+    const ganancia = Math.floor(coin * 2.5)
 
     if (hasGanado) {
       users.coin += ganancia
