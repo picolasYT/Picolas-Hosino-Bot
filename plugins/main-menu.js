@@ -301,11 +301,13 @@ Aquí tienes mi lista de comandos
 > ✦ Ver información de un personaje.
 ₊· ͟͟͞͞➳❥ *#favoritetop • favtop*
 > ✦ Ver el top de personajes del rollwaifu favoritos.
+₊· ͟͟͞͞➳❥ *#giveallharem • regalarharem*
+> ✦ regalar todos tus personajes a otro usuario.
 ├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#givechar • #givewaifu • #regalar*
 > ✦ Regalar un personaje a otro usuario.
 ├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#setfav • #setfavorito*
 > ✦ poner de favorito a un personaje.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥  ੈ₊˚༅༴│.ᰔᩚ *#vote • #votar*
+├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#vote • #votar*
 > ✦ Votar por un personaje para subir su valor.
 ├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#waifusboard • #waifustop • #topwaifus*
 > ✦ Ver el top de personajes con mayor valor.
