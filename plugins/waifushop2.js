@@ -40,10 +40,15 @@ let handler = async (m, { conn, args }) => {
   for (let i = 0; i < waifusPagina.length; i++) {
     try {
       let { name, precio, vendedor, fecha } = waifusPagina[i];
-      let username = await conn.getName?.(vendedor).catch(() => `@${(vendedor || '').split('@')[0] || 'desconocido'}`);
+      let username;
+      try {
+        username = await conn.getName(vendedor);
+      } catch {
+        username = `@${(vendedor || '').split('@')[0] || 'desconocido'}`;
+      }
       texto += `✰ ${inicio + i + 1} » *${name || '-'}*\n`;
       texto += `  🛒 Precio: *¥${(precio || '-').toLocaleString()} ᴅᴀʀᴋᴏs*\n`;
-      texto += `  👤 Vendedor: @${(vendedor || '').split('@')[0]}\n`;
+      texto += `  👤 Vendedor: ${username}\n`;
       texto += `  📅 Publicado: ${formatoFecha(fecha)}\n\n`;
       if (vendedor) mencionados.push(vendedor);
     } catch (err) {
