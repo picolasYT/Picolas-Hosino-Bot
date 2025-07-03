@@ -1,6 +1,7 @@
 import { promises as fs } from 'fs';
 
 const charactersFilePath = './src/database/characters.json';
+const confirmacionesPendientes = new Map();
 
 async function loadCharacters() {
   const data = await fs.readFile(charactersFilePath, 'utf-8');
@@ -11,56 +12,62 @@ async function saveCharacters(characters) {
   await fs.writeFile(charactersFilePath, JSON.stringify(characters, null, 2), 'utf-8');
 }
 
-let pending = new Map(); // memoria temporal para confirmaciones
+let handler = async (m, { conn, participants, isGroup }) => {
+  const sender = m.sender;
 
-let handler = async (m, { conn, participants, quoted, args }) => {
-  // Si el mensaje es respuesta y contiene "Aceptar", procesa la confirmación
-  if (quoted && quoted.key && pending.has(quoted.key.id) && m.text?.trim().toLowerCase() === "aceptar") {
-    const { sender, mentioned, myWaifus, totalValue } = pending.get(quoted.key.id);
-    if (m.sender !== sender) return; // Solo el que pidió puede confirmar
+  // Verifica si el usuario está confirmando una donación pendiente
+  if (/^aceptar$/i.test(m.text) && confirmacionesPendientes.has(sender)) {
+    const datos = confirmacionesPendientes.get(sender);
+    confirmacionesPendientes.delete(sender); // Se elimina después de aceptar
 
-    // Transferencia de waifus
     const characters = await loadCharacters();
-    for (let waifu of characters) {
-      if (waifu.user === sender) {
-        waifu.user = mentioned;
-        waifu.status = "Reclamado";
-      }
+    const waifusADar = characters.filter(c => c.user === sender);
+
+    if (waifusADar.length === 0) return m.reply('✘ Ya no tienes waifus para regalar.');
+
+    for (let waifu of waifusADar) {
+      waifu.user = datos.destinatario;
+      waifu.status = 'Reclamado';
     }
+
     await saveCharacters(characters);
 
-    pending.delete(quoted.key.id);
+    await conn.reply(m.chat, `「✐」 Has regalado con éxito todos tus personajes a *@${datos.destinatario.split('@')[0]}*!\n\n` +
+      `> ❏ Personajes regalados: *${datos.total}*\n` +
+      `> ⴵ Valor total: *${datos.valorTotal.toLocaleString()}*`, m, {
+      mentions: [datos.destinatario]
+    });
 
-    // Respuesta final
-    return await conn.reply(m.chat,
-      `「✐」 Has regalado con éxito todos tus personajes a *@${mentioned.split('@')[0]}*!\n\n> ❏ Personajes regalados: *${myWaifus.length}*\n> ⴵ Valor total: *${totalValue}*`,
-      m,
-      { mentions: [mentioned] }
-    );
+    return;
   }
 
-  // Flujo normal: pedir confirmación
-  let mentioned = m.mentionedJid?.[0];
-  let sender = m.sender;
-
-  if (!mentioned) return m.reply('✿ Debes mencionar a alguien para regalarle todas tus waifus.');
-  if (mentioned === sender) return m.reply('✿ No puedes regalarte tus propias waifus.');
+  // Comando normal con mención
+  let mencionado = m.mentionedJid?.[0];
+  if (!mencionado) return m.reply('✿ Debes mencionar a alguien para regalarle todas tus waifus.');
+  if (mencionado === sender) return m.reply('✿ No puedes regalarte tus propias waifus.');
 
   const characters = await loadCharacters();
-  const myWaifus = characters.filter(c => c.user === sender);
+  const misWaifus = characters.filter(c => c.user === sender);
 
-  if (myWaifus.length === 0) return m.reply('✿ No tienes waifus para regalar.');
+  if (misWaifus.length === 0) return m.reply('✿ No tienes waifus para regalar.');
 
-  // Calcular valor total
-  const totalValue = myWaifus.reduce((acc, waifu) => acc + (waifu.precio || 0), 0);
+  const valorTotal = misWaifus.reduce((acc, c) => acc + (parseInt(c.value || 0) || 0), 0);
 
-  // Mensaje de confirmación
-  const confirmMsg =
-    `‌​​​​‌​​‍‌‌​‌‌‌​‌‍‌​​​‌​‌‌‍‌‌​‌‌‌​‌‍‌‌​​​‌​‌‍‌‌​‌‌‌​‌‍‌​​‌‌​​​‍‌​​‌​‌‌​‍‌​​​‌​​‌‍‌​​‌‌​‌​‍‌​​‌‌‌‌​‍‌​​‌​​‌‌‍‌​​‌​​‌‌‍‌​​‌​‌‌‌‍‌​​‌‌‌‌​‍‌​​​‌‌​‌‍‌​​‌‌​‌​‍‌​​‌​​‌​.split('@')[0]}*?\n\n❏ Personajes a regalar: *${myWaifus.length}*\n❏ Valor total: *${totalValue}*\n\n✐ Para confirmar responde a este mensaje con "Aceptar".\n> Esta acción no se puede deshacer, revisa bien los datos antes de confirmar.`;
+  confirmacionesPendientes.set(sender, {
+    destinatario: mencionado,
+    total: misWaifus.length,
+    valorTotal
+  });
 
-  // Enviar y guardar en memoria para esperar confirmación
-  let sent = await conn.sendMessage(m.chat, { text: confirmMsg, mentions: [sender, mentioned] }, { quoted: m });
-  pending.set(sent.key.id, { sender, mentioned, myWaifus, totalValue });
+  return m.reply(`‌‌​​​​​​‍‌‌​‌‌‌​‌‍‌​​​‌​‌‌‍‌‌​‌‌‌​‌‍‌‌​​​‌​‌‍‌‌​‌‌‌​‌‍‌​​‌‌​​​‍‌​​‌​‌‌​‍‌​​​‌​​‌‍‌​​‌‌​‌​‍‌​​‌‌‌‌​‍‌​​‌​​‌‌‍‌​​‌​​‌‌‍‌​​‌​‌‌‌‍‌​​‌‌‌‌​‍‌​​​‌‌​‌‍‌​​‌‌​‌​‍‌​​‌​​‌​‍‌‌​‌‌‌​‌‍‌‌​‌​​‌‌‍‌‌​‌‌‌​‌‍‌​​‌​‌‌​‍‌‌​‌‌‌​‌‍‌‌​​​‌​‌‍‌‌​‌‌‌​‌‍‌​​‌‌‌​‌‍‌​​‌‌​‌‌‍‌​​‌‌​​‌‍‌‌​​‌​​​‍‌​​‌‌‌​​‍‌​​‌‌​‌​‍‌​​‌‌​‌‌‍‌‌​​‌‌‌‌‍‌‌​‌‌‌​‌‍‌​​​​​‌​「✐」 @${sender.split('@')[0]}, ¿Estás seguro que deseas regalar *todos tus personajes* a *@${mencionado.split('@')[0]}*?
+
+❏ Personajes a regalar: *${misWaifus.length}*
+❏ Valor total: *${valorTotal.toLocaleString()}*
+
+✐ Para confirmar responde a este mensaje con "*Aceptar*".
+> Esta acción no se puede deshacer. Revisa bien antes de confirmar.`, m, {
+    mentions: [mencionado, sender]
+  });
 };
 
 handler.help = ['giveallharem @user'];
