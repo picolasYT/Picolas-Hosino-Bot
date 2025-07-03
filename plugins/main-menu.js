@@ -337,6 +337,8 @@ Aquí tienes mi lista de comandos
 > ✦ Crea stickers con texto.
 ├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#emojimix*
 > ✦ Funciona 2 emojis para crear un sticker.
+├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#stickerly*
+> ✦ Envía 5 stickers.
 ├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#wm*
 > ✦ Cambia el nombre de los stickers.
 ╚▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬▭╝
