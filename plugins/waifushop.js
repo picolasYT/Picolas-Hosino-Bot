@@ -74,7 +74,7 @@ let handler = async (m, { args, conn }) => {
     await saveCharacters(await loadCharacters()); // Se vuelve a leer para guardar bien
     await saveVentas(ventas);
 
-    m.reply(`✿ Has puesto en venta a *${personaje.name}* por *¥${precio.toLocaleString()} ᴅᴀʀᴋᴏs*.`);
+    m.reply(`✿ Has puesto en venta a *${personaje.name}* por *¥${precio.toLocaleString()} ${moneda}*.`);
 };
 
 handler.help = ['venderwaifu'];
