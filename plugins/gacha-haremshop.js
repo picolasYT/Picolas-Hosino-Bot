@@ -27,7 +27,6 @@ let handler = async (m, { conn, args }) => {
     return m.reply('✿ Actualmente no hay waifus en venta.');
   }
 
-  // Paginación
   let page = parseInt(args[0]) || 1;
   const pageSize = 10;
   const totalPages = Math.ceil(ventas.length / pageSize);
@@ -44,7 +43,6 @@ let handler = async (m, { conn, args }) => {
     try {
       let { name, precio, vendedor, fecha } = waifusPagina[i];
 
-      // Buscar valor original e ID del personaje desde characters.json
       const p = personajes.find(p => p.name.toLowerCase() === name.toLowerCase());
       const valorOriginal = p?.value || 'Desconocido';
       const idPersonaje = p?.id || 'Desconocido';
