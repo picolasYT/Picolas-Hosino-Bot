@@ -80,6 +80,7 @@ Aquí tienes mi lista de comandos
 
 *➩ L I S T A  -  D E  -  C O M A N D O S*
 
+
    ֪╔═══════ • ° ❁⊕❁ ° • ═══════╗
 ╭╼.  ☁️✿⃟⃢᭄͜═✩═[𝐈𝐍𝐅𝐎-𝐁𝐎𝐓]═✩═⃟⃢᭄͜✿☁️
 ┃֪࣪ ╚═══════ • ° ❁⊕❁ ° • ═══════╝
@@ -99,29 +100,29 @@ Aquí tienes mi lista de comandos
 > ✦ Ver la lista de Sub-Bots activos.  
 . 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#creador*  
 > ✦ Contacto del creador de la Bot.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#status • #estado*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#status • #estado*  
 > ✦ Ver el estado actual de la Bot.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#links • #grupos*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#links • #grupos*  
 > ✦ Ver los enlaces oficiales de la Bot.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#infobot • #infobot*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#infobot • #infobot*  
 > ✦ Ver la información completa de la Bot.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#sug • #newcommand*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#sug • #newcommand*  
 > ✦ Sugiere un nuevo comando.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#p • #ping*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#p • #ping*  
 > ✦ Ver la velocidad de respuesta del Bot.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#reporte • #reportar*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#reporte • #reportar*  
 > ✦ Reporta alguna falla o problema de la Bot.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#sistema • #system*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#sistema • #system*  
 > ✦ Ver estado del sistema de alojamiento.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#speed • #speedtest*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#speed • #speedtest*  
 > ✦ Ver las estadísticas de velocidad de la Bot.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#views • #usuarios*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#views • #usuarios*  
 > ✦ Ver la cantidad de usuarios registrados en el sistema.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#funciones • #totalfunciones*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#funciones • #totalfunciones*  
 > ✦ Ver todas las funciones de la Bot.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#ds • #fixmsgespera*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#ds • #fixmsgespera*  
 > ✦ Eliminar archivos de sesión innecesarios.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#editautoresponder*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#editautoresponder*  
 > ✦ Configurar un Prompt personalizado de la Bot.  
 ╚▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬▭╝
 
@@ -130,39 +131,39 @@ Aquí tienes mi lista de comandos
 ┃֪࣪ ╚═══════ • ° ❁⊕❁ ° • ═══════╝
 ┃࣪
 ┃֪࣪🔍⊹ 𝐂𝐨𝐦𝐚𝐧𝐝𝐨𝐬 𝐩𝐚𝐫𝐚 𝐫𝐞𝐚𝐥𝐢𝐳𝐚𝐫 𝐛𝐮́𝐬𝐪𝐮𝐞𝐝𝐚𝐬 𝐞𝐧 𝐝𝐢𝐬𝐭𝐢𝐧𝐭𝐚𝐬 𝐩𝐥𝐚𝐭𝐚𝐟𝐨𝐫𝐦𝐚𝐬 🔎⊹࣪
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#tiktoksearch • #tiktoks*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#tiktoksearch • #tiktoks*  
 > ✦ Buscador de videos de TikTok.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#tweetposts*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#tweetposts*  
 > ✦ Buscador de posts de Twitter/X.    
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#ytsearch • #yts*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#ytsearch • #yts*  
 > ✦ Realiza búsquedas en YouTube.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#githubsearch*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#githubsearch*  
 > ✦ Buscador de usuarios de GitHub.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#cuevana • #cuevanasearch*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#cuevana • #cuevanasearch*  
 > ✦ Buscador de películas/series por Cuevana.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#google*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#google*  
 > ✦ Realiza búsquedas en Google.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#pin • #pinterest*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#pin • #pinterest*  
 > ✦ Buscador de imágenes de Pinterest.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ ׄ.*animeinfo*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ ׄ.*animeinfo*  
 ׁ> ✦ Buscador de información de un animé
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#imagen • #image*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#imagen • #image*  
 > ✦ Buscador de imágenes en Google.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#animesearch • #animess*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#animesearch • #animess*  
 > ✦ Buscador de animes en TioAnime.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#animei • #animeinfo*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#animei • #animeinfo*  
 > ✦ Buscador de capítulos de #animesearch.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#infoanime*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#infoanime*  
 > ✦ Buscador de información de anime/manga.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#hentaisearch • #searchhentai*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#hentaisearch • #searchhentai*  
 > ✦ Buscador de capítulos hentai.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#xnxxsearch • #xnxxs*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#xnxxsearch • #xnxxs*  
 ׁ> ✦ Buscador de videos de XNXX.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#xvsearch • #xvideossearch*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#xvsearch • #xvideossearch*  
 ׁ> ✦ Buscador de videos de Xvideos.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#pornhubsearch • #phsearch*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#pornhubsearch • #phsearch*  
 > ✦ Buscador de videos de Pornhub.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#npmjs*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#npmjs*  
 > ✦ Buscador de paquetes en npmjs.  
 ╚▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬▭╝
 
@@ -171,51 +172,51 @@ Aquí tienes mi lista de comandos
 ┃֪࣪ ╚═══════ • ° ❁⊕❁ ° • ═══════╝
 ┃࣪
 ┃࣪📥⊹ 𝐂𝐨𝐦𝐚𝐧𝐝𝐨𝐬 𝐝𝐞 𝐝𝐞𝐬𝐜𝐚𝐫𝐠𝐚𝐬 𝐩𝐚𝐫𝐚 𝐯𝐚𝐫𝐢𝐨𝐬 𝐚𝐫𝐜𝐡𝐢𝐯𝐨𝐬  📂⊹࣪
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#tiktok • #tt*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#tiktok • #tt*
 > ✦ Descarga videos de TikTok.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#mediafire • #mf*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#mediafire • #mf*
 > ✦ Descargar un archivo de MediaFire.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#tiktok • #tt*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#tiktok • #tt*
 > ✦ Descarga videos de TikTok.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#pindl • #pinterestdl*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#pindl • #pinterestdl*
 > ✦ Descarga videos de Pinterest con un enlace.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#mediafire • #mf*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#mediafire • #mf*
 > ✦ Descargar archivos de MediaFire.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#pinvid • #pinvideo* + [enlace]
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#pinvid • #pinvideo* + [enlace]
 ׁ> ✦ Descargar videos de Pinterest.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#mega • #mg* + [enlace]
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#mega • #mg* + [enlace]
 > ✦ Descargar archivos de MEGA.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#play • #play2*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#play • #play2*
 > ✦ Descargar música/video de YouTube.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#ytmp3 • #ytmp4*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#ytmp3 • #ytmp4*
 > ✦ Descarga directa por url de YouTube.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#fb • #facebook*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#fb • #facebook*
 > ✦ Descargar videos de Facebook.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#twitter • #x* + [link]
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#twitter • #x* + [link]
 ׁ> ✦ Descargar videos de Twitter/X.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#ig • #instagram*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#ig • #instagram*
 > ✦ Descargar contenido de Instagram.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#tts • #tiktoks* + [búsqueda]
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#tts • #tiktoks* + [búsqueda]
 > ✦ Buscar videos de TikTok.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#terabox • #tb* + [enlace]
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#terabox • #tb* + [enlace]
 > ✦ Descargar archivos de Terabox.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#gdrive • #drive* + [enlace]
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#gdrive • #drive* + [enlace]
 > ✦ Descargar archivos desde Google Drive.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#ttimg • #ttmp3* + <url>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#ttimg • #ttmp3* + <url>
 > ✦ Descargar fotos/audios de TikTok.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#gitclone* + <url>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#gitclone* + <url>
 ׁ> ✦ Descargar repositorios desde GitHub.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#xvideosdl*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#xvideosdl*
 > ✦ Descargar videos de Xvideos.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#xnxxdl*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#xnxxdl*
 ׁ> ✦ Descargar videos de XNXX.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#apk • #modapk*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#apk • #modapk*
 > ✦ Descargar APKs (Aptoide).
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#tiktokrandom • #ttrandom*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#tiktokrandom • #ttrandom*
 > ✦ Descargar video aleatorio de TikTok.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#npmdl • #npmdownloader*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#npmdl • #npmdownloader*
 > ✦ Descargar paquetes desde NPMJs.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#animelinks • #animedl*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#animelinks • #animedl*
 ׁ> ✦ Descargar enlaces disponibles de anime.
 ╚▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬▭╝
 
@@ -225,61 +226,61 @@ Aquí tienes mi lista de comandos
 ┃֪࣪
 ┃֪࣪💰🎮⊹ 𝐂𝐨𝐦𝐚𝐧𝐝𝐨𝐬 𝐝𝐞 𝐞𝐜𝐨𝐧𝐨𝐦𝐢́𝐚 𝐲 𝐑𝐏𝐆 𝐩𝐚𝐫𝐚 𝐠𝐚𝐧𝐚𝐫 𝐝𝐢𝐧𝐞𝐫𝐨 𝐲 𝐨𝐭𝐫𝐨𝐬 𝐫𝐞𝐜𝐮𝐫𝐬𝐨𝐬 🏆💎⊹
 ┃֪࣪
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#w • #work • #trabajar*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#w • #work • #trabajar*
 > ✦ Trabaja para ganar ${moneda}.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#slut • #protituirse*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#slut • #protituirse*
 > ✦ Trabaja como prostituta y gana ${moneda}.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#cf • #suerte*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#cf • #suerte*
 > ✦ Apuesta tus ${moneda} a cara o cruz.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#crime • #crimen*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#crime • #crimen*
 > ✦ Trabaja como ladrón para ganar ${moneda}.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#ruleta • #roulette • #rt*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#ruleta • #roulette • #rt*
 > ✦ Apuesta ${moneda} al color rojo o negro.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#casino • #apostar*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#casino • #apostar*
 ׁ> ✦ Apuesta tus ${moneda} en el casino.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#slot*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#slot*
 > ✦ Apuesta tus ${moneda} en la ruleta y prueba tu suerte.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#cartera • #wallet*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#cartera • #wallet*
 > ✦ Ver tus ${moneda} en la cartera.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#banco • #bank*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#banco • #bank*
 > ✦ Ver tus ${moneda} en el banco.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#deposit • #depositar • #d*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#deposit • #depositar • #d*
 > ✦ Deposita tus ${moneda} al banco.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#with • #retirar • #withdraw*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#with • #retirar • #withdraw*
 > ✦ Retira tus ${moneda} del banco.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#transfer • #pay*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#transfer • #pay*
 > ✦ Transfiere ${moneda} o XP a otros usuarios.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#miming • #minar • #mine*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#miming • #minar • #mine*
 > ✦ Trabaja como minero y recolecta recursos.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#buyall • #buy*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#buyall • #buy*
 > ✦ Compra ${moneda} con tu XP.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#daily • #diario*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#daily • #diario*
 > ✦ Reclama tu recompensa diaria.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥  *#cofre*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១  *#cofre*
 > ✦ Reclama un cofre diario lleno de recursos.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#weekly • #semanal*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#weekly • #semanal*
 > ✦ Reclama tu regalo semanal.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#monthly • #mensual*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#monthly • #mensual*
 > ✦ Reclama tu recompensa mensual.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#steal • #robar • #rob*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#steal • #robar • #rob*
 > ✦ Intenta robarle ${moneda} a alguien.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#robarxp • #robxp*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#robarxp • #robxp*
 > ✦ Intenta robar XP a un usuario.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#eboard • #baltop*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#eboard • #baltop*
 > ✦ Ver el ranking de usuarios con más ${moneda}.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#aventura • #adventure*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#aventura • #adventure*
 > ✦ Aventúrate en un nuevo reino y recolecta recursos.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#curar • #heal*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#curar • #heal*
 > ✦ Cura tu salud para volverte aventurero.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#cazar • #hunt • #berburu*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#cazar • #hunt • #berburu*
 > ✦ Aventúrate en una caza de animales.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#inv • #inventario*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#inv • #inventario*
 > ✦ Ver tu inventario con todos tus ítems.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#mazmorra • #explorar*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#mazmorra • #explorar*
 > ✦ Explorar mazmorras para ganar ${moneda}.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#halloween*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#halloween*
 > ✦ Reclama tu dulce o truco (Solo en Halloween).
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#christmas • #navidad*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#christmas • #navidad*
 > ✦ Reclama tu regalo navideño (Solo en Navidad).
 ╚▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬▭╝
 
@@ -289,33 +290,33 @@ Aquí tienes mi lista de comandos
 ┃֪࣪
 ┃֪࣪✨⊹ 𝐂𝐨𝐦𝐚𝐧𝐝𝐨𝐬 𝐝𝐞 𝐠𝐚𝐜𝐡𝐚 𝐩𝐚𝐫𝐚 𝐫𝐞𝐜𝐥𝐚𝐦𝐚𝐫 𝐲 𝐜𝐨𝐥𝐞𝐜𝐜𝐢𝐨𝐧𝐚𝐫 𝐩𝐞𝐫𝐬𝐨𝐧𝐚𝐣𝐞𝐬 🎭🌟⊹
 ┃֪࣪
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#rollwaifu • #rw • #roll*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#rollwaifu • #rw • #roll*
 > ✦ Waifu o husbando aleatorio.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#claim • #c • #reclamar*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#claim • #c • #reclamar*
 > ✦ Reclamar un personaje.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#buycharacter • #buychar • #comprarwaifu*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#buycharacter • #buychar • #comprarwaifu*
 > ✦ comprar un personaje en venta.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#harem • #waifus • #claims*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#harem • #waifus • #claims*
 > ✦ Ver tus personajes reclamados.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#removerwaifu • #removersale*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#removerwaifu • #removersale*
 > ✦ Eliminar un personaje en venta.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#sell • #vender + [nombre] [precio]*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#sell • #vender + [nombre] [precio]*
 > ✦ poner un personaje a la venta.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#charimage • #waifuimage • #wimage*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#charimage • #waifuimage • #wimage*
 > ✦ Ver una imagen aleatoria de un personaje.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#charinfo • #winfo • #waifuinfo*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#charinfo • #winfo • #waifuinfo*
 > ✦ Ver información de un personaje.
 ₊· ͟͟͞͞➳❥ *#favoritetop • favtop*
 > ✦ Ver el top de personajes del rollwaifu favoritos.
 ₊· ͟͟͞͞➳❥ *#giveallharem • regalarharem*
 > ✦ regalar todos tus personajes a otro usuario.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#givechar • #givewaifu • #regalar*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#givechar • #givewaifu • #regalar*
 > ✦ Regalar un personaje a otro usuario.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#setfav • #setfavorito*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#setfav • #setfavorito*
 > ✦ poner de favorito a un personaje.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#vote • #votar*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#vote • #votar*
 > ✦ Votar por un personaje para subir su valor.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#waifusboard • #waifustop • #topwaifus*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#waifusboard • #waifustop • #topwaifus*
 > ✦ Ver el top de personajes con mayor valor.
 ╚▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬▭╝
 
@@ -325,27 +326,27 @@ Aquí tienes mi lista de comandos
 ┃֪࣪
 ┃֪࣪🖼️✨⊹ 𝐂𝐨𝐦𝐚𝐧𝐝𝐨𝐬 𝐩𝐚𝐫𝐚 𝐜𝐫𝐞𝐚𝐜𝐢𝐨𝐧𝐞𝐬 𝐝𝐞 𝐬𝐭𝐢𝐜𝐤𝐞𝐫𝐬, 𝐞𝐭𝐜. 🎨🔖
 ┃֪࣪
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#sticker • #s*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#sticker • #s*
 > ✦ Crea stickers de (imagen/video).
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#setmeta*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#setmeta*
 > ✦ Establece un pack y autor para los stickers.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#delmeta*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#delmeta*
 > ✦ Elimina tu pack de stickers.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#pfp • #getpic*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#pfp • #getpic*
 > ✦ Obtén la foto de perfil de un usuario.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#stickergen#*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#stickergen#*
 > ✦ te genera un sticker con ia con un promt.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#qc*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#qc*
 > ✦ Crea stickers con texto o de un usuario.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#toimg • #img*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#toimg • #img*
 > ✦ Convierte stickers en imagen.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#brat • #ttp • #attp*︎
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#brat • #ttp • #attp*︎
 > ✦ Crea stickers con texto.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#emojimix*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#emojimix*
 > ✦ Funciona 2 emojis para crear un sticker.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#stickerly*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#stickerly*
 > ✦ Envía 5 stickers.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#wm*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#wm*
 > ✦ Cambia el nombre de los stickers.
 ╚▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬▭╝
 
@@ -355,37 +356,37 @@ Aquí tienes mi lista de comandos
 ┃֪࣪
 ┃֪࣪🛠️✨⊹ 𝐂𝐨𝐦𝐚𝐧𝐝𝐨𝐬 𝐝𝐞 𝐡𝐞𝐫𝐫𝐚𝐦𝐢𝐞𝐧𝐭𝐚𝐬 𝐜𝐨𝐧 𝐦𝐮𝐜𝐡𝐚𝐬 𝐟𝐮𝐧𝐜𝐢𝐨𝐧𝐞𝐬 ⚙️
 ┃֪࣪
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#calcular • #calcular • #cal*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#calcular • #calcular • #cal*  
 > ✦ Calcular todo tipo de ecuaciones.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#tiempo • #clima*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#tiempo • #clima*  
 > ✦ Ver el clima de un país.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#horario*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#horario*  
 > ✦ Ver el horario global de los países.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#fake • #fakereply*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#fake • #fakereply*  
 > ✦ Crea un mensaje falso de un usuario.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#qrcode*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#qrcode*  
 > ✦ crea un QR al enlace o texto que escribas.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#compress • comprimir*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#compress • comprimir*  
 > ✦ comprime una imagen reduciendo su peso.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#enhance • #remini • #hd*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#enhance • #remini • #hd*  
 > ✦ Mejora la calidad de una imagen.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#letra*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#letra*  
 > ✦ Cambia la fuente de las letras.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#read • #readviewonce • #ver*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#read • #readviewonce • #ver*  
 > ✦ Ver imágenes de una sola vista.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#whatmusic • #shazam*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#whatmusic • #shazam*  
 > ✦ Descubre el nombre de canciones o vídeos.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#spamwa • #spam*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#spamwa • #spam*  
 > ✦ Envía spam a un usuario.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#ss • #ssweb*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#ss • #ssweb*  
 > ✦ Ver el estado de una página web.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#length • #tamaño*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#length • #tamaño*  
 > ✦ Cambia el tamaño de imágenes y vídeos.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#say • #decir* + [texto]  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#say • #decir* + [texto]  
 >  ✦ Repetir un mensaje.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#todoc • #toducument*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#todoc • #toducument*  
 > ✦ Crea documentos de (audio, imágenes y vídeos).
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#translate • #traducir • #trad*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#translate • #traducir • #trad*  
 > ✦ Traduce palabras en otros idiomas.
 ╚▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬▭╝
 
@@ -394,35 +395,35 @@ Aquí tienes mi lista de comandos
 ┃֪࣪ ╚═══════ • ° ❁⊕❁ ° • ═══════╝
 ┃֪࣪
 ┃֪࣪🆔✨⊹ 𝐂𝐨𝐦𝐚𝐧𝐝𝐨𝐬 𝐝𝐞 𝐩𝐞𝐫𝐟𝐢𝐥 𝐩𝐚𝐫𝐚 𝐯𝐞𝐫, 𝐜𝐨𝐧𝐟𝐢𝐠𝐮𝐫𝐚𝐫 𝐲 𝐜𝐨𝐦𝐩𝐫𝐨𝐛𝐚𝐫 𝐞𝐬𝐭𝐚𝐝𝐨𝐬 𝐝𝐞 𝐭𝐮 𝐩𝐞𝐫𝐟𝐢𝐥 📇🔍
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#reg • #verificar • #register*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#reg • #verificar • #register*
 > ✦ Registra tu nombre y edad en el bot.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#unreg*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#unreg*
 > ✦ Elimina tu registro del bot.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#profile*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#profile*
 > ✦ Muestra tu perfil de usuario.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#marry* [mension / etiquetar]
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#marry* [mension / etiquetar]
 > ✦ Propón matrimonio a otro usuario.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#divorce*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#divorce*
 > ✦ Divorciarte de tu pareja.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#setgenre • #setgenero*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#setgenre • #setgenero*
 > ✦ Establece tu género en el perfil del bot.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#delgenre • #delgenero*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#delgenre • #delgenero*
 > ✦ Elimina tu género del perfil del bot.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#setbirth • #setnacimiento*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#setbirth • #setnacimiento*
 > ✦ Establece tu fecha de nacimiento en el perfil del bot.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#delbirth • #delnacimiento*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#delbirth • #delnacimiento*
 > ✦ Elimina tu fecha de nacimiento del perfil del bot.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#setdescription • #setdesc*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#setdescription • #setdesc*
 > ✦ Establece una descripción en tu perfil del bot.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#deldescription • #deldesc*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#deldescription • #deldesc*
 > ✦ Elimina la descripción de tu perfil del bot.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#lb • #lboard* + <Paginá>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#lb • #lboard* + <Paginá>
 > ✦ Top de usuarios con más (experiencia y nivel).
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#level • #lvl* + <@Mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#level • #lvl* + <@Mencion>
 ׁ> ✦ Ver tu nivel y experiencia actual.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#comprarpremium • #premium*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#comprarpremium • #premium*
 > ✦ Compra un pase premium para usar el bot sin límites.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#confesiones • #confesar*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#confesiones • #confesar*
 > ✦ Confiesa tus sentimientos a alguien de manera anonima.
 ╚▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬▭╝
 
@@ -432,69 +433,69 @@ Aquí tienes mi lista de comandos
 ┃֪࣪
 ┃֪࣪👥✨⊹ 𝐂𝐨𝐦𝐚𝐧𝐝𝐨𝐬 𝐝𝐞 𝐠𝐫𝐮𝐩𝐨𝐬 𝐩𝐚𝐫𝐚 𝐮𝐧𝐚 𝐦𝐞𝐣𝐨𝐫 𝐠𝐞𝐬𝐭𝐢𝐨́𝐧 𝐝𝐞 𝐞𝐥𝐥𝐨𝐬 🔧📢⊹
 ┃֪࣪
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#config • #on*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#config • #on*
 > ✦ Ver opciones de configuración de grupos.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#hidetag*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#hidetag*
 > ✦ Envía un mensaje mencionando a todos los usuarios.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#gp • #infogrupo*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#gp • #infogrupo*
 > ✦ Ver la información del grupo.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#linea • #listonline*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#linea • #listonline*
 > ✦ Ver la lista de los usuarios en línea.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#setwelcome*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#setwelcome*
 > ✦ Establecer un mensaje de bienvenida personalizado.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#setbye*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#setbye*
 > ✦ Establecer un mensaje de despedida personalizado.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#link*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#link*
 > ✦ El Bot envía el link del grupo.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#admins • #admin*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#admins • #admin*
 > ✦ Mencionar a los admins para solicitar ayuda.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#restablecer • #revoke*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#restablecer • #revoke*
 > ✦ Restablecer el enlace del grupo.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#grupo • #group* [open / abrir]
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#grupo • #group* [open / abrir]
 > ✦ Cambia ajustes del grupo para que todos los usuarios envíen mensaje.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#grupo • #gruop* [close / cerrar]
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#grupo • #gruop* [close / cerrar]
 > ✦ Cambia ajustes del grupo para que solo los administradores envíen mensaje.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#kick* [número / mención]
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#kick* [número / mención]
 > ✦ Elimina un usuario de un grupo.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#add • #añadir • #agregar* [número]
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#add • #añadir • #agregar* [número]
 > ✦ Invita a un usuario a tu grupo.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#promote* [mención / etiquetar]
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#promote* [mención / etiquetar]
 > ✦ El Bot dará administrador al usuario mencionado.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#demote* [mención / etiquetar]
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#demote* [mención / etiquetar]
 > ✦ El Bot quitará el rol de administrador al usuario mencionado.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#gpbanner • #groupimg*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#gpbanner • #groupimg*
 > ✦ Cambiar la imagen del grupo.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#gpname • #groupname*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#gpname • #groupname*
 > ✦ Cambiar el nombre del grupo.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#gpdesc • #groupdesc*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#gpdesc • #groupdesc*
 > ✦ Cambiar la descripción del grupo.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#advertir • #warn • #warning*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#advertir • #warn • #warning*
 > ✦ Dar una advertencia a un usuario.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#unwarn • #delwarn*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#unwarn • #delwarn*
 > ✦ Quitar advertencias.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#advlist • #listadv*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#advlist • #listadv*
 > ✦ Ver lista de usuarios advertidos.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#banchat*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#banchat*
 > ✦ Banear al Bot en un chat o grupo.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#unbanchat*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#unbanchat*
 > ✦ Desbanear al Bot del chat o grupo.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#mute* [mención / etiquetar]
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#mute* [mención / etiquetar]
 > ✦ El Bot elimina los mensajes del usuario.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#unmute* [mención / etiquetar]
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#unmute* [mención / etiquetar]
 > ✦ El Bot deja de eliminar los mensajes del usuario.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#encuesta • #poll*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#encuesta • #poll*
 > ✦ Crea una encuesta.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#delete • #del*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#delete • #del*
 > ✦ Elimina mensajes de otros usuarios.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#fantasmas*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#fantasmas*
 > ✦ Ver lista de inactivos del grupo.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#kickfantasmas*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#kickfantasmas*
 > ✦ Elimina a los inactivos del grupo.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#invocar • #tagall • #todos*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#invocar • #tagall • #todos*
 > ✦ Invoca a todos los usuarios del grupo.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#setemoji • #setemo*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#setemoji • #setemo*
 > ✦ Cambia el emoji que se usa en la invitación de usuarios.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#listnum • #kicknum*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#listnum • #kicknum*
 > ✦ Elimina a usuarios por el prefijo de país.
 ╚▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬▭╝
 
@@ -504,75 +505,75 @@ Aquí tienes mi lista de comandos
 ┃֪࣪
 ┃֪࣪🎌✨⊹ 𝐂𝐨𝐦𝐚𝐧𝐝𝐨𝐬 𝐝𝐞 𝐫𝐞𝐚𝐜𝐜𝐢𝐨𝐧𝐞𝐬 𝐝𝐞 𝐚𝐧𝐢𝐦𝐞 💢🎭⊹
 ┃֪࣪
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#angry • #enojado* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#angry • #enojado* + <mencion>
 > ✦ Estar enojado
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#bite* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#bite* + <mencion>
 > ✦ Muerde a alguien
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#bleh* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#bleh* + <mencion>
 > ✦ Sacar la lengua
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#blush* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#blush* + <mencion>
 > ✦ Sonrojarte
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#bored • #aburrido* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#bored • #aburrido* + <mencion>
 ׁ> ✦ Estar aburrido
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#cry* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#cry* + <mencion>
 > ✦ Llorar por algo o alguien
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#cuddle* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#cuddle* + <mencion>
 ׁ> ✦ Acurrucarse
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#dance* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#dance* + <mencion>
 > ✦ Sacate los pasitos prohibidos
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#drunk* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#drunk* + <mencion>
 > ✦ Estar borracho
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#eat • #comer* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#eat • #comer* + <mencion>
 > ✦ Comer algo delicioso
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#facepalm* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#facepalm* + <mencion>
 ׁ> ✦ Darte una palmada en la cara
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#happy • #feliz* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#happy • #feliz* + <mencion>
 > ✦ Salta de felicidad
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#hug* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#hug* + <mencion>
 > ✦ Dar un abrazo
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#impregnate • #preg* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#impregnate • #preg* + <mencion>
 ׁ> ✦ Embarazar a alguien
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#kill* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#kill* + <mencion>
 > ✦ Toma tu arma y mata a alguien
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#kiss • #besar* • #kiss2 + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#kiss • #besar* • #kiss2 + <mencion>
 > ✦ Dar un beso
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#laugh* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#laugh* + <mencion>
 ׁ> ✦ Reírte de algo o alguien
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#lick* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#lick* + <mencion>
 ׁ> ✦ Lamer a alguien
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#love • #amor* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#love • #amor* + <mencion>
 ׁ> ✦ Sentirse enamorado
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#pat* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#pat* + <mencion>
 > ✦ Acaricia a alguien
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#poke* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#poke* + <mencion>
 > ✦ Picar a alguien
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#pout* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#pout* + <mencion>
 > ✦ Hacer pucheros
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#punch* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#punch* + <mencion>
 > ✦ Dar un puñetazo
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#run* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#run* + <mencion>
 > ✦ Correr
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#sad • #triste* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#sad • #triste* + <mencion>
 > ✦ Expresar tristeza
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#scared* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#scared* + <mencion>
 ׁ> ✦ Estar asustado
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#seduce* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#seduce* + <mencion>
 ׁ> ✦ Seducir a alguien
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#shy • #timido* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#shy • #timido* + <mencion>
 > ✦ Sentir timidez
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#slap* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#slap* + <mencion>
 > ✦ Dar una bofetada
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#dias • #days*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#dias • #days*
 > ✦ Darle los buenos días a alguien
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#fraseanime • #phraseanime*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#fraseanime • #phraseanime*
 > ✦ envía una frase aleatorio de un anime
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#noches • #nights*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#noches • #nights*
 > ✦ Darle las buenas noches a alguien
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#sleep* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#sleep* + <mencion>
 ׁ> ✦ Tumbarte a dormir
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#smoke* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#smoke* + <mencion>
 ׁ> ✦ Fumar
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#think* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#think* + <mencion>
 ׁ> ✦ Pensar en algo
 ╚▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬▭╝
 
@@ -582,71 +583,71 @@ Aquí tienes mi lista de comandos
 ┃֪࣪
 ┃֪࣪🎮✨⊹ 𝐂𝐨𝐦𝐚𝐧𝐝𝐨𝐬 𝐝𝐞 𝐣𝐮𝐞𝐠𝐨𝐬 𝐩𝐚𝐫𝐚 𝐣𝐮𝐠𝐚𝐫 𝐜𝐨𝐧 𝐭𝐮𝐬 𝐚𝐦𝐢𝐠𝐨𝐬 🕹️🎲⊹
 ┃֪࣪
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#amistad • #amigorandom* 
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#amistad • #amigorandom* 
 > ✦ Hacer amigos con un juego.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#chaqueta • #jalamela*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#chaqueta • #jalamela*  
 > ✦ Hacerte una chaqueta.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#chiste*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#chiste*  
 > ✦ La bot te cuenta un chiste.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#consejo*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#consejo*  
 > ✦ La bot te da un consejo.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#doxeo • #doxear* + <mención>  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#doxeo • #doxear* + <mención>  
 > ✦ Simular un doxeo falso.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#facto*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#facto*  
 > ✦ La bot te lanza un facto.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#formarpareja*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#formarpareja*  
 > ✦ Forma una pareja.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#formarpareja5*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#formarpareja5*  
 > ✦ Forma 5 parejas diferentes.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#frase*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#frase*  
 > ✦ La bot te da una frase.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#huevo*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#huevo*  
 > ✦ Agárrale el huevo a alguien.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#chupalo* + <mención>  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#chupalo* + <mención>  
 > ✦ Hacer que un usuario te la chupe.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#aplauso* + <mención>  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#aplauso* + <mención>  
 > ✦ Aplaudirle a alguien.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#marron* + <mención>  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#marron* + <mención>  
 > ✦ Burlarte del color de piel de un usuario.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#suicidar*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#suicidar*  
 > ✦ Suicídate.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#iq • #iqtest* + <mención>  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#iq • #iqtest* + <mención>  
 > ✦ Calcular el IQ de alguna persona.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#meme*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#meme*  
 > ✦ La bot te envía un meme aleatorio.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#morse*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#morse*  
 > ✦ Convierte un texto a código morse.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#nombreninja*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#nombreninja*  
 > ✦ Busca un nombre ninja aleatorio.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#paja • #pajeame*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#paja • #pajeame*  
 > ✦ La bot te hace una paja.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#personalidad* + <mención>  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#personalidad* + <mención>  
 > ✦ La bot busca tu personalidad.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#piropo*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#piropo*  
 > ✦ Lanza un piropo.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#pregunta*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#pregunta*  
 > ✦ Hazle una pregunta a la bot.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#ship • #pareja*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#ship • #pareja*  
 > ✦ La bot te da la probabilidad de enamorarte de una persona.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#sorteo*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#sorteo*  
 > ✦ Empieza un sorteo.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#top*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#top*  
 > ✦ Empieza un top de personas.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#formartrio* + <mención>  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#formartrio* + <mención>  
 > ✦ Forma un trío.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#ahorcado*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#ahorcado*  
 > ✦ Diviértete jugando al ahorcado con la bot.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#genio*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#genio*  
 > ✦ Comienza una ronda de preguntas con el genio.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#mates • #matematicas*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#mates • #matematicas*  
 > ✦ Responde preguntas de matemáticas para ganar recompensas.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#ppt*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#ppt*  
 > ✦ Juega piedra, papel o tijeras con la bot.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#sopa • #buscarpalabra*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#sopa • #buscarpalabra*  
 > ✦ Juega al famoso juego de sopa de letras.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#pvp • #suit* + <mención>  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#pvp • #suit* + <mención>  
 > ✦ Juega un PVP contra otro usuario.  
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#ttt*  
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#ttt*  
 > ✦ Crea una sala de juego.  
 ╚▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬▭╝
 
@@ -656,49 +657,49 @@ Aquí tienes mi lista de comandos
 ┃֪࣪
 ┃֪࣪🔞✨⊹ 𝐂𝐨𝐦𝐚𝐧𝐝𝐨𝐬 𝐍𝐒𝐅𝐖 (𝐂𝐨𝐧𝐭𝐞𝐧𝐢𝐝𝐨 𝐩𝐚𝐫𝐚 𝐚𝐝𝐮𝐥𝐭𝐨𝐬) 🍑🔥⊹
 ┃֪࣪
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#anal* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#anal* + <mencion>
 > ✦ Hacer un anal
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#waifu*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#waifu*
 > ✦ Buscá una waifu aleatorio.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#bath* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#bath* + <mencion>
 > ✦ Bañarse
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#blowjob • #mamada • #bj* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#blowjob • #mamada • #bj* + <mencion>
 > ✦ Dar una mamada
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#boobjob* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#boobjob* + <mencion>
 > ✦ Hacer una rusa
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#cum* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#cum* + <mencion>
 > ✦ Venirse en alguien.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#fap* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#fap* + <mencion>
 > ✦ Hacerse una paja
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#ppcouple • #ppcp*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#ppcouple • #ppcp*
 > ✦ Genera imágenes para amistades o parejas.
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#footjob* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#footjob* + <mencion>
 > ✦ Hacer una paja con los pies
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#fuck • #coger • #fuck2* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#fuck • #coger • #fuck2* + <mencion>
 > ✦ Follarte a alguien
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#hentaivideo • #hentaivid*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#hentaivideo • #hentaivid*
 > ✦ envía un vídeo hentai aleatorio
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#cafe • #coffe*
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#cafe • #coffe*
 > ✦ Tomate un cafecito con alguien
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#violar • #perra* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#violar • #perra* + <mencion>
 > ✦ Viola a alguien
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#grabboobs* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#grabboobs* + <mencion>
 > ✦ Agarrar tetas
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#grop* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#grop* + <mencion>
 > ✦ Manosear a alguien
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#lickpussy* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#lickpussy* + <mencion>
 > ✦ Lamer un coño
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#rule34 • #r34* + [Tags]
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#rule34 • #r34* + [Tags]
 > ✦ Buscar imágenes en Rule34
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#sixnine • #69* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#sixnine • #69* + <mencion>
 > ✦ Haz un 69 con alguien
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#spank • #nalgada* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#spank • #nalgada* + <mencion>
 > ✦ Dar una nalgada
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#suckboobs* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#suckboobs* + <mencion>
 > ✦ Chupar tetas
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#undress • #encuerar* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#undress • #encuerar* + <mencion>
 > ✦ Desnudar a alguien
-├ׁ̟̇˚₊· ͟͟͞͞➳❥ *#yuri • #tijeras* + <mencion>
+. 바˓   ⃚̫🌷ܷ̯̌ ֙ ꜥ ១ *#yuri • #tijeras* + <mencion>
 > ✦ Hacer tijeras.
 ╚▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬ִ▭࣪▬▭╝
   `.trim();
