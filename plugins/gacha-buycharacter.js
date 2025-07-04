@@ -44,26 +44,21 @@ let handler = async (m, { conn, args }) => {
   const waifu = characters.find(c => c.name.toLowerCase() === nombre);
   if (!waifu) return m.reply('✘ No se encontró ese personaje en la base de datos.');
 
-  // Transferencia
   user.coin -= precio;
   const vendedorId = venta.vendedor;
   global.db.data.users[vendedorId].coin += precio;
 
-  // Cambiar dueño
   waifu.user = userId;
   waifu.status = "Reclamado";
 
-  // Eliminar de waifus en venta
   const nuevasVentas = ventas.filter(w => w.name.toLowerCase() !== nombre);
   await saveVentas(nuevasVentas);
   await saveCharacters(characters);
 
-  // Mensaje privado al vendedor
   let nombreComprador = await conn.getName(userId);
   let textoPrivado = `✿ Tu waifu *${waifu.name}* fue comprada por *${nombreComprador}*.\nGanaste *¥${precio.toLocaleString()} ${moneda}*.`;
   await conn.sendMessage(vendedorId, { text: textoPrivado }, { quoted: m });
 
-  // Confirmación al comprador
   m.reply(`✿ Has comprado a *${waifu.name}* por *¥${precio.toLocaleString()} ${moneda}* exitosamente!\nAhora es parte de tu harem.`);
 };
 
