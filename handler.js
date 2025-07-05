@@ -53,77 +53,77 @@ export async function handler(chatUpdate) {
     // Inicialización de usuarios y chats solo si es necesario
     let user = global.db.data.users[m.sender]
     if (typeof user !== 'object') global.db.data.users[m.sender] = user = {}
-    user.exp ??= 0
-    user.coin ??= 10
-    user.joincount ??= 1
-    user.diamond ??= 3
-    user.lastadventure ??= 0
-    user.lastclaim ??= 0
-    user.health ??= 100
-    user.crime ??= 0
-    user.lastcofre ??= 0
-    user.lastdiamantes ??= 0
-    user.lastpago ??= 0
-    user.lastcode ??= 0
-    user.lastcodereg ??= 0
-    user.lastduel ??= 0
-    user.lastmining ??= 0
-    user.muto ??= false
-    user.premium ??= false
+    if (user.exp == null) user.exp = 0
+    if (user.coin == null) user.coin = 10
+    if (user.joincount == null) user.joincount = 1
+    if (user.diamond == null) user.diamond = 3
+    if (user.lastadventure == null) user.lastadventure = 0
+    if (user.lastclaim == null) user.lastclaim = 0
+    if (user.health == null) user.health = 100
+    if (user.crime == null) user.crime = 0
+    if (user.lastcofre == null) user.lastcofre = 0
+    if (user.lastdiamantes == null) user.lastdiamantes = 0
+    if (user.lastpago == null) user.lastpago = 0
+    if (user.lastcode == null) user.lastcode = 0
+    if (user.lastcodereg == null) user.lastcodereg = 0
+    if (user.lastduel == null) user.lastduel = 0
+    if (user.lastmining == null) user.lastmining = 0
+    if (user.muto == null) user.muto = false
+    if (user.premium == null) user.premium = false
     if (!user.premium) user.premiumTime = 0
-    user.registered ??= false
-    user.genre ??= ''
-    user.birth ??= ''
-    user.marry ??= ''
-    user.description ??= ''
-    user.packstickers ??= null
+    if (user.registered == null) user.registered = false
+    if (user.genre == null) user.genre = ''
+    if (user.birth == null) user.birth = ''
+    if (user.marry == null) user.marry = ''
+    if (user.description == null) user.description = ''
+    if (user.packstickers == null) user.packstickers = null
     if (!user.registered) {
-      user.name ??= m.name
-      user.age ??= -1
-      user.regTime ??= -1
+      if (user.name == null) user.name = m.name
+      if (user.age == null) user.age = -1
+      if (user.regTime == null) user.regTime = -1
     }
-    user.afk ??= -1
-    user.afkReason ??= ''
-    user.role ??= 'Nuv'
-    user.banned ??= false
-    user.useDocument ??= false
-    user.level ??= 0
-    user.bank ??= 0
-    user.warn ??= 0
-    user.spam ??= 0 // para anti-spam
+    if (user.afk == null) user.afk = -1
+    if (user.afkReason == null) user.afkReason = ''
+    if (user.role == null) user.role = 'Nuv'
+    if (user.banned == null) user.banned = false
+    if (user.useDocument == null) user.useDocument = false
+    if (user.level == null) user.level = 0
+    if (user.bank == null) user.bank = 0
+    if (user.warn == null) user.warn = 0
+    if (user.spam == null) user.spam = 0 // para anti-spam
 
     let chat = global.db.data.chats[m.chat]
     if (typeof chat !== 'object') global.db.data.chats[m.chat] = chat = {}
-    chat.isBanned ??= false
-    chat.sAutoresponder ??= ''
-    chat.welcome ??= true
-    chat.autolevelup ??= false
-    chat.autoAceptar ??= false
-    chat.autosticker ??= false
-    chat.autoRechazar ??= false
-    chat.autoresponder ??= false
-    chat.detect ??= true
-    chat.antiBot ??= false
-    chat.antiBot2 ??= false
-    chat.modoadmin ??= false
-    chat.antiLink ??= true
-    chat.antiImg ??= false
-    chat.reaction ??= false
-    chat.nsfw ??= false
-    chat.antifake ??= false
-    chat.delete ??= false
-    chat.expired ??= 0
-    chat.antiLag ??= false
-    chat.per ??= []
+    if (chat.isBanned == null) chat.isBanned = false
+    if (chat.sAutoresponder == null) chat.sAutoresponder = ''
+    if (chat.welcome == null) chat.welcome = true
+    if (chat.autolevelup == null) chat.autolevelup = false
+    if (chat.autoAceptar == null) chat.autoAceptar = false
+    if (chat.autosticker == null) chat.autosticker = false
+    if (chat.autoRechazar == null) chat.autoRechazar = false
+    if (chat.autoresponder == null) chat.autoresponder = false
+    if (chat.detect == null) chat.detect = true
+    if (chat.antiBot == null) chat.antiBot = false
+    if (chat.antiBot2 == null) chat.antiBot2 = false
+    if (chat.modoadmin == null) chat.modoadmin = false
+    if (chat.antiLink == null) chat.antiLink = true
+    if (chat.antiImg == null) chat.antiImg = false
+    if (chat.reaction == null) chat.reaction = false
+    if (chat.nsfw == null) chat.nsfw = false
+    if (chat.antifake == null) chat.antifake = false
+    if (chat.delete == null) chat.delete = false
+    if (chat.expired == null) chat.expired = 0
+    if (chat.antiLag == null) chat.antiLag = false
+    if (chat.per == null) chat.per = []
 
     let settings = global.db.data.settings[this.user.jid]
     if (typeof settings !== 'object') global.db.data.settings[this.user.jid] = settings = {}
-    settings.self ??= false
-    settings.restrict ??= true
-    settings.jadibotmd ??= true
-    settings.antiPrivate ??= false
-    settings.autoread ??= false
-    settings.status ??= 0
+    if (settings.self == null) settings.self = false
+    if (settings.restrict == null) settings.restrict = true
+    if (settings.jadibotmd == null) settings.jadibotmd = true
+    if (settings.antiPrivate == null) settings.antiPrivate = false
+    if (settings.autoread == null) settings.autoread = false
+    if (settings.status == null) settings.status = 0
 
   } catch (e) {
     console.error(e)
