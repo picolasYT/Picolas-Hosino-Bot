@@ -82,15 +82,14 @@ export async function handler(chatUpdate) {
       if (user.age == null) user.age = -1
       if (user.regTime == null) user.regTime = -1
     }
-    if (user.afk == null) user.afk = -1
-    if (user.afkReason == null) user.afkReason = ''
+    if (user.afk == null) user ''
     if (user.role == null) user.role = 'Nuv'
     if (user.banned == null) user.banned = false
     if (user.useDocument == null) user.useDocument = false
     if (user.level == null) user.level = 0
     if (user.bank == null) user.bank = 0
     if (user.warn == null) user.warn = 0
-    if (user.spam == null) user.spam = 0 // para anti-spam
+    if (user.spam == null) user.spam = 0
 
     let chat = global.db.data.chats[m.chat]
     if (typeof chat !== 'object') global.db.data.chats[m.chat] = chat = {}
@@ -100,8 +99,7 @@ export async function handler(chatUpdate) {
     if (chat.autolevelup == null) chat.autolevelup = false
     if (chat.autoAceptar == null) chat.autoAceptar = false
     if (chat.autosticker == null) chat.autosticker = false
-    if (chat.autoRechazar == null) chat.autoRechazar = false
-    if (chat.autoresponder == null) chat.autoresponder = false
+    if (chat.autoRechazar == null) chat.autooresponder == null) chat.autoresponder = false
     if (chat.detect == null) chat.detect = true
     if (chat.antiBot == null) chat.antiBot = false
     if (chat.antiBot2 == null) chat.antiBot2 = false
@@ -168,7 +166,6 @@ export async function handler(chatUpdate) {
   const isMods = isOwner || global.mods.map(v => v.replace(/[^0-9]/g, '')).includes(senderNum)
   const isPrems = isROwner || global.prems.map(v => v.replace(/[^0-9]/g, '')).includes(senderNum) || _user.premium == true
 
-  // ---- Cola de mensajes (mejora: procesamiento secuencial por chat si es necesario) ----
   if (opts['queque'] && m.text && !(isMods || isPrems)) {
     let queque = this.msgqueque, time = 1000 * 5
     const previousID = queque[queque.length - 1]
@@ -184,14 +181,12 @@ export async function handler(chatUpdate) {
   m.exp += Math.ceil(Math.random() * 10)
 
   // ---- Índice de plugins por comando ----
-  // Puede moverse fuera del handler si no recargas plugins dinámicamente
   const commandMap = buildCommandIndex(global.plugins)
 
   let usedPrefix
   let ___dirname = path.join(path.dirname(fileURLToPath(import.meta.url)), './plugins')
 
   let match, command, noPrefix, args = [], _args = [], text = '', plugin = null
-  // Detecta el prefijo y comando
   for (let name in global.plugins) {
     let plug = global.plugins[name]
     if (!plug || plug.disabled) continue
@@ -222,10 +217,8 @@ export async function handler(chatUpdate) {
     }
   }
 
-  // Si no se detectó comando, termina aquí
   if (!plugin || !command) return
 
-  // ---- Checks de permisos y contexto ----
   if (plugin.disabled) return
   if (plugin.tags && plugin.tags.includes('admin') && !isAdmin) return
   if (!opts['restrict'] && plugin.tags && plugin.tags.includes('admin')) return
@@ -340,14 +333,12 @@ export async function handler(chatUpdate) {
     if (m.coin) conn.reply(m.chat, `❮✦❯ Utilizaste ${+m.coin} monedas`, m)
   }
 
-  // ---- Finalización ----
   if (opts['queque'] && m.text) {
     const quequeIndex = this.msgqueque.indexOf(m.id || m.key.id)
     if (quequeIndex !== -1)
       this.msgqueque.splice(quequeIndex, 1)
   }
 
-  // Actualización de experiencia, monedas, y estadísticas
   if (m) {
     let utente = global.db.data.users[m.sender]
     if (utente.muto == true) {
@@ -357,44 +348,25 @@ export async function handler(chatUpdate) {
     }
     if (m.sender && (user = global.db.data.users[m.sender])) {
       user.exp += m.exp
-      user.coin -= m.coin * 1
-    }
-    let stats = global.db.data.stats
-    if (m.plugin) {
-      let now = +new Date
-      let stat = stats[m.plugin] || (stats[m.plugin] = {
-        total: 0, success: 0, last: 0, lastSuccess: 0
-      })
-      stat.total += 1
-      stat.last = now
-      if (m.error == null) {
-        stat.success += 1
-        stat.lastSuccess = now
-      }
-    }
-  }
-
-  // Print/log
-  try {
-    if (!opts['noprint']) await (await import(`./lib/print.js`)).default(m, this)
-  } catch (e) {
-    console.log(m, m.quoted, e)
-  }
-
-  // Auto-read si está activado
-  let settingsREAD = global.db.data.settings[this.user.jid] || {}
-  if (opts['autoread']) await this.readMessages([m.key])
-
-  // Reacción automática si está activado
-  if (db.data.chats[m.chat].reaction && m.text.match(/(ción|dad|aje|oso|izar|mente|pero|tion|age|ous|ate|and|but|ify|ai|yuki|a|s)/gi)) {
-    let emot = pickRandom(["🍟", "😃", "😄", "😁", "😆", "🍓", "😅", "😂", "🤣", "🥲", "☺️", "😊", "😇", "🙂", "🙃", "😉", "😌", "😍", "🥰", "😘", "😗", "😙", "🌺", "🌸", "😚", "😋", "😛", "😝", "😜", "🤪", "🤨", "🌟", "🤓", "😎", "🥸", "🤩", "🥳", "😏", "💫", "😞", "😔", "😟", "😕", "🙁", "☹️", "😣", "😖", "😫", "😩", "🥺", "😢", "😭", "😤", "😠", "😡", "🤬", "🤯", "😳", "🥵", "🥶", "😶‍🌫️", "😱", "😨", "😰", "😥", "😓", "🤗", "🤔", "🫣", "🤭", "🤖", "🍭", "🤫", "🫠", "🤥", "😶", "📇", "😐", "💧", "😑", "🫨", "😬", "🙄", "😯", "😦", "😧", "😮", "😲", "🥱", "😴", "🤤", "😪", "😮‍💨", "😵", "😵‍💫", "🤐", "🥴", "🤢", "🤮", "🤧", "😷", "🤒", "🤕", "🤑", "🤠", "😈", "👿", "👺", "🧿", "🌩", "👻", "😺", "😸", "😹", "😻", "😼", "😽", "🙀", "😿", "😾", "🫶", "👍", "✌️", "🙏", "🫵", "🤏", "🤌", "☝️", "🖕", "🙏", "🫵", "🫂", "🐱", "🤹‍♀️", "🤹‍♂️", "🗿", "✨", "⚡", "🔥", "🌈", "🩷", "❤️", "🧡", "💛", "💚", "🩵", "💙", "💜", "🖤", "🩶", "🤍", "🤎", "💔", "❤️‍🔥", "❤️‍🩹", "❣️", "💕", "💞", "💓", "💗", "💖", "💘", "💝", "🚩", "👊", "⚡️", "💋", "🫰", "💅", "👑", "🐣", "🐤", "🐈"])
+mente|pero|tion|age|ous|ate|and|but|ify|ai|yuki|a|s)/gi)) {
+    let emot = pickRandom([
+      "🍟", "😃", "😄", "😁", "😆", "🍓", "😅", "😂", "🤣", "🥲", "☺️", "😊", "😇", "🙂", "🙃", "😉", "😌",
+      "😍", "🥰", "😘", "😗", "😙", "🌺", "🌸", "😚", "😋", "😛", "😝", "😜", "🤪", "🤨", "🌟", "🤓", "😎", "🥸",
+      "🤩", "🥳", "😏", "💫", "😞", "😔", "😟", "😕", "🙁", "☹️", "😣", "😖", "😫", "😩", "🥺", "😢", "😭", "😤",
+      "😠", "😡", "🤬", "🤯", "😳", "🥵", "🥶", "😶‍🌫️", "😱", "😨", "😰", "😥", "😓", "🤗", "🤔", "🫣", "🤭", "🤖",
+      "🍭", "🤫", "🫠", "🤥", "😶", "📇", "😐", "💧", "😑", "🫨", "😬", "🙄", "😯", "😦", "😧", "😮", "😲", "🥱", "😴",
+      "🤤", "😪", "😮‍💨", "😵", "😵‍💫", "🤐", "🥴", "🤢", "🤮", "🤧", "😷", "🤒", "🤕", "🤑", "🤠", "😈", "👿", "👺",
+      "🧿", "🌩", "👻", "😺", "😸", "😹", "😻", "😼", "😽", "🙀", "😿", "😾", "🫶", "👍", "✌️", "🙏", "🫵", "🤏", "🤌",
+      "☝️", "🖕", "🙏", "🫵", "🫂", "🐱", "🤹‍♀️", "🤹‍♂️", "🗿", "✨", "⚡", "🔥", "🌈", "🩷", "❤️", "🧡", "💛", "💚",
+      "🩵", "💙", "💜", "🖤", "🩶", "🤍", "🤎", "💔", "❤️‍🔥", "❤️‍🩹", "❣️", "💕", "💞", "💓", "💗", "💖", "💘", "💝",
+      "🚩", "👊", "⚡️", "💋", "🫰", "💅", "👑", "🐣", "🐤", "🐈"
+    ])
     if (!m.fromMe) return this.sendMessage(m.chat, { react: { text: emot, key: m.key } })
   }
 
   function pickRandom(list) { return list[Math.floor(Math.random() * list.length)] }
 }
 
-// Manejo de errores
 global.dfail = (type, m, conn) => {
   const msg = {
     rowner: '「🌺」 *Gomenasai~! Esta función solo la puede usar mi creador celestial...* 🌌\n\n> *Dioneibi-sama.*',
@@ -411,7 +383,6 @@ global.dfail = (type, m, conn) => {
   if (msg) return conn.reply(m.chat, msg, m).then(_ => m.react('✖️'))
 }
 
-// Hot reload
 let file = global.__filename(import.meta.url, true)
 watchFile(file, async () => {
   unwatchFile(file)
