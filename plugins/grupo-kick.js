@@ -1,86 +1,63 @@
-import { areJidsSameUser } from '@whiskeysockets/baileys';
+import { areJidsSameUser } from '@whiskeysockets/baileys'
 
-const emoji = '👻';
-const emoji2 = '📜';
-const emoji3 = '⚰️';
-const advertencia = '⚠️';
+var handler = async (m, { conn, text, participants, args, command }) => {
 
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+let member = participants.map(u => u.id)
+if(!text) {
+var sum = member.length
+} else {
+var sum = text} 
+var total = 0
+var sider = []
+for (let i = 0; i < sum; i++) {
+let users = m.isGroup ? participants.find(u => u.id == member[i]) : {}
+if ((typeof global.db.data.users[member[i]] == 'undefined' || global.db.data.users[member[i]].chat == 0) && !users.isAdmin && !users.isSuperAdmin) { 
+if (typeof global.db.data.users[member[i]] !== 'undefined'){
+if (global.db.data.users[member[i]].whitelist == false){
+total++
+sider.push(member[i])}
+}else {
+total++
+sider.push(member[i])}}}
+const delay = time => new Promise(res=>setTimeout(res,time))
 
-var handler = async (m, { conn, participants, command, text }) => {
-  const miembros = participants.map(u => u.id);
-  const cantidad = text && !isNaN(text) ? parseInt(text) : miembros.length;
+switch (command) {
 
-  let fantasmas = [];
+case 'fantasmas': 
+if(total == 0) return conn.reply(m.chat, `🎌 *Este grupo es activo, no tiene fantasmas*`, m, fake, ) 
+m.reply(`🐉 *Revisión de inactivos*\n\n⚠️ *Lista de fantasmas*\n${sider.map(v => '@' + v.replace(/@.+/, '')).join('\n')}\n\n*📝 NOTA:*\nEsto no es al 100% acertado, el bot inicia el conteo de mensajes a partir de que se active en este número`, null, { mentions: sider }) 
+break
 
-  for (let i = 0; i < cantidad; i++) {
-    let id = miembros[i];
-    let user = global.db.data.users[id] || {};
-    let participante = participants.find(p => areJidsSameUser(p.id, id));
-    let esAdmin = participante?.admin === 'admin' || participante?.admin === 'superadmin';
+case 'kickfantasmas':  
+if(total == 0) return conn.reply(m.chat, `🎌 *Este grupo es activo no tiene fantasmas*`, m, fake, ) 
+await m.reply(`🎉 *Eliminación de inactivos*\n\n⚠️ *Lista de fantasmas*\n${sider.map(v => '@' + v.replace(/@.+/, '')).join('\n')}\n\n❗ _El bot eliminara a los usuarios de la lista mencionada cada 10 segundos_`, null, { mentions: sider }) 
+await delay(1 * 10000)
+let chat = global.db.data.chats[m.chat]
+chat.welcome = false
+try {
 
-    if (!esAdmin && (!user.chat || user.chat === 0) && !user.whitelist) {
-      fantasmas.push(id);
-    }
-  }
+let users = m.mentionedJid.filter(u => !areJidsSameUser(u, conn.user.id))
+let kickedGhost = sider.map(v => v.id).filter(v => v !== conn.user.jid)
+for (let user of users)
+if (user.endsWith('@s.whatsapp.net') && !(participants.find(v => areJidsSameUser(v.id, user)) || { admin: true }).admin)
+{
+let res = await conn.groupParticipantsUpdate(m.chat, [user], 'remove')
+kickedGhost.concat(res)
+await delay(1 * 10000)
+}} finally{
+chat.welcome = true
+}
+break            
+}
 
-  if (command === 'fantasmas') {
-    if (fantasmas.length === 0) {
-      return conn.reply(m.chat, `${emoji} *¡Este grupo está lleno de vida!* No se han detectado fantasmas.`, m);
-    }
+}
+handler.tags = ['grupo']
+handler.command = ['fantasmas', 'kickfantasmas']
+handler.group = true
+handler.botAdmin = true
+handler.admin = true
+handler.fail = null
 
-    const texto = `╭━━━〔 𝔻𝔼𝕋𝔼ℂ𝕋𝔸𝔻𝕆ℝ 👻 〕━━⬣
-┃  ${emoji2} *Lista de Fantasmas Inactivos:*
-${fantasmas.map(u => '┃  ✦ @' + u.split('@')[0]).join('\n')}
-┃  
-┃  ${advertencia} *Nota:*
-┃  Esta lista puede no ser 100% exacta.
-┃  Solo se cuentan usuarios desde que el bot se añadió.
-╰━━━━━━━━━━━━━━━━━━━━⬣`;
+export default handler
 
-    return conn.reply(m.chat, texto, m, { mentions: fantasmas });
-  }
-
-  if (command === 'kickfantasmas') {
-    if (fantasmas.length === 0) {
-      return conn.reply(m.chat, `${emoji} *No hay fantasmas que eliminar*, el grupo está activo.`, m);
-    }
-
-    const advertenciaTexto = `╭──────〔 𝔼𝕃𝕀𝕄𝕀ℕ𝔸ℂ𝕀Óℕ ⚰️ 〕──────⬣
-┃  Se han detectado *${fantasmas.length} fantasmas* 👻
-┃  Iniciando purga en *10 segundos...*
-┃  
-┃  ${emoji2} *Lista:*
-${fantasmas.map(u => '┃  ⊳ @' + u.split('@')[0]).join('\n')}
-╰━━━━━━━━━━━━━━━━━━━━⬣`;
-
-    await conn.reply(m.chat, advertenciaTexto, m, { mentions: fantasmas });
-    await delay(10000);
-
-    const chat = global.db.data.chats[m.chat];
-    chat.welcome = false;
-
-    try {
-      for (let id of fantasmas) {
-        const participante = participants.find(p => areJidsSameUser(p.id, id));
-        const esAdmin = participante?.admin === 'admin' || participante?.admin === 'superadmin';
-        if (!esAdmin) {
-          await conn.groupParticipantsUpdate(m.chat, [id], 'remove');
-          await delay(4000);
-        }
-      }
-    } catch (e) {
-      console.error('[❌ ERROR AL EXPULSAR]', e);
-    } finally {
-      chat.welcome = true;
-    }
-  }
-};
-
-handler.tags = ['grupo'];
-handler.command = ['fantasmas', 'kickfantasmas'];
-handler.group = true;
-handler.botAdmin = true;
-handler.admin = true;
-
-export default handler;
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
