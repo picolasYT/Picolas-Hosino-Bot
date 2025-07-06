@@ -11,17 +11,19 @@ let handler = async (m, { conn, text, participants, command }) => {
   const cantidad = text && !isNaN(text) ? parseInt(text) : miembros.length
   let fantasmas = []
 
+  const groupMetadata = await conn.groupMetadata(m.chat)
+  const botNumber = conn.user.id
+  const botParticipante = participants.find(p => areJidsSameUser(p.id, botNumber))
+  const soyBotAdmin = botParticipante?.admin === 'admin' || botParticipante?.admin === 'superadmin'
+
   for (let i = 0; i < cantidad; i++) {
-    let id = miembros[i]
-    let user = global.db.data.users[id]
-    let participante = participants.find(p => areJidsSameUser(p.id, id))
+    const id = miembros[i]
+    const user = global.db.data.users[id]
+    const participante = participants.find(p => areJidsSameUser(p.id, id))
+    const esAdmin = participante?.admin === 'admin' || participante?.admin === 'superadmin'
 
-    let esAdmin = participante?.admin === 'admin' || participante?.admin === 'superadmin'
-
-    if ((!user || user.chat === 0) && !esAdmin) {
-      if (!user || (user && !user.whitelist)) {
-        fantasmas.push(id)
-      }
+    if (!esAdmin && (!user || user.chat === 0) && (!user || !user.whitelist)) {
+      fantasmas.push(id)
     }
   }
 
@@ -42,6 +44,10 @@ let handler = async (m, { conn, text, participants, command }) => {
   }
 
   if (command === 'kickfantasmas') {
+    if (!soyBotAdmin) {
+      return conn.reply(m.chat, '⚠️ El bot no es administrador y no puede expulsar miembros.', m)
+    }
+
     if (fantasmas.length === 0) {
       return conn.reply(m.chat, `${emoji} *No hay fantasmas que eliminar*, el grupo está activo.`, m)
     }
@@ -56,7 +62,7 @@ let handler = async (m, { conn, text, participants, command }) => {
     await conn.reply(m.chat, advertenciaTexto, m, { mentions: fantasmas })
     await delay(10000)
 
-    let chat = global.db.data.chats[m.chat]
+    const chat = global.db.data.chats[m.chat]
     chat.welcome = false
 
     try {
@@ -65,12 +71,15 @@ let handler = async (m, { conn, text, participants, command }) => {
         const esAdmin = participante?.admin === 'admin' || participante?.admin === 'superadmin'
 
         if (!esAdmin && id.endsWith('@s.whatsapp.net')) {
+          console.log('🚫 Expulsando:', id)
           await conn.groupParticipantsUpdate(m.chat, [id], 'remove')
-          await delay(3000) // retraso menor para evitar cuelgues
+          await delay(3000)
+        } else {
+          console.log('⛔ Saltando (es admin o ya salió):', id)
         }
       }
     } catch (e) {
-      console.error('❌ Error expulsando fantasmas:', e)
+      console.error('❌ Error durante expulsión:', e)
       await conn.reply(m.chat, '❌ Hubo un error al expulsar a algunos fantasmas.', m)
     } finally {
       chat.welcome = true
