@@ -18,14 +18,14 @@ let handler = async (m, { conn, args, participants }) => {
   const totalPages = Math.ceil(sorted.length / perPage)
 
   const iconos = ['👑', '🥈', '🥉']
-  let texto = `「✿」Los usuarios con más *¥ Yenes* son:\n\n`
+  let texto = `「✿」Los usuarios con más *¥ ${moneda}* son:\n\n`
 
   for (let i = start; i < Math.min(end, sorted.length); i++) {
     const { jid, coin = 0, bank = 0 } = sorted[i]
     const total = coin + bank
     const nombre = await conn.getName(jid)
     const icono = iconos[i] || '✰'
-    const yenes = `¥${total.toLocaleString()} Yenes`
+    const yenes = `¥${total.toLocaleString()} ${moneda}`
 
     texto += `${icono} ${i + 1} » *${nombre}:*\n`
     texto += `\t\t Total→ *${yenes}*\n`
