@@ -73,7 +73,7 @@ const handler = async (m, { conn, text, command }) => {
         audio: { url: res.result.download },
         mimetype: "audio/mpeg",
         fileName: res.result.title + ".mp3",
-        ptt: false
+        ptt:true
       }, { quoted: m });
 
       await m.react("🎶");
