@@ -79,23 +79,20 @@ const handler = async (m, { conn, text, command }) => {
       await m.react("🎶");
 
     } else if (command === "play2" || command === "playvid") {
-      const apiBase = "https://api.stellarwa.xyz/dow";
-      const resVideo = await fetch(`${apiBase}/ytmp4?url=${encodeURIComponent(video.url)}`);
-      const json = await resVideo.json();
+      const res = await ogmp3.download(video.url, '720', 'video');
 
-      if (!json.status || !json.data?.dl) {
-        const cause = json.message || "No se pudo descargar el video.";
-        return conn.reply(m.chat, `❌ Error de video:\n📛 *Causa:* ${cause}`, m, { contextInfo });
+      if (!res.status) {
+        return conn.reply(m.chat, `❌ Error de video:\n📛 *Causa:* ${res.error}`, m, { contextInfo });
       }
 
-      const head = await fetch(json.data.dl, { method: "HEAD" });
+      const head = await fetch(res.result.download, { method: "HEAD" });
       const sizeMB = parseInt(head.headers.get("content-length") || "0") / (1024 * 1024);
       const asDocument = sizeMB > SIZE_LIMIT_MB;
 
       await conn.sendMessage(m.chat, {
-        video: { url: json.data.dl },
+        video: { url: res.result.download },
         caption: `🎥 *Listo ${name}-chan!* Aquí está tu video~`,
-        fileName: json.data.title + ".mp4",
+        fileName: res.result.title + ".mp4",
         mimetype: "video/mp4"
       }, {
         quoted: m,
