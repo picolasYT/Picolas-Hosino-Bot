@@ -1,5 +1,6 @@
 import yts from "yt-search";
 import fetch from "node-fetch";
+import { ogmp3 } from '../lib/youtubedl.js';
 
 const SIZE_LIMIT_MB = 100;
 const newsletterJid = '120363335626706839@newsletter';
@@ -62,18 +63,16 @@ const handler = async (m, { conn, text, command }) => {
 
   try {
     if (command === "play") {
-      const resAudio = await fetch(`https://api.vreden.my.id/api/ytmp3?url=${encodeURIComponent(video.url)}`);
-      const json = await resAudio.json();
+      const res = await ogmp3.download(video.url, '320', 'audio');
 
-      if (!json?.status || !json.result?.download?.url) {
-        const cause = json.message || "No se pudo descargar el audio.";
-        return conn.reply(m.chat, `❌ Error de audio:\n📛 *Causa:* ${cause}`, m, { contextInfo });
+      if (!res.status) {
+        return conn.reply(m.chat, `❌ Error de audio:\n📛 *Causa:* ${res.error}`, m, { contextInfo });
       }
 
       await conn.sendMessage(m.chat, {
-        audio: { url: json.result.download.url },
+        audio: { url: res.result.download },
         mimetype: "audio/mpeg",
-        fileName: json.result.download.filename || (json.result.metadata?.title + ".mp3"),
+        fileName: res.result.title + ".mp3",
         ptt: false
       }, { quoted: m });
 
