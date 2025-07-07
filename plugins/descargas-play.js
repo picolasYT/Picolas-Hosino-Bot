@@ -63,7 +63,7 @@ const handler = async (m, { conn, text, command }) => {
 
   try {
     if (command === "play") {
-      const res = await ogmp3.download(video.url, '320', 'audio');
+      const res = await ogmp3.download(video.url, '480', 'audio');
 
       if (!res.status) {
         return conn.reply(m.chat, `❌ Error de audio:\n📛 *Causa:* ${res.error}`, m, { contextInfo });
