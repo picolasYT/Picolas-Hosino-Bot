@@ -571,29 +571,47 @@ if (!m.fromMe) return this.sendMessage(m.chat, { react: { text: emot, key: m.key
 function pickRandom(list) { return list[Math.floor(Math.random() * list.length)]}
 }}
 
-global.dfail = (type, m, conn) => {
-const msg = {
-rowner: '「👑」 *Esta función solo puede ser usada por mi creador*\n\n> Dioneibi.', 
-owner: '「👑」 *Esta función solo puede ser usada por mi desarrollador.', 
-premium: '「🍧」 *Esta función solo es para usuarios Premium.',  
-private: '「🍭」 *Esta función solo puede ser usada en chat privado.*', 
-admin: '「👑」 *Este comando solo puede ser usado por admins.*', 
-botAdmin: '「🚩」 *Para usar esta función debo ser admin.*', 
-unreg: '「🍟」 *¡Hey! no estas registrado, registrese para usar esta función*\n\n*/reg nombre.edad*\n\n*_❕ Ejemplo_* : */reg David.23*',
-restrict: '「💫」 *Esta característica esta desactivada.*'
-}[type];
-await conn.sendMessage(m.chat, { text: msg, contextInfo: global.rcanal }, { quoted: m });
-await m.react('✖️');
-let file = global.__filename(import.meta.url, true)
+global.dfail = async (type, m, conn) => {
+  const msg = {
+    rowner: '「👑」 *Esta función solo puede ser usada por mi creador*\n\n> Dioneibi.',
+    owner: '「👑」 *Esta función solo puede ser usada por mi desarrollador.*',
+    premium: '「🍧」 *Esta función solo es para usuarios Premium.*',
+    private: '「🍭」 *Esta función solo puede ser usada en chat privado.*',
+    admin: '「👑」 *Este comando solo puede ser usado por admins.*',
+    botAdmin: '「🚩」 *Para usar esta función debo ser admin.*',
+    unreg: '「🍟」 *¡Hey! no estás registrado, regístrate para usar esta función*\n\n*/reg nombre.edad*\n\n*_❕ Ejemplo_* : */reg David.23*',
+    restrict: '「💫」 *Esta característica está desactivada.*'
+  }[type];
+
+  if (msg) {
+    await conn.sendMessage(m.chat, {
+      text: msg,
+      contextInfo: global.rcanal.contextInfo
+    }, { quoted: m });
+
+    await m.react('✖️');
+  }
+};
+
+let file = global.__filename(import.meta.url, true);
 
 // NO TOCAR
 watchFile(file, async () => {
-unwatchFile(file);
-console.log(chalk.green('Actualizando "handler.js"'));
-// if (global.reloadHandler) console.log(await global.reloadHandler());
+  unwatchFile(file);
+  console.log(chalk.green('Actualizando "handler.js"'));
 
-if (global.conns && global.conns.length > 0 ) {
-const users = [...new Set([...global.conns.filter((conn) => conn.user && conn.ws.socket && conn.ws.socket.readyState !== ws.CLOSED).map((conn) => conn)])];
-for (const userr of users) {
-userr.subreloadHandler(false)
-}}});
+  if (global.conns && global.conns.length > 0) {
+    const users = [
+      ...new Set(
+        global.conns.filter(conn =>
+          conn.user &&
+          conn.ws.socket &&
+          conn.ws.socket.readyState !== ws.CLOSED
+        )
+      )
+    ];
+    for (const userr of users) {
+      userr.subreloadHandler(false);
+    }
+  }
+});
