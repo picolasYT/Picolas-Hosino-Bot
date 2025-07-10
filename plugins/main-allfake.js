@@ -150,7 +150,7 @@ global.rcanal = {
       title: textbot,
       body: '𝐥𝐚 𝐢𝐝𝐨𝐥 𝐪𝐮𝐞 𝐭𝐞 𝐢𝐥𝐮𝐦𝐢𝐧𝐚𝐫𝐚́',
       sourceUrl: redes,
-      thumbnailUrl: icons
+      thumbnailUrl: icono
     }
   }
 };
