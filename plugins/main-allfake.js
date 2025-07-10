@@ -131,23 +131,33 @@ switch(hour){
 }
 global.saludo = hour
 
-//tags
-global.nombre = m.pushName || 'Anónimo'
-global.taguser = '@' + m.sender.split("@")[0]
-var more = String.fromCharCode(8206)
-global.readMore = more.repeat(850)
+// Etiquetas globales
+global.nombre = m.pushName || 'Anónimo';
+global.taguser = '@' + m.sender.split("@")[0];
 
+var more = String.fromCharCode(8206);
+global.readMore = more.repeat(850);
+
+// Paquete de sticker personalizado
 global.packsticker = `⏜͜⌒᳝︵໋۪۪۪۪۪᳝֔࣪⡳۟︵໋۪۪۪᳝֔࣪⌒꒰🍥꒱︵᳝࣪⡳۪۟︵໋۪۪۪᳝֔⌒⏜
-⌯⃝⃕ 🧸 𝐩𝐫𝐨𝐩𝐢𝐞𝐝𝐚𝐝 𝐝𝐞 ${nombre}
+⌯⃝⃕ 🧸 𝐩𝐫𝐨𝐩𝐢𝐞𝐝𝐚𝐝 𝐝𝐞 ${global.nombre}
 
- 𑁯ᰰᘘ᷒ᰰ ༝⃟ꪆ 𝙂𝘼𝙔 𝙎𝙄 𝙇𝙊 𝙍𝙊𝘽𝘼𝙎 ༝⃟ꪆ ᘘ᷒ᰰ𑁯`;
+𑁯ᰰᘘ᷒ᰰ ༝⃟ꪆ 𝙂𝘼𝙔 𝙎𝙄 𝙇𝙊 𝙍𝙊𝘽𝘼𝙎 ༝⃟ꪆ ᘘ᷒ᰰ𑁯`;
 
-global.rcanal = {contextInfo: {forwardingScore: 2025, isForwarded: true, externalAdReply: {title: textbot, body: '𝐥𝐚 𝐢𝐝𝐨𝐥 𝐪𝐮𝐞 𝐭𝐞 𝐢𝐥𝐮𝐦𝐢𝐧𝐚𝐫𝐚́', sourceUrl: redes, thumbnailUrl: icono}}}
-    },
+
+global.rcanal = {
+  contextInfo: {
+    forwardingScore: 2025,
+    isForwarded: true,
+    externalAdReply: {
+      title: textbot,
+      body: '𝐥𝐚 𝐢𝐝𝐨𝐥 𝐪𝐮𝐞 𝐭𝐞 𝐢𝐥𝐮𝐦𝐢𝐧𝐚𝐫𝐚́',
+      sourceUrl: redes,
+      thumbnailUrl: icono
+    }
   }
-}
+};
 
-}
 
 export default handler
 
