@@ -573,16 +573,14 @@ function pickRandom(list) { return list[Math.floor(Math.random() * list.length)]
 
 global.dfail = (type, m, conn) => {
 const msg = {
-  rowner: '「🌺」 *Gomenasai~! Esta función solo la puede usar mi creador celestial...* 🌌\n\n> *Dioneibi-sama.*',
-  owner: '「🌸」 *¡Nyaa~! Solo mi creador y programadores pueden usar este comando~!* 💾💕',
-  mods: '「🌟」 *Uguu~ Esto eso solo lo pueden usar mis desarrolladores mágicos~!* 🔮',
-  premium: '「🍡」 *Ehh~? Esta función es exclusiva para usuarios Premium-desu~!* ✨\n\n💫 *¿No eres premium aún? Consíguelo ahora usando:*\n> ✨ *.comprarpremium 2 dias*  (o reemplaza "2 dias" por la cantidad que desees).',
-  group: '「🐾」 *¡Onii-chan~! Este comando solo puede usarse en grupos grupales~!* 👥',
-  private: '「🎀」 *Shh~ Este comando es solo para ti y para mí, en privado~* 💌',
-  admin: '「🧸」 *¡Kyah~! Solo los admin-senpai pueden usar esta habilidad~!* 🛡️',
-  botAdmin: '「🔧」 *¡Espera! Necesito ser admin para que este comando funcione correctamente.*\n\n🔧 *Hazme admin y desataré todo mi poder~*',
-  unreg: `🍥 𝑶𝒉 𝒏𝒐~! *¡Aún no estás registrado~!* 😿\nNecesito conocerte para que uses mis comandos~ ✨\n\n📝 Por favor regístrate con:\n» */reg nombre.edad*\n\n🎶 Ejemplo encantado:\n» */reg Dioneibi-kun.15*\n\n💖 ¡Así podré reconocerte, nya~!*`,
-  restrict: '「📵」 *¡Ouh~! Esta función está dormida por ahora~* 💤'
+rowner: '「👑」 *Esta función solo puede ser usada por mi creador*\n\n> Dioneibi.', 
+owner: '「👑」 *Esta función solo puede ser usada por mi desarrollador.', 
+premium: '「🍧」 *Esta función solo es para usuarios Premium.',  
+private: '「🍭」 *Esta función solo puede ser usada en chat privado.*', 
+admin: '「👑」 *Este comando solo puede ser usado por admins.*', 
+botAdmin: '「🚩」 *Para usar esta función debo ser admin.*', 
+unreg: '「🍟」 *¡Hey! no estas registrado, registrese para usar esta función*\n\n*/reg nombre.edad*\n\n*_❕ Ejemplo_* : */reg David.23*',
+restrict: '「💫」 *Esta característica esta desactivada.*'
 }[type];
 if (msg) return conn.reply(m.chat, msg, m, rcanal).then(_ => m.react('✖️'))}
 let file = global.__filename(import.meta.url, true)
