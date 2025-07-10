@@ -572,6 +572,8 @@ if (!m.fromMe) return this.sendMessage(m.chat, { react: { text: emot, key: m.key
 function pickRandom(list) { return list[Math.floor(Math.random() * list.length)]}
 }}
 
+
+// Función dfail global
 global.dfail = async (type, m, conn) => {
   const msg = {
     rowner: '「👑」 *Esta función solo puede ser usada por mi creador*\n\n> Dioneibi.',
@@ -586,20 +588,29 @@ global.dfail = async (type, m, conn) => {
 
   if (msg) {
     await conn.sendMessage(m.chat, {
-      text: msg,
-      contextInfo: global.rcanal.contextInfo
+      image: { url: global.icono },
+      caption: msg,
+      contextInfo: {
+        externalAdReply: {
+          title: global.textbot,
+          body: '𝐥𝐚 𝐢𝐝𝐨𝐥 𝐪𝐮𝐞 𝐭𝐞 𝐢𝐥𝐮𝐦𝐢𝐧𝐚𝐫𝐚́',
+          thumbnailUrl: global.icono,
+          sourceUrl: global.redes,
+          mediaType: 1,
+          showAdAttribution: true
+        }
+      }
     }, { quoted: m });
 
     await m.react('✖️');
   }
 };
 
+// Auto recarga para hot reload
 let file = global.__filename(import.meta.url, true);
-
-// NO TOCAR
 watchFile(file, async () => {
   unwatchFile(file);
-  console.log(chalk.green('Actualizando "handler.js"'));
+  console.log(chalk.green('✅ Se ha actualizado "dfail" automáticamente.'));
 
   if (global.conns && global.conns.length > 0) {
     const users = [
