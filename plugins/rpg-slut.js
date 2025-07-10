@@ -17,7 +17,7 @@ let handler = async (m, { conn }) => {
   let targetId = Object.keys(users).filter(u => u !== senderId)[Math.floor(Math.random() * (Object.keys(users).length - 1))]
   let targetCoin = users[targetId].coin || 0
 
-  const ganar = Math.random() < 0.7 // 60% de ganar
+  const ganar = Math.random() < 0.8 // 60% de ganar
   const monto = Math.floor(Math.random() * (10000 - 1000 + 1)) + 1000
 
   const frasesGanancia = [
