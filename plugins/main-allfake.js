@@ -142,25 +142,7 @@ global.packsticker = `⏜͜⌒᳝︵໋۪۪۪۪۪᳝֔࣪⡳۟︵໋۪۪۪᳝֔�
 
  𑁯ᰰᘘ᷒ᰰ ༝⃟ꪆ 𝙂𝘼𝙔 𝙎𝙄 𝙇𝙊 𝙍𝙊𝘽𝘼𝙎 ༝⃟ꪆ ᘘ᷒ᰰ𑁯`;
 
-global.rcanal = {
-  contextInfo: {
-    isForwarded: true,
-    forwardedNewsletterMessageInfo: {
-      newsletterJid: channelRD.id,
-      serverMessageId: 100,
-      newsletterName: channelRD.name,
-    },
-    externalAdReply: {
-      showAdAttribution: true,
-      title: botname,
-      body: dev,
-      mediaUrl: null,
-      description: null,
-      previewType: "PHOTO",
-      thumbnail: global.icono,
-      sourceUrl: global.redes,
-      mediaType: 1,
-      renderLargerThumbnail: false
+global.rcanal = {contextInfo: {forwardingScore: 2025, isForwarded: true, externalAdReply: {title: textbot, body: '𝐥𝐚 𝐢𝐝𝐨𝐥 𝐪𝐮𝐞 𝐭𝐞 𝐢𝐥𝐮𝐦𝐢𝐧𝐚𝐫𝐚́', sourceUrl: redes, thumbnailUrl: icono}}}
     },
   }
 }
