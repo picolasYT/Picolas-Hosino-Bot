@@ -131,35 +131,45 @@ switch(hour){
 }
 global.saludo = hour
 
-// tags
-global.nombre = m.pushName || 'Anónimo';
-global.taguser = '@' + m.sender.split("@")[0];
-var more = String.fromCharCode(8206);
-global.readMore = more.repeat(850);
+//tags
+global.nombre = m.pushName || 'Anónimo'
+global.taguser = '@' + m.sender.split("@")[0]
+var more = String.fromCharCode(8206)
+global.readMore = more.repeat(850)
 
-global.packsticker = `⏜͜⌒᳝︵໋۪۪۪۪۪᳝֔࣪⡳۟︵໋۪۪۪᳝֔࣪⌒꒰🍥꒱︵᳝࣪⡳۪۟︵໋۪۪۪᳝֔⌒⏜
-⌯⃝⃕ 🧸 𝐩𝐫𝐨𝐩𝐢𝐞𝐝𝐚𝐝 𝐝𝐞 ${nombre}
+global.packsticker = `°.⎯⃘̶⎯̸⎯ܴ⎯̶᳞͇ࠝ⎯⃘̶⎯̸⎯ܴ⎯̶᳞͇ࠝ⎯⃘̶⎯̸.°\nᰔᩚ Usuario: ${nombre}\n❀ Bot: ${botname}\n✦ Fecha: ${fecha}\nⴵ Hora: ${tiempo}`;
 
-𑁯ᰰᘘ᷒ᰰ ༝⃟ꪆ 𝙂𝘼𝙔 𝙎𝙄 𝙇𝙊 𝙍𝙊𝘽𝘼𝙎 ༝⃟ꪆ ᘘ᷒ᰰ𑁯`;
-
+// rcanaɭ con icono como buffer
 global.rcanal = {
   contextInfo: {
-    forwardingScore: 2025,
     isForwarded: true,
+    forwardedNewsletterMessageInfo: {
+      newsletterJid: channelRD.id,
+      serverMessageId: 100,
+      newsletterName: channelRD.name,
+    },
     externalAdReply: {
-      title: textbot,
-      body: '𝐥𝐚 𝐢𝐝𝐨𝐥 𝐪𝐮𝐞 𝐭𝐞 𝐢𝐥𝐮𝐦𝐢𝐧𝐚𝐫𝐚́',
-      sourceUrl: redes,
-      thumbnailUrl: icono
-    }
+      showAdAttribution: true,
+      title: botname,
+      body: dev,
+      mediaUrl: null,
+      description: null,
+      previewType: "PHOTO",
+      thumbnail: global.icono,
+      sourceUrl: global.redes,
+      mediaType: 1,
+      renderLargerThumbnail: false
+    },
   }
-};
+}
 
-export default handler;
+}
+
+export default handler
 
 async function getRandomChannel() {
-  let randomIndex = Math.floor(Math.random() * canalIdM.length);
-  let id = canalIdM[randomIndex];
-  let name = canalNombreM[randomIndex];
-  return { id, name };
+  let randomIndex = Math.floor(Math.random() * canalIdM.length)
+  let id = canalIdM[randomIndex]
+  let name = canalNombreM[randomIndex]
+  return { id, name }
 }
