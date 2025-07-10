@@ -25,7 +25,7 @@ let handler = async (m, { conn }) => {
   const rand = Math.random()
   const jailChance = 0.1
   const failChance = 0.3
-  const successChance = 0.7
+  const successChance = 0.8
 
   if (rand < jailChance) {
     jail[senderId] = Date.now() + jailCooldown
