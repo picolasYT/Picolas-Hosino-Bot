@@ -582,7 +582,8 @@ botAdmin: '「🚩」 *Para usar esta función debo ser admin.*',
 unreg: '「🍟」 *¡Hey! no estas registrado, registrese para usar esta función*\n\n*/reg nombre.edad*\n\n*_❕ Ejemplo_* : */reg David.23*',
 restrict: '「💫」 *Esta característica esta desactivada.*'
 }[type];
-if (msg) return conn.reply(m.chat, msg, m, rcanal).then(_ => m.react('✖️'))}
+await conn.sendMessage(m.chat, { text: msg, contextInfo: global.rcanal }, { quoted: m });
+await m.react('✖️');
 let file = global.__filename(import.meta.url, true)
 
 // NO TOCAR
