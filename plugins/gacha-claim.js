@@ -5,7 +5,6 @@ const claimMsgFile = './src/database/userClaimConfig.json';
 
 const cooldowns = {};
 
-// ─── FUNCIONES DE CARGA ──────
 async function loadCharacters() {
     const data = await fs.readFile(charactersFilePath, 'utf-8');
     return JSON.parse(data);
@@ -20,21 +19,19 @@ async function loadClaimMessages() {
         const data = await fs.readFile(claimMsgFile, 'utf-8');
         return JSON.parse(data);
     } catch {
-        return {}; // por defecto vacío si no existe
+        return {};
     }
 }
 
-// ─── OBTENER MENSAJE PERSONALIZADO ──────
 async function getCustomClaimMessage(userId, username, characterName) {
     const messages = await loadClaimMessages();
-    const template = messages[userId] || '✧ $user ha reclamado a $character ✦';
+    const template = messages[userId] || '✧ *$user* ha reclamado a *$character* ✦';
 
     return template
         .replace(/\$user/g, username)
         .replace(/\$character/g, characterName);
 }
 
-// ─── HANDLER PRINCIPAL ──────
 let handler = async (m, { conn }) => {
     const userId = m.sender;
     const now = Date.now();
@@ -68,12 +65,10 @@ let handler = async (m, { conn }) => {
                 { mentions: [character.user] });
         }
 
-        // Reclamar personaje
         character.user = userId;
         character.status = 'Reclamado';
         await saveCharacters(characters);
 
-        // Mensaje personalizado
         const username = await conn.getName(userId);
         const mensajeFinal = await getCustomClaimMessage(userId, username, character.name);
 
