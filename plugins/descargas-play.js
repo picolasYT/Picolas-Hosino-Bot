@@ -79,8 +79,8 @@ const handler = async (m, { conn, text, command }) => {
       await m.react("🎶");
 
     } else if (command === "play2" || command === "playvid") {
-      const apiBase = "https://api.stellarwa.xyz/dow";
-      const resVideo = await fetch(`${apiBase}/ytmp4?url=${encodeURIComponent(video.url)}&apikey=Stellar`);
+      const apiBase = "https://api.vreden.my.id/api";
+      const resVideo = await fetch(`${apiBase}/ytmp4?url=${encodeURIComponent(video.url)}`);
       const json = await resVideo.json();
 
       if (!json.status || !json.data?.dl) {
