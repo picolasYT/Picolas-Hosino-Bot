@@ -80,7 +80,7 @@ const handler = async (m, { conn, text, command }) => {
 
     } else if (command === "play2" || command === "playvid") {
       const apiBase = "https://api.stellarwa.xyz/dow";
-      const resVideo = await fetch(`${apiBase}/ytmp4?url=${encodeURIComponent(video.url)}`);
+      const resVideo = await fetch(`${apiBase}/ytmp4?url=${encodeURIComponent(video.url)}&apikey=Stellar`);
       const json = await resVideo.json();
 
       if (!json.status || !json.data?.dl) {
