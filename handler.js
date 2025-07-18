@@ -189,6 +189,8 @@ if (!('antiImg' in chat))
 chat.antiImg = false
 if (!('reaction' in chat))
 chat.reaction = false
+if (!('antiArabe' in chat))
+chat.antiArabe = false
 if (!('nsfw' in chat))
 chat.nsfw = false
 if (!('antifake' in chat))
