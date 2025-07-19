@@ -449,7 +449,7 @@ fail('group', m, this)
 continue
 }
 if (plugin.register == true && _user.registered == false) { 
-fail('unreg', m, this)
+await fail('unreg', m, this)
 continue
 }
 m.isCommand = true
