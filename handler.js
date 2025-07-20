@@ -590,7 +590,7 @@ global.dfail = (type, m, conn) => {
   unreg: `🍥 𝑶𝒉 𝒏𝒐~! *¡Aún no estás registrado~!* 😿\nNecesito conocerte para que uses mis comandos~ ✨\n\n📝 Por favor regístrate con:\n» */reg nombre.edad*\n\n🎶 Ejemplo encantado:\n» */reg Dioneibi-kun.15*\n\n💖 ¡Así podré reconocerte, nya~!*`,
   restrict: '「📵」 *¡Ouh~! Esta función está dormida por ahora~* 💤'
 }[type];
-if (msg) return conn.reply(m.chat, msg, m, m rcanal).then(_ => m.react('✖️'))}
+if (msg) return conn.reply(m.chat, msg, m).then(_ => m.react('✖️'))}
 const file = global.__filename(import.meta.url, true);
 
 // NO TOCAR
