@@ -1,5 +1,6 @@
 import yts from "yt-search";
 const limit = 100;
+let name = await conn.getName(userId);
 const handler = async (m, { conn, text, command }) => {
   if (!text) return m.reply("🌸 *Konnichiwa ${name}-chan~!* Necesito que me digas el nombre de un video o me pegues el link de YouTube 💕\n\n✨ *Ejemplos:*\n.play Shinzou wo Sasageyo\n.play https://youtu.be/xxx");
   m.react("♥")
