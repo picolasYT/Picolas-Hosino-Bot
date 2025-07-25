@@ -1,76 +1,110 @@
 import yts from "yt-search";
 import fetch from "node-fetch";
+import { ogmp3 } from '../lib/youtubedl.js';
 
-const limit = 100;
+const SIZE_LIMIT_MB = 100;
+const newsletterJid = '120363335626706839@newsletter';
+const newsletterName = '⏤‏⃪ً፝͟͞⁡⁎⊡『 Ruby-Hoshino-Channel 』༿⊡';
 
 const handler = async (m, { conn, text, command }) => {
-  const name = await conn.getName(m.sender);
+  const name = conn.getName(m.sender);
+  const contextInfo = {
+    mentionedJid: [m.sender],
+    isForwarded: true,
+    forwardingScore: 999,
+    forwardedNewsletterMessageInfo: {
+      newsletterJid,
+      newsletterName,
+      serverMessageId: -1
+    },
+    externalAdReply: {
+      title: packname,
+      body: "🎿 Ruby Hoshino Downloader",
+      thumbnail: icons,
+      sourceUrl: redes,
+      mediaType: 1,
+      renderLargerThumbnail: false
+    }
+  };
 
   if (!text) {
-    return m.reply(`🌸 *Konnichiwa ${name}-chan~!* Necesito que me digas el nombre de un video o me pegues el link de YouTube 💕\n\n✨ *Ejemplos:*\n${command} Shinzou wo Sasageyo\n${command} https://youtu.be/xxx`);
+    return conn.reply(m.chat,
+      `🌸 *Konnichiwa ${name}-chan~!* Necesito que me digas el nombre de un video o me pegues el link de YouTube 💕\n\n✨ *Ejemplos:*\n.play Shinzou wo Sasageyo\n.play https://youtu.be/xxx`,
+      m, { contextInfo });
   }
 
-  await m.react("💖");
+  await m.react("🕝");
 
-  let res = await yts(text);
-  if (!res?.all?.length) return m.reply("💔 No se encontraron resultados para tu búsqueda.");
+  const search = await yts(text);
+  if (!search?.all || search.all.length === 0) {
+    return conn.reply(m.chat, `💦 *Gomen ne, no encontré nada con:* "${text}"`, m, { contextInfo });
+  }
 
-  const video = res.all[0];
+  const video = search.all[0];
 
-  const cap = `
-╭── ❍⃟💛 𝙍𝙪𝙗𝙮 - 𝙋𝙡𝙖𝙮 💛 ❍⃟──
-│ 💮 *Título:* ${video.title}
-│ 💮 *Duración:* ${video.duration?.timestamp || 'Desconocida'}
-│ 💮 *Vistas:* ${video.views.toLocaleString()}
-│ 💮 *Autor:* ${video.author.name}
-│ 💮 *URL:* ${video.url}
-╰───────────────💗
-`;
+  const caption = `
+> 🍓 *Título:* ${video.title}
+> 📏 *Duración:* ${video.duration.timestamp}
+> 👁️ *Vistas:*  ${video.views.toLocaleString()}
+> 🎨 *Autor:* ${video.author.name}
+> 📍 *URL:* ${video.url}`.trim();
+
+  await conn.sendMessage(m.chat, {
+    image: { url: video.thumbnail },
+    caption,
+    contextInfo
+  }, { quoted: m });
 
   try {
-    const thumbRes = await fetch(video.thumbnail);
-    const thumbBuffer = Buffer.from(await thumbRes.arrayBuffer());
-    await conn.sendFile(m.chat, thumbBuffer, "thumb.jpg", cap, m);
-  } catch (e) {
-    await m.reply("⚠️ No se pudo cargar la miniatura.");
-  }
+    if (command === "play") {
+      const res = await ogmp3.download(video.url, '320', 'audio');
 
-  if (command === "play") {
-    try {
-      const api = await fetch(`https://dark-core-api.vercel.app/api/download/YTMP3?key=api&url=${encodeURIComponent(video.url)}`).then(res => res.json());
-      if (!api.status || !api.download) throw new Error("La API no devolvió un audio válido.");
+      if (!res.status) {
+        return conn.reply(m.chat, `❌ Error de audio:\n📋 *Causa:* ${res.error}`, m, { contextInfo });
+      }
 
-      await conn.sendFile(m.chat, api.download, `${api.title || video.title}.mp3`, "", m);
-      await m.react("✨");
-    } catch (error) {
-      await m.react("❌");
-      return m.reply("❌ Error descargando audio:\n" + error.message);
-    }
-  } else if (command === "play2" || command === "playvid") {
-    try {
-      const api = await fetch(`https://api.stellarwa.xyz/dow/ytmp4?url=${video.url}&apikey=stellar-o7UYR5SC`).then(res => res.json());
-      if (!api.status || !api.data?.dl) throw new Error("La API no devolvió un video válido.");
+      await conn.sendMessage(m.chat, {
+        audio: { url: res.result.download },
+        mimetype: "audio/mpeg",
+        fileName: res.result.title + ".mp3",
+        ptt: true
+      }, { quoted: m });
 
-      const dl = api.data.dl;
-      const head = await fetch(dl, { method: "HEAD" });
-      const size = parseInt(head.headers.get("content-length") || "0");
-      const isLarge = size / (1024 * 1024) >= limit;
+      await m.react("🎶");
 
-      await conn.sendFile(m.chat, dl, `${video.title}.mp4`, "", m, null, {
-        asDocument: isLarge,
-        mimetype: "video/mp4",
+    } else if (command === "play2" || command === "playvid") {
+      const res = await ogmp3.download(video.url, '720', 'video');
+
+      if (!res.status) {
+        return conn.reply(m.chat, `❌ Error de video:\n📋 *Causa:* ${res.error}`, m, { contextInfo });
+      }
+
+      const head = await fetch(res.result.download, { method: "HEAD" });
+      const sizeMB = parseInt(head.headers.get("content-length") || "0") / (1024 * 1024);
+      const asDocument = sizeMB > SIZE_LIMIT_MB;
+
+      await conn.sendMessage(m.chat, {
+        video: { url: res.result.download },
+        caption: `🎥 *Listo ${name}-chan!* Aquí está tu video~`,
+        fileName: res.result.title + ".mp4",
+        mimetype: "video/mp4"
+      }, {
+        quoted: m,
+        ...(asDocument ? { asDocument: true } : {})
       });
 
-      await m.react("✨");
-    } catch (error) {
-      await m.react("❌");
-      return m.reply("❌ Error descargando video:\n" + error.message);
+      await m.react("🎥");
     }
+  } catch (e) {
+    console.error(e);
+    return conn.reply(m.chat, `❌ Error inesperado:\n\`\`\`${e.message}\`\`\``, m, { contextInfo });
   }
 };
 
-handler.help = ["play", "play2"];
-handler.tags = ["downloader"];
+handler.help = ["play", "play2", "playvid"];
+handler.tags = ["descargas"];
 handler.command = ["play", "play2", "playvid"];
+handler.register = true;
+handler.limit = true;
 
 export default handler;
