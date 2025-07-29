@@ -261,13 +261,6 @@ let _user = global.db.data && global.db.data.users && global.db.data.users[m.sen
 const groupMetadata = (m.isGroup ? ((conn.chats[m.chat] || {}).metadata || await this.groupMetadata(m.chat).catch(_ => null)) : {}) || {}
 const participants = (m.isGroup ? groupMetadata.participants : []) || []
 
-if (m.isGroup) {
-  let chat = global.db.data.chats[m.chat];
-  if (chat?.primaryBot && this?.user?.jid !== chat.primaryBot) {
-    return; 
-  }
-}
-
 const senderNum = normalizeJid(m.sender)
 const botNums = [this.user.jid, this.user.lid].map(j => normalizeJid(cleanJid(j)))
 const user = m.isGroup 
