@@ -28,11 +28,6 @@ let m = chatUpdate.messages[chatUpdate.messages.length - 1]
 if (!m)
 return
 
-if (m.isGroup && global.conns && global.conns.length > 1) {
-    let botsEnGrupo = global.conns.filter(c => c.user && c.user.jid && c.ws && c.ws.socket && c.ws.socket.readyState !== 3)
-    let elegido = botsEnGrupo[Math.floor(Math.random() * botsEnGrupo.length)]
-    if (this.user.jid !== elegido.user.jid) return
-}
 
 if (global.db.data == null)
 await global.loadDatabase()       
@@ -265,6 +260,13 @@ let _user = global.db.data && global.db.data.users && global.db.data.users[m.sen
 
 const groupMetadata = (m.isGroup ? ((conn.chats[m.chat] || {}).metadata || await this.groupMetadata(m.chat).catch(_ => null)) : {}) || {}
 const participants = (m.isGroup ? groupMetadata.participants : []) || []
+
+if (m.isGroup) {
+  let chat = global.db.data.chats[m.chat];
+  if (chat?.primaryBot && this?.user?.jid !== chat.primaryBot) {
+    return; 
+  }
+}
 
 const senderNum = normalizeJid(m.sender)
 const botNums = [this.user.jid, this.user.lid].map(j => normalizeJid(cleanJid(j)))
