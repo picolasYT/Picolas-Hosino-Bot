@@ -3,6 +3,7 @@ import './settings.js'
 import { setupMaster, fork } from 'cluster'
 import { watchFile, unwatchFile } from 'fs'
 import cfonts from 'cfonts'
+const { KeepAlive } = require("./keep_alive")
 import {createRequire} from 'module'
 import {fileURLToPath, pathToFileURL} from 'url'
 import {platform} from 'process'
