@@ -42,55 +42,35 @@ var handler = async (m, { conn, args, usedPrefix, command }) => {
     );
 
     const url = args[0];
-    const apiUrl = `https://api.vreden.my.id/api/ytmp3?url=${encodeURIComponent(url)}`;
-    const res     = await fetch(apiUrl);
-    const json    = await res.json();
+    const apiUrl = `https://dark-core-api.vercel.app/api/download/YTMP3?key=api&url=${encodeURIComponent(url)}`;
+    const res = await fetch(apiUrl);
+    const json = await res.json();
 
-    if (json.status !== 200 || !json.result?.download?.url) {
+    if (!json.status || !json.download) {
       return conn.reply(
         m.chat,
-        `❌ *No pude descargar el audio.*\nRazón: ${json.message || 'Respuesta inválida.'}`,
+        `❌ *No pude descargar el audio.*\nRazón: ${json.message || 'Respuesta inválida de la API.'}`,
         m,
         { contextInfo, quoted: m }
       );
     }
 
-    // Metadata
-    const meta = json.result.metadata;
-    const title       = meta.title;
-    const description = meta.description;
-    const timestamp   = meta.timestamp;
-    const views       = meta.views.toLocaleString();
-    const ago         = meta.ago;
-    const authorName  = meta.author?.name || 'Desconocido';
-    // Download info
-    const downloadURL = json.result.download.url;
-    const quality     = json.result.download.quality;
-    const filename    = json.result.download.filename;
-
-    const audioRes    = await fetch(downloadURL);
+    const audioRes = await fetch(json.download);
     const audioBuffer = await audioRes.buffer();
 
-    // Caption con separadores
     const caption = `
 ╭───[ 𝚈𝚃𝙼𝙿𝟹 • 🎶 ]───⬣
-📌 *Título:* ${title}
-👤 *Autor:* ${authorName}
-⏱️ *Duración:* ${timestamp}
-📅 *Publicado:* ${ago}
-👁️ *Vistas:* ${views}
-🎚️ *Calidad:* ${quality}
-📄 *Descripción:*
-${description}
+📌 *Título:* ${json.title}
+📁 *Formato:* ${json.format}
+📎 *Fuente:* ${url}
 ╰────────────────⬣`;
 
-    // Enviar audio
     await conn.sendMessage(
       m.chat,
       {
         audio: audioBuffer,
         mimetype: 'audio/mpeg',
-        fileName: filename,
+        fileName: `${json.title}.mp3`,
         ptt: false,
         caption
       },
