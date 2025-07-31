@@ -8,7 +8,7 @@ return conn.reply(m.chat, `${emoji} Utiliza este comando directamente en el núm
 }
 
 let chatId = m.isGroup ? [m.chat, m.sender] : [m.sender]
-let sessionPath = `./${sessions}/`
+let sessionPath = `./${Rubysessions}/`
 
 try {
 
