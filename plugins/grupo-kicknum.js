@@ -1,54 +1,74 @@
 const handler = async (m, { conn, args, groupMetadata, participants, usedPrefix, command, isBotAdmin }) => {
-  const emoji = '🍒';
-  const emoji2 = '⚠️';
+  const emoji = '📛';
+  const emoji2 = '🚫';
 
-  if (!args[0]) return conn.reply(m.chat, `${emoji} Debes ingresar un *prefijo de país*.\nEjemplo: *${usedPrefix + command} 212*`, m);
-  if (isNaN(args[0])) return conn.reply(m.chat, `${emoji2} El prefijo debe ser numérico.\nEjemplo: *${usedPrefix + command} 51*`, m);
+  if (!args[0]) {
+    return conn.reply(m.chat, `${emoji} Debes ingresar el prefijo de un país.\nEjemplo: *${usedPrefix + command} 212*`, m);
+  }
 
-  const prefix = args[0].replace(/[+]/g, '');
+  if (isNaN(args[0])) {
+    return conn.reply(m.chat, `${emoji} El prefijo debe ser numérico.`, m);
+  }
 
-  const filteredUsers = participants
-    .map(p => p.id)
-    .filter(id => id && id.includes(prefix) && !id.includes(conn.user.jid));
+  const prefix = args[0].replace(/\D+/g, ''); // Elimina todo lo que no sea número
+  const allParticipants = participants.map(p => p.id);
 
-  if (!filteredUsers.length) return conn.reply(m.chat, `${emoji2} No se encontraron números con el prefijo +${prefix} en este grupo.`, m);
+  // Filtra participantes que empiezan con el prefijo
+  const filtered = allParticipants.filter(jid => jid.startsWith(prefix) && jid.endsWith('@s.whatsapp.net') && jid !== conn.user.jid);
 
-  const userList = filteredUsers.map(u => '⭔ @' + u.split('@')[0]).join('\n');
-  const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+  if (!filtered.length) {
+    return conn.reply(m.chat, `${emoji2} No se encontraron números con el prefijo *+${prefix}* en este grupo.`, m);
+  }
 
-  if (command === 'listnum' || command === 'listanum') {
-    return conn.reply(m.chat, `${emoji} *Números encontrados con el prefijo +${prefix}:*\n\n${userList}`, m, { mentions: filteredUsers });
+  const mentionList = filtered.map(id => '@' + id.split('@')[0]);
+
+  if (command === 'listanum' || command === 'listnum') {
+    return conn.reply(
+      m.chat,
+      `📋 *Números con el prefijo +${prefix} detectados:*\n\n${mentionList.join('\n')}`,
+      m,
+      { mentions: filtered }
+    );
   }
 
   if (command === 'kicknum') {
-    const botSettings = global.db.data.settings[conn.user.jid] || {};
-    if (!botSettings.restrict) return conn.reply(m.chat, `${emoji2} El comando está deshabilitado por el propietario del bot.`, m);
+    const settings = global.db.data.settings[conn.user.jid] || {};
+    if (!settings.restrict) {
+      return conn.reply(m.chat, `${emoji} Este comando está deshabilitado por el propietario del bot.`, m);
+    }
 
-    await conn.reply(m.chat, `🍂 Eliminando usuarios con prefijo +${prefix}...`, m);
-    
-    const groupOwner = groupMetadata.owner || '';
-    for (const user of filteredUsers) {
-      if ([groupOwner, conn.user.jid, global.owner + '@s.whatsapp.net'].includes(user)) continue;
-      try {
-        await delay(2000);
-        const res = await conn.groupParticipantsUpdate(m.chat, [user], 'remove');
-        if (res[0]?.status === '404') {
-          const errText = `@${user.split('@')[0]} ya no está en el grupo.`;
-          conn.reply(m.chat, errText, m, { mentions: [user] });
+    if (!isBotAdmin) {
+      return conn.reply(m.chat, `${emoji2} El bot no tiene permisos de administrador.`, m);
+    }
+
+    await conn.reply(m.chat, `☁️ Eliminando miembros con prefijo *+${prefix}*...`, m);
+
+    const ownerGroup = groupMetadata.owner || '';
+
+    for (const user of filtered) {
+      if (
+        user !== conn.user.jid &&
+        user !== ownerGroup &&
+        !global.owner.includes(user.split('@')[0])
+      ) {
+        try {
+          await conn.groupParticipantsUpdate(m.chat, [user], 'remove');
+          await new Promise(res => setTimeout(res, 5000)); // Espera 5s entre expulsiones
+        } catch (e) {
+          conn.reply(m.chat, `❌ No se pudo eliminar a @${user.split('@')[0]}`, m, {
+            mentions: [user]
+          });
         }
-        await delay(5000);
-      } catch (err) {
-        console.error(err);
-        conn.reply(m.chat, `❌ Error al eliminar a @${user.split('@')[0]}.`, m, { mentions: [user] });
       }
     }
+
+    return conn.reply(m.chat, `✅ Finalizado. Usuarios con prefijo *+${prefix}* fueron procesados.`, m);
   }
 };
 
 handler.command = ['kicknum', 'listnum', 'listanum'];
 handler.group = true;
-handler.botAdmin = true;
 handler.admin = true;
-handler.fail = null;
+handler.botAdmin = true;
 
 export default handler;
