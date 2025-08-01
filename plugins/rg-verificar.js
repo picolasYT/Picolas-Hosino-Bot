@@ -5,7 +5,7 @@ const REGEX_REGISTRO = /\|?\s*([^.]+)\s*\.\s*(\d+)\s*$/i
 let handler = async function (m, { conn, text, usedPrefix, command }) {
     const user = global.db.data.users[m.sender]
     const nombreUsuario = conn.getName(m.sender)
-    const imagen_url_registro = 'https://qu.ax/FGSG.jpg'
+    const imagen_url_registro = 'https://files.catbox.moe/ittzuq.webp'
 
     if (user.registered === true) {
         const mensajeYaRegistrado = `🌟 ¡Ya brillas en nuestra comunidad! 🌟\n\nNo es necesario que te registres de nuevo. Si quieres empezar de cero, puedes usar el comando:\n*${usedPrefix}unreg*`
