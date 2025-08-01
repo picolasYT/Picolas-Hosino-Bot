@@ -1,34 +1,51 @@
-const handler = async (m, {conn, args, groupMetadata, participants, usedPrefix, command, isBotAdmin, isSuperAdmin}) => {
-  if (!args[0]) return conn.reply(m.chat, `${emoji} Ingrese Algun Prefijo De Un Pais para ejecutar el comando.`, m);
-  if (isNaN(args[0])) return conn.reply(m.chat, `${emoji} Ingrese Algun Prefijo De Un Pais\nEjemplo: ${usedPrefix + command} 212`, m);
-  const lol = args[0].replace(/[+]/g, '');
-  const ps = participants.map((u) => u.id).filter((v) => v !== conn.user.jid && v.startsWith(lol || lol));
-  const bot = global.db.data.settings[conn.user.jid] || {};
-  if (ps == '') return m.reply(`${emoji2} Aqui No Hay Ningun Numero Con El Prefijo +${lol}`);
-  const numeros = ps.map((v)=> '⭔ @' + v.replace(/@.+/, ''));
-  const delay = (time) => new Promise((res)=>setTimeout(res, time));
-  switch (command) {
-    case 'listanum': case 'listnum':
-      conn.reply(m.chat, `${emoji} Lista de numeros con el prefijo +${lol} que estan en este grupo:\n\n` + numeros.join`\n`, m, {mentions: ps});
-      break;
-    case 'kicknum':
-      if (!bot.restrict) return conn.reply(m.chat, `${emoji} ¡Este Comando Esta Desabilitado Por El Propietario Del Bot!.`, m);
-      if (!isBotAdmin) return m.reply(`${emoji2} El bot no es admin.`);
-      await conn.reply(m.chat, `♻️ Iniciando eliminación....`, m);
-      const ownerGroup = m.chat.split`-`[0] + '@s.whatsapp.net';
-      const users = participants.map((u) => u.id).filter((v) => v !== conn.user.jid && v.startsWith(lol || lol));
-      for (const user of users) {
-        const error = `@${user.split('@')[0]} ya ha sido eliminado o ha abandonado el grupo...`;
-        if (user !== ownerGroup + '@s.whatsapp.net' && user !== global.conn.user.jid && user !== global.owner + '@s.whatsapp.net' && user.startsWith(lol || lol) && user !== isSuperAdmin && isBotAdmin && bot.restrict) {
-          await delay(2000);
-          const responseb = await conn.groupParticipantsUpdate(m.chat, [user], 'remove');
-          if (responseb[0].status === '404') m.reply(error, m.chat, {mentions: conn.parseMention(error)});
-          await delay(10000);
-        } else return m.reply(m.chat, `${msm} Ocurrió un error.`, m);
+const handler = async (m, { conn, args, groupMetadata, participants, usedPrefix, command, isBotAdmin }) => {
+  const emoji = '🍒';
+  const emoji2 = '⚠️';
+
+  if (!args[0]) return conn.reply(m.chat, `${emoji} Debes ingresar un *prefijo de país*.\nEjemplo: *${usedPrefix + command} 212*`, m);
+  if (isNaN(args[0])) return conn.reply(m.chat, `${emoji2} El prefijo debe ser numérico.\nEjemplo: *${usedPrefix + command} 51*`, m);
+
+  const prefix = args[0].replace(/[+]/g, '');
+
+  const filteredUsers = participants
+    .map(p => p.id)
+    .filter(id => id && id.includes(prefix) && !id.includes(conn.user.jid));
+
+  if (!filteredUsers.length) return conn.reply(m.chat, `${emoji2} No se encontraron números con el prefijo +${prefix} en este grupo.`, m);
+
+  const userList = filteredUsers.map(u => '⭔ @' + u.split('@')[0]).join('\n');
+  const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+  if (command === 'listnum' || command === 'listanum') {
+    return conn.reply(m.chat, `${emoji} *Números encontrados con el prefijo +${prefix}:*\n\n${userList}`, m, { mentions: filteredUsers });
+  }
+
+  if (command === 'kicknum') {
+    const botSettings = global.db.data.settings[conn.user.jid] || {};
+    if (!botSettings.restrict) return conn.reply(m.chat, `${emoji2} El comando está deshabilitado por el propietario del bot.`, m);
+    if (!isBotAdmin) return conn.reply(m.chat, `${emoji2} El bot no tiene permisos de administrador.`, m);
+
+    await conn.reply(m.chat, `🍂 Eliminando usuarios con prefijo +${prefix}...`, m);
+    
+    const groupOwner = groupMetadata.owner || '';
+    for (const user of filteredUsers) {
+      if ([groupOwner, conn.user.jid, global.owner + '@s.whatsapp.net'].includes(user)) continue;
+      try {
+        await delay(2000);
+        const res = await conn.groupParticipantsUpdate(m.chat, [user], 'remove');
+        if (res[0]?.status === '404') {
+          const errText = `@${user.split('@')[0]} ya no está en el grupo.`;
+          conn.reply(m.chat, errText, m, { mentions: [user] });
+        }
+        await delay(5000);
+      } catch (err) {
+        console.error(err);
+        conn.reply(m.chat, `❌ Error al eliminar a @${user.split('@')[0]}.`, m, { mentions: [user] });
       }
-      break;
+    }
   }
 };
+
 handler.command = ['kicknum', 'listnum', 'listanum'];
 handler.group = true;
 handler.botAdmin = true;
