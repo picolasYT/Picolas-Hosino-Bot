@@ -34,7 +34,7 @@ let handler = async (m, { conn, args, text, participants, usedPrefix, command })
 
 handler.help = ['lid', 'lid @usuario']
 handler.tags = ['tools']
-handler.command = /^lid$/i
+handler.command = ['lid']
 handler.group = false
 handler.register = false
 export default handler
