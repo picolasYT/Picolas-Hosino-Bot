@@ -23,7 +23,6 @@ const handler = async (m, { conn, args, groupMetadata, participants, usedPrefix,
   if (command === 'kicknum') {
     const botSettings = global.db.data.settings[conn.user.jid] || {};
     if (!botSettings.restrict) return conn.reply(m.chat, `${emoji2} El comando está deshabilitado por el propietario del bot.`, m);
-    if (!isBotAdmin) return conn.reply(m.chat, `${emoji2} El bot no tiene permisos de administrador.`, m);
 
     await conn.reply(m.chat, `🍂 Eliminando usuarios con prefijo +${prefix}...`, m);
     
