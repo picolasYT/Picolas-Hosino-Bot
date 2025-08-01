@@ -1,74 +1,39 @@
-const handler = async (m, { conn, args, groupMetadata, participants, usedPrefix, command, isBotAdmin }) => {
-  const emoji = '📛';
-  const emoji2 = '🚫';
-
-  if (!args[0]) {
-    return conn.reply(m.chat, `${emoji} Debes ingresar el prefijo de un país.\nEjemplo: *${usedPrefix + command} 212*`, m);
+const handler = async (m, { conn, args, participants, command }) => {
+  const prefix = args[0]
+  if (!prefix || !prefix.startsWith('+')) {
+    return m.reply(`⚠️ Debes especificar un prefijo válido.\nEjemplo: *.${command} +52*`)
   }
 
-  if (isNaN(args[0])) {
-    return conn.reply(m.chat, `${emoji} El prefijo debe ser numérico.`, m);
-  }
+  const botNumber = conn.user.id.split(':')[0]
 
-  const prefix = args[0].replace(/\D+/g, ''); // Elimina todo lo que no sea número
-  const allParticipants = participants.map(p => p.id);
+  const groupMetadata = await conn.groupMetadata(m.chat)
+  const admins = groupMetadata.participants.filter(p => p.admin).map(p => p.id)
 
-  // Filtra participantes que empiezan con el prefijo
-  const filtered = allParticipants.filter(jid => jid.startsWith(prefix) && jid.endsWith('@s.whatsapp.net') && jid !== conn.user.jid);
+  const matching = participants.filter(p => 
+    p.id.startsWith(prefix.replace('+', '')) &&
+    p.id !== botNumber &&
+    !admins.includes(p.id)
+  )
 
-  if (!filtered.length) {
-    return conn.reply(m.chat, `${emoji2} No se encontraron números con el prefijo *+${prefix}* en este grupo.`, m);
-  }
+  if (command === 'listnum' || command === 'listanum') {
+    if (matching.length === 0) return m.reply(`🤖 No se encontraron usuarios con el prefijo ${prefix}`)
 
-  const mentionList = filtered.map(id => '@' + id.split('@')[0]);
-
-  if (command === 'listanum' || command === 'listnum') {
-    return conn.reply(
-      m.chat,
-      `📋 *Números con el prefijo +${prefix} detectados:*\n\n${mentionList.join('\n')}`,
-      m,
-      { mentions: filtered }
-    );
+    const lista = matching.map((p, i) => `${i + 1}. wa.me/${p.id.split('@')[0]}`).join('\n')
+    return m.reply(`🔎 Lista de usuarios con el prefijo ${prefix}:\n\n${lista}`)
   }
 
   if (command === 'kicknum') {
-    const settings = global.db.data.settings[conn.user.jid] || {};
-    if (!settings.restrict) {
-      return conn.reply(m.chat, `${emoji} Este comando está deshabilitado por el propietario del bot.`, m);
+    if (matching.length === 0) return m.reply(`🤖 No se encontraron usuarios para expulsar con el prefijo ${prefix}`)
+
+    for (let p of matching) {
+      await conn.groupParticipantsUpdate(m.chat, [p.id], 'remove').catch(_ => null)
     }
-
-    if (!isBotAdmin) {
-      return conn.reply(m.chat, `${emoji2} El bot no tiene permisos de administrador.`, m);
-    }
-
-    await conn.reply(m.chat, `☁️ Eliminando miembros con prefijo *+${prefix}*...`, m);
-
-    const ownerGroup = groupMetadata.owner || '';
-
-    for (const user of filtered) {
-      if (
-        user !== conn.user.jid &&
-        user !== ownerGroup &&
-        !global.owner.includes(user.split('@')[0])
-      ) {
-        try {
-          await conn.groupParticipantsUpdate(m.chat, [user], 'remove');
-          await new Promise(res => setTimeout(res, 5000)); // Espera 5s entre expulsiones
-        } catch (e) {
-          conn.reply(m.chat, `❌ No se pudo eliminar a @${user.split('@')[0]}`, m, {
-            mentions: [user]
-          });
-        }
-      }
-    }
-
-    return conn.reply(m.chat, `✅ Finalizado. Usuarios con prefijo *+${prefix}* fueron procesados.`, m);
+    return m.reply(`✅ Se han expulsado ${matching.length} usuario(s) con el prefijo ${prefix}`)
   }
-};
+}
 
-handler.command = ['kicknum', 'listnum', 'listanum'];
-handler.group = true;
-handler.admin = true;
-handler.botAdmin = true;
+handler.command = ['kicknum', 'listnum', 'listanum']
+handler.group = true
+handler.botAdmin = true // Tú puedes quitar esta línea si no quieres validación
 
-export default handler;
+export default handler
