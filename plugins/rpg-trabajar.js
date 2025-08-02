@@ -11,7 +11,7 @@ let handler = async (m, { conn }) => {
 
   cooldowns[m.sender] = Date.now()
 
-  const ganar = Math.random() < 0.85
+  const ganar = Math.random() < 0.70
   const monto = ganar
     ? Math.floor(Math.random() * (12000 - 1000 + 1)) + 1000
     : Math.floor(Math.random() * (6000 - 800 + 1)) + 800
