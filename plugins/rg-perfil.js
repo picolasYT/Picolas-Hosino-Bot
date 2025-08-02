@@ -34,7 +34,7 @@ let handler = async (m, { conn, args }) => {
 
   try {
     await conn.sendFile(m.chat, imageAPI, 'perfil.jpg', `
-「✿」 *Perfil de @${userId.split('@')[0]}*
+「✿」Perfil de @${userId.split('@')[0]}
 ✦ Edad: ${edad}
 ♛ Cumpleaños: ${cumpleanos}
 ⚥ Género: ${genero}
