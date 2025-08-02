@@ -1,17 +1,13 @@
 import yts from "yt-search";
 import fetch from "node-fetch";
 
-const SIZE_LIMIT_MB = 100; // Límite de 100 MB para enviar como video, si no, como documento.
+const SIZE_LIMIT_MB = 100;
+
 const newsletterJid = '120363335626706839@newsletter';
 const newsletterName = '⏤‏⃪ً፝͟͞⁡⁎⊡『 Ruby-Hoshino-Channel 』༿⊡';
 
-const API_MP3 = (url) => `https://dark-core-api.vercel.app/api/download/YTMP3?key=api&url=${url}`;
-const API_MP4 = (url) => `https://api.stellarwa.xyz/dow/ytmp4?url=${url}&apikey=stellar-bFA8UWSA`;
-
-
 const handler = async (m, { conn, text, command }) => {
   const name = conn.getName(m.sender);
-  
   const contextInfo = {
     mentionedJid: [m.sender],
     isForwarded: true,
@@ -23,9 +19,9 @@ const handler = async (m, { conn, text, command }) => {
     },
     externalAdReply: {
       title: packname,
-      body: " ദ്ദി ᵔ ᴗ ᵔ ) 𝙍𝙪𝙗𝙮 𝙃𝙤𝙨𝙝𝙞𝙣𝙤 𝙙𝙚𝙨𝙘𝙖𝙧𝙜𝙖𝙨",
+      body: "🎿 Ruby Hoshino Downloader",
       thumbnail: icons,
-      sourceUrl: 'https://github.com/Dioneibi-rip/Ruby-Hoshino-Bot',
+      sourceUrl: redes,
       mediaType: 1,
       renderLargerThumbnail: false
     }
@@ -37,7 +33,7 @@ const handler = async (m, { conn, text, command }) => {
       m, { contextInfo });
   }
 
-  await m.react("🕝"); // Reacción de espera
+  await m.react("🕝");
 
   const search = await yts(text);
   if (!search?.all || search.all.length === 0) {
@@ -60,61 +56,57 @@ const handler = async (m, { conn, text, command }) => {
   }, { quoted: m });
 
   try {
-    if (command === "play") {
-      const apiUrl = API_MP3(video.url);
-      const res = await fetch(apiUrl);
-      const json = await res.json();
+    if (["play", "playaudio"].includes(command)) {
+      const res = await fetch(`https://dark-core-api.vercel.app/api/download/YTMP3?key=api&url=${encodeURIComponent(video.url)}`);
+      const data = await res.json();
 
-      if (!json.status) {
-        return conn.reply(m.chat, `❌ Error al obtener el audio. La API no respondió correctamente.`, m, { contextInfo });
+      if (!data.status) {
+        return conn.reply(m.chat, `❌ Error al obtener el audio.`, m, { contextInfo });
       }
 
       await conn.sendMessage(m.chat, {
-        audio: { url: json.download },
+        audio: { url: data.download },
         mimetype: "audio/mpeg",
-        fileName: json.title + ".mp3",
-        ptt: true // Enviar como nota de voz
+        fileName: data.title + ".mp3",
+        ptt: true
       }, { quoted: m });
 
       await m.react("🎶");
 
-    } else if (command === "play2" || command === "playvid") {
-      const apiUrl = API_MP4(video.url);
-      const res = await fetch(apiUrl);
-      const json = await res.json();
+    } else if (["play2", "playvid", "playvideo"].includes(command)) {
+      const res = await fetch(`https://api.stellarwa.xyz/dow/ytmp4?url=${encodeURIComponent(video.url)}&apikey=stellar-bFA8UWSA`);
+      const data = await res.json();
 
-      if (!json.status || !json.data?.dl) {
-        return conn.reply(m.chat, `❌ Error al obtener el video. La API no respondió correctamente.`, m, { contextInfo });
+      if (!data.status) {
+        return conn.reply(m.chat, `❌ Error al obtener el video.`, m, { contextInfo });
       }
-      
-      const downloadUrl = json.data.dl;
 
-      const head = await fetch(downloadUrl, { method: "HEAD" });
+      const head = await fetch(data.data.dl, { method: "HEAD" });
       const sizeMB = parseInt(head.headers.get("content-length") || "0") / (1024 * 1024);
-      
       const asDocument = sizeMB > SIZE_LIMIT_MB;
 
       await conn.sendMessage(m.chat, {
-        video: { url: downloadUrl },
+        video: { url: data.data.dl },
         caption: `🎥 *Listo ${name}-chan!* Aquí está tu video~`,
-        fileName: json.data.title + ".mp4",
-        mimetype: "video/mp4",
-        ...(asDocument ? { asDocument: true } : {})
+        fileName: data.data.title + ".mp4",
+        mimetype: "video/mp4"
       }, {
-        quoted: m
+        quoted: m,
+        ...(asDocument ? { asDocument: true } : {})
       });
 
       await m.react("🎥");
     }
+
   } catch (e) {
     console.error(e);
-    return conn.reply(m.chat, `❌ *Ocurrió un error inesperado.*\n\n*Detalles:* \`\`\`${e.message}\`\`\``, m, { contextInfo });
+    return conn.reply(m.chat, `❌ Error inesperado:\n\`\`\`${e.message}\`\`\``, m, { contextInfo });
   }
 };
 
-handler.help = ["play", "play2", "playvid"];
+handler.help = ["play", "play2", "playvid", "playaudio", "playvideo"];
 handler.tags = ["descargas"];
-handler.command = ["play", "play2", "playvid"];
+handler.command = ["play", "play2", "playvid", "playaudio", "playvideo"];
 handler.register = true;
 handler.limit = true;
 
