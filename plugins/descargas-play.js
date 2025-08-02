@@ -73,7 +73,7 @@ const handler = async (m, { conn, text, command }) => {
       await m.react("🎶");
 
     } else if (command === "play2" || command === "playvid") {
-      const res = await ogmp3.download(video.url, '480', 'video');
+      const res = await ogmp3.download(video.url, '320', 'video');
 
       if (!res.status) {
         return conn.reply(m.chat, `❌ Error de video:\n📋 *Causa:* ${res.error}`, m, { contextInfo });
