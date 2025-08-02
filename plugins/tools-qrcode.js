@@ -19,6 +19,6 @@ const handler = async (m, { args, usedPrefix, command, conn }) => {
   }
 };
 
-handler.command = ['qrcode];
+handler.command = ['qrcode'];
 handler.register = true;
 export default handler;
