@@ -28,7 +28,7 @@ let handler = async (m, { conn, args, participants }) => {
     const yenes = `¥${total.toLocaleString()} ${moneda}`
 
     texto += `${icono} ${i + 1} » *${nombre}:*\n`
-    texto += `\t\t Total→ *${moneda}*\n`
+    texto += `\t\t Total→ *${yenes}*\n`
   }
 
   texto += `\n> • Página *${page}* de *${totalPages}*`
