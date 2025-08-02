@@ -59,8 +59,8 @@ let handler = async (m, { conn, args }) => {
 ║ ☆ 📊 *𝖭𝖨𝖵𝖤𝖫*: ${level}
 ║ ☆ 🏅 *𝖱𝖠𝖭𝖦𝖮*: ${role}
 ╚═══════════════════════╝
-> Crea un *sub-bot* de Ruby utilizando *#qr* o *#code*
 
+> Crea un *sub-bot* de Ruby utilizando *#qr* o *#code*
 
 ╔══⩽✦✰✦⩾══╗
    「 ${(conn.user.jid == global.conn.user.jid ? '𝘽𝙤𝙩 𝙊𝙛𝙞𝙘𝙞𝙖𝙡' : '𝙎𝙪𝙗𝘽𝙤𝙩')} 」
