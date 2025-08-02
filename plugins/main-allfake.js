@@ -32,7 +32,7 @@ global.getBuffer = async function getBuffer(url, options) {
 // Lista de iconos
 const iconUrls = [
   "https://files.catbox.moe/ahp3bc.jpeg", "https://files.catbox.moe/uscoxy.png",
-  "https://files.catbox.moe/uc272d.webp", "https://files.catbox.moe/wvz4n8.png",
+  "https://files.catbox.moe/uc272d.webp", "https://files.catbox.moe/nuoard.jpg",
   "https://files.catbox.moe/edsflw.jpg", "https://files.catbox.moe/nuoard.jpg",
   "https://files.catbox.moe/ilkgfh.webp", "https://files.catbox.moe/c0mxk7.png",
   "https://files.catbox.moe/k25pcl.jpg",  "https://files.catbox.moe/5qglcn.jpg",
