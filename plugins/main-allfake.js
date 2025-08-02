@@ -31,7 +31,7 @@ global.getBuffer = async function getBuffer(url, options) {
 
 // Lista de iconos
 const iconUrls = [
-  "https://files.catbox.moe/ahp3bc.jpeg", "https://files.catbox.moe/uscoxy.png",
+  "https://files.catbox.moe/ahp3bc.jpeg", "https://files.catbox.moe/ffkx61.jpg",
   "https://files.catbox.moe/uc272d.webp", "https://files.catbox.moe/nuoard.jpg",
   "https://files.catbox.moe/edsflw.jpg", "https://files.catbox.moe/nuoard.jpg",
   "https://files.catbox.moe/ilkgfh.webp", "https://files.catbox.moe/fslr4h.jpg",
@@ -40,13 +40,13 @@ const iconUrls = [
   "https://files.catbox.moe/k25pcl.jpg",  "https://files.catbox.moe/6x9q51.jpg",
   "https://files.catbox.moe/i7vsnr.jpg",  "https://files.catbox.moe/e9zgbu.jpg",
   "https://files.catbox.moe/nuoard.jpg", "https://files.catbox.moe/jm6j5b.jpeg",
-  "https://files.catbox.moe/88fn6r.png", "https://files.catbox.moe/iph9xr.jpeg",
-  "https://files.catbox.moe/zem8ot.png", "https://files.catbox.moe/k8griq.jpeg",
-  "https://files.catbox.moe/r4fme5.png", "https://files.catbox.moe/104xtw.jpeg",
-  "https://files.catbox.moe/0buw2b.png", "https://files.catbox.moe/pjuo2b.jpg",
-  "https://files.catbox.moe/guwjzo.png",  "https://files.catbox.moe/7bn1pf.jpg",
-  "https://files.catbox.moe/n4c1es.png", "https://files.catbox.moe/fe6pw6.jpeg",
-  "https://files.catbox.moe/gmfmlc.png"
+  "https://files.catbox.moe/jobvjq.jpg", "https://files.catbox.moe/iph9xr.jpeg",
+  "https://files.catbox.moe/z962x9.jpg", "https://files.catbox.moe/k8griq.jpeg",
+  "https://files.catbox.moe/fslr4h.jpg", "https://files.catbox.moe/104xtw.jpeg",
+  "https://files.catbox.moe/ffkx61.jpg", "https://files.catbox.moe/pjuo2b.jpg",
+  "https://files.catbox.moe/jobvjq.jpg",  "https://files.catbox.moe/7bn1pf.jpg",
+  "https://files.catbox.moe/z962x9.jpg", "https://files.catbox.moe/fe6pw6.jpeg",
+  "https://files.catbox.moe/fslr4h.jpg"
 ]
 
 // Función para elegir y descargar un icono aleatorio
