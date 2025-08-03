@@ -33,19 +33,32 @@ const handler = async (m, { conn, text, command }) => {
       m, { contextInfo });
   }
 
-  await m.react("🕝");
+  let video;
+  const isYTLink = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\//.test(text);
 
-  const search = await yts(text);
-  if (!search?.all || search.all.length === 0) {
-    return conn.reply(m.chat, `💦 *Gomen ne, no encontré nada con:* "${text}"`, m, { contextInfo });
+  if (isYTLink) {
+    const id = text.split("v=")[1]?.split("&")[0] || text.split("/").pop();
+    video = {
+      url: text,
+      title: "Video de YouTube",
+      duration: { timestamp: "?" },
+      views: 0,
+      author: { name: "Desconocido" },
+      thumbnail: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`
+    };
+  } else {
+    const search = await yts(text);
+    if (!search?.all || search.all.length === 0) {
+      return conn.reply(m.chat, `💦 *Gomen ne, no encontré nada con:* "${text}"`, m, { contextInfo });
+    }
+    video = search.all[0];
   }
 
-  const video = search.all[0];
   const caption = `
 > 🍓 *Título:* ${video.title}
-> 📏 *Duración:* ${video.duration.timestamp}
-> 👁️ *Vistas:* ${video.views.toLocaleString()}
-> 🎨 *Autor:* ${video.author.name}
+> 📏 *Duración:* ${video.duration.timestamp || "?"}
+> 👁️ *Vistas:* ${video.views?.toLocaleString?.() || "?"}
+> 🎨 *Autor:* ${video.author?.name || "?"}
 > 📍 *URL:* ${video.url}`.trim();
 
   await conn.sendMessage(m.chat, {
@@ -56,11 +69,11 @@ const handler = async (m, { conn, text, command }) => {
 
   try {
     if (command === "play" || command === "playaudio") {
-      const url = `https://dark-core-api.vercel.app/api/download/YTMP3?key=api&url=${video.url}`;
-      const res = await fetch(url).then(r => r.json());
+      const api = `https://dark-core-api.vercel.app/api/download/YTMP3?key=api&url=${video.url}`;
+      const res = await fetch(api).then(r => r.json());
 
       if (!res.status || !res.download) {
-        return conn.reply(m.chat, `❌ Error de audio:\n📋 *Causa:* No se pudo obtener el MP3.`, m, { contextInfo });
+        return conn.reply(m.chat, `❌ Error de audio:\n📋 *No se pudo obtener el MP3.*`, m, { contextInfo });
       }
 
       await conn.sendMessage(m.chat, {
@@ -73,16 +86,19 @@ const handler = async (m, { conn, text, command }) => {
       await m.react("🎶");
 
     } else if (["play2", "playvid", "playvideo"].includes(command)) {
-      const url = `https://api.stellarwa.xyz/dow/ytmp4?url=${video.url}&apikey=stellar-bFA8UWSA`;
-      const res = await fetch(url).then(r => r.json());
+      const api = `https://api.stellarwa.xyz/dow/ytmp4?url=${video.url}&apikey=stellar-bFA8UWSA`;
+      const res = await fetch(api).then(r => r.json());
 
       if (!res.status || !res.data?.dl) {
-        return conn.reply(m.chat, `❌ Error de video:\n📋 *Causa:* No se pudo obtener el MP4.`, m, { contextInfo });
+        return conn.reply(m.chat, `❌ Error de video:\n📋 *No se pudo obtener el MP4.*`, m, { contextInfo });
       }
 
-      const head = await fetch(res.data.dl, { method: "HEAD" });
-      const sizeMB = parseInt(head.headers.get("content-length") || "0") / (1024 * 1024);
-      const asDocument = sizeMB > SIZE_LIMIT_MB;
+      let asDocument = false;
+      try {
+        const head = await fetch(res.data.dl, { method: "HEAD" });
+        const sizeMB = parseInt(head.headers.get("content-length") || "0") / (1024 * 1024);
+        asDocument = sizeMB > SIZE_LIMIT_MB;
+      } catch { }
 
       await conn.sendMessage(m.chat, {
         video: { url: res.data.dl },
@@ -96,6 +112,7 @@ const handler = async (m, { conn, text, command }) => {
 
       await m.react("🎥");
     }
+
   } catch (e) {
     console.error(e);
     return conn.reply(m.chat, `❌ Error inesperado:\n\`\`\`${e.message}\`\`\``, m, { contextInfo });
