@@ -1,42 +1,110 @@
-import yts from 'yt-search';
+import yts from "yt-search";
+import fetch from "node-fetch";
+import { ogmp3 } from '../lib/youtubedl.js';
 
-let handler = async (m, { conn, command, args, text, usedPrefix }) => {
-    if (!text) {
-        return conn.reply(m.chat, '*𝙸𝚗𝚐𝚛𝚎𝚜𝚊 𝚎𝚕 𝚗𝚘𝚖𝚋𝚛𝚎 𝚍𝚎 𝚕𝚘 𝚚𝚞𝚎 𝚚𝚞𝚒𝚎𝚛𝚎𝚜 𝚋𝚞𝚜𝚌𝚊𝚛*', m);
+const SIZE_LIMIT_MB = 100;
+const newsletterJid = '120363335626706839@newsletter';
+const newsletterName = '⏤‏⃪ً፝͟͞⁡⁎⊡『 Ruby-Hoshino-Channel 』༿⊡';
+
+const handler = async (m, { conn, text, command }) => {
+  const name = conn.getName(m.sender);
+  const contextInfo = {
+    mentionedJid: [m.sender],
+    isForwarded: true,
+    forwardingScore: 999,
+    forwardedNewsletterMessageInfo: {
+      newsletterJid,
+      newsletterName,
+      serverMessageId: -1
+    },
+    externalAdReply: {
+      title: packname,
+      body: "🎿 Ruby Hoshino Downloader",
+      thumbnail: icons,
+      sourceUrl: redes,
+      mediaType: 1,
+      renderLargerThumbnail: false
     }
+  };
 
-    await m.react('🕓');
-    let res = await yts(text);
-    let play = res.videos[0];
+  if (!text) {
+    return conn.reply(m.chat,
+      `🌸 *Konnichiwa ${name}-chan~!* Necesito que me digas el nombre de un video o me pegues el link de YouTube 💕\n\n✨ *Ejemplos:*\n.play Shinzou wo Sasageyo\n.play https://youtu.be/xxx`,
+      m, { contextInfo });
+  }
 
-    if (!play) {
-        throw `Error: Vídeo no encontrado`;
+  await m.react("🕝");
+
+  const search = await yts(text);
+  if (!search?.all || search.all.length === 0) {
+    return conn.reply(m.chat, `💦 *Gomen ne, no encontré nada con:* "${text}"`, m, { contextInfo });
+  }
+
+  const video = search.all[0];
+
+  const caption = `
+> 🍓 *Título:* ${video.title}
+> 📏 *Duración:* ${video.duration.timestamp}
+> 👁️ *Vistas:*  ${video.views.toLocaleString()}
+> 🎨 *Autor:* ${video.author.name}
+> 📍 *URL:* ${video.url}`.trim();
+
+  await conn.sendMessage(m.chat, {
+    image: { url: video.thumbnail },
+    caption,
+    contextInfo
+  }, { quoted: m });
+
+  try {
+    if (command === "play") {
+      const res = await ogmp3.download(video.url, '320', 'audio');
+
+      if (!res.status) {
+        return conn.reply(m.chat, `❌ Error de audio:\n📋 *Causa:* ${res.error}`, m, { contextInfo });
+      }
+
+      await conn.sendMessage(m.chat, {
+        audio: { url: res.result.download },
+        mimetype: "audio/mpeg",
+        fileName: res.result.title + ".mp3",
+        ptt: true
+      }, { quoted: m });
+
+      await m.react("🎶");
+
+    } else if (command === "play2" || command === "playvid") {
+      const res = await ogmp3.download(video.url, '360', 'video');
+
+      if (!res.status) {
+        return conn.reply(m.chat, `❌ Error de video:\n📋 *Causa:* ${res.error}`, m, { contextInfo });
+      }
+
+      const head = await fetch(res.result.download, { method: "HEAD" });
+      const sizeMB = parseInt(head.headers.get("content-length") || "0") / (1024 * 1024);
+      const asDocument = sizeMB > SIZE_LIMIT_MB;
+
+      await conn.sendMessage(m.chat, {
+        video: { url: res.result.download },
+        caption: `🎥 *Listo ${name}-chan!* Aquí está tu video~`,
+        fileName: res.result.title + ".mp4",
+        mimetype: "video/mp4"
+      }, {
+        quoted: m,
+        ...(asDocument ? { asDocument: true } : {})
+      });
+
+      await m.react("🎥");
     }
-
-    let { title, thumbnail, ago, timestamp, views, videoId, url } = play;
-
-    let txt = '```𝚈𝚘𝚞𝚃𝚞𝚋𝚎 𝙳𝚎𝚜𝚌𝚊𝚛𝚐𝚊𝚜```\n';
-    txt += '===========================\n';
-    txt += `> *𝚃𝚒𝚝𝚞𝚕𝚘* : _${title}_\n`;
-    txt += `> *𝙲𝚛𝚎𝚊𝚍𝚘* : _${ago}_\n`;
-    txt += `> *𝙳𝚞𝚛𝚊𝚌𝚒𝚘𝚗* : _${timestamp}_\n`;
-    txt += `> *𝚅𝚒𝚜𝚒𝚝𝚊𝚜* : _${views.toLocaleString()}_\n`;
-    txt += `> *𝙻𝚒𝚗𝚔* : _https://www.youtube.com/watch?v=${videoId}_\n`;
-    txt += '===========================\n';
-    txt += '*𝙿𝚘𝚠𝚎𝚛𝚎𝚍 𝚋𝚢 𝙶𝚊𝚋𝚛𝚒𝚎𝚕 𝙲𝚞𝚛𝚒*';
-
-    await conn.sendButton2(m.chat, txt, '𝐑𝐮𝐛𝐲-𝐇𝐨𝐬𝐡𝐢𝐧𝐨', thumbnail, [
-        ['ʏᴛᴍᴘ3', `${usedPrefix}ytmp3 ${url}`],
-        ['ʏᴛᴍᴘ4', `${usedPrefix}ytmp4 ${url}`],
-        ['ʏᴛᴍᴘ4ᴅᴏᴄ', `${usedPrefix}ytmp4doc ${url}`],
-        ['ʏᴛᴍᴘ3ᴅᴏᴄ', `${usedPrefix}ytmp3doc ${url}`]
-    ], null, [['ᴄᴀɴᴀʟ', 'https://whatsapp.com/channel/0029VakLbM76mYPPFL0IFI3P']], m);
-
-    await m.react('✅');
+  } catch (e) {
+    console.error(e);
+    return conn.reply(m.chat, `❌ Error inesperado:\n\`\`\`${e.message}\`\`\``, m, { contextInfo });
+  }
 };
 
-handler.help = ['play', 'play2', ];
-handler.tags = ['dl'];
-handler.command = ['play',];
+handler.help = ["play", "play2", "playvid"];
+handler.tags = ["descargas"];
+handler.command = ["play", "play2", "playvid"];
+handler.register = true;
+handler.limit = true;
 
 export default handler;
