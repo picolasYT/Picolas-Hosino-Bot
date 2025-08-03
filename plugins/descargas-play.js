@@ -1,10 +1,10 @@
 import yts from "yt-search";
 import fetch from "node-fetch";
-import { ogmp3 } from '../lib/youtubedl.js';
 
 const SIZE_LIMIT_MB = 100;
+
 const newsletterJid = '120363335626706839@newsletter';
-const newsletterName = '⏤‏⃪ً፝͟͞⁡⁎⊡『 Ruby-Hoshino-Channel 』༿⊡';
+const newsletterName = '⏤‏⃪ً፝͟͞⁡⁎⊡『 Ruby-Hoshino-Channel 』༿⊡';
 
 const handler = async (m, { conn, text, command }) => {
   const name = conn.getName(m.sender);
@@ -41,11 +41,10 @@ const handler = async (m, { conn, text, command }) => {
   }
 
   const video = search.all[0];
-
   const caption = `
 > 🍓 *Título:* ${video.title}
 > 📏 *Duración:* ${video.duration.timestamp}
-> 👁️ *Vistas:*  ${video.views.toLocaleString()}
+> 👁️ *Vistas:* ${video.views.toLocaleString()}
 > 🎨 *Autor:* ${video.author.name}
 > 📍 *URL:* ${video.url}`.trim();
 
@@ -56,37 +55,39 @@ const handler = async (m, { conn, text, command }) => {
   }, { quoted: m });
 
   try {
-    if (command === "play") {
-      const res = await ogmp3.download(video.url, '320', 'audio');
+    if (command === "play" || command === "playaudio") {
+      const url = `https://dark-core-api.vercel.app/api/download/YTMP3?key=api&url=${video.url}`;
+      const res = await fetch(url).then(r => r.json());
 
-      if (!res.status) {
-        return conn.reply(m.chat, `❌ Error de audio:\n📋 *Causa:* ${res.error}`, m, { contextInfo });
+      if (!res.status || !res.download) {
+        return conn.reply(m.chat, `❌ Error de audio:\n📋 *Causa:* No se pudo obtener el MP3.`, m, { contextInfo });
       }
 
       await conn.sendMessage(m.chat, {
-        audio: { url: res.result.download },
+        audio: { url: res.download },
         mimetype: "audio/mpeg",
-        fileName: res.result.title + ".mp3",
+        fileName: res.title + ".mp3",
         ptt: true
       }, { quoted: m });
 
       await m.react("🎶");
 
-    } else if (command === "play2" || command === "playvid") {
-      const res = await ogmp3.download(video.url, '360', 'video');
+    } else if (["play2", "playvid", "playvideo"].includes(command)) {
+      const url = `https://api.stellarwa.xyz/dow/ytmp4?url=${video.url}&apikey=stellar-bFA8UWSA`;
+      const res = await fetch(url).then(r => r.json());
 
-      if (!res.status) {
-        return conn.reply(m.chat, `❌ Error de video:\n📋 *Causa:* ${res.error}`, m, { contextInfo });
+      if (!res.status || !res.data?.dl) {
+        return conn.reply(m.chat, `❌ Error de video:\n📋 *Causa:* No se pudo obtener el MP4.`, m, { contextInfo });
       }
 
-      const head = await fetch(res.result.download, { method: "HEAD" });
+      const head = await fetch(res.data.dl, { method: "HEAD" });
       const sizeMB = parseInt(head.headers.get("content-length") || "0") / (1024 * 1024);
       const asDocument = sizeMB > SIZE_LIMIT_MB;
 
       await conn.sendMessage(m.chat, {
-        video: { url: res.result.download },
+        video: { url: res.data.dl },
         caption: `🎥 *Listo ${name}-chan!* Aquí está tu video~`,
-        fileName: res.result.title + ".mp4",
+        fileName: res.data.title + ".mp4",
         mimetype: "video/mp4"
       }, {
         quoted: m,
@@ -101,9 +102,9 @@ const handler = async (m, { conn, text, command }) => {
   }
 };
 
-handler.help = ["play", "play2", "playvid"];
+handler.help = ["play", "play2", "playvid", "playaudio", "playvideo"];
 handler.tags = ["descargas"];
-handler.command = ["play", "play2", "playvid"];
+handler.command = ["play", "play2", "playvid", "playaudio", "playvideo"];
 handler.register = true;
 handler.limit = true;
 
