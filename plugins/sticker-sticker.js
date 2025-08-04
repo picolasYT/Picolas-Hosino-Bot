@@ -10,7 +10,7 @@ const handler = async (m, { conn, usedPrefix, command }) => {
   let stiker = false;
 
   if (!/image|webp|video/g.test(mime)) {
-    return conn.reply(m.chat, `📸 Responde a una imagen o etiqueta una imagen para convertirla en sticker.`, m);
+    return conn.reply(m.chat, `${emoji} 𝙍𝙚𝙨𝙥𝙤𝙣𝙙𝙚 𝙖 𝙪𝙣𝙖 𝙞𝙢𝙖𝙜𝙚𝙣 𝙤 𝙚𝙩𝙞𝙦𝙪𝙚𝙩𝙖 𝙪𝙣𝙖 𝙞𝙢𝙖𝙜𝙚𝙣 𝙥𝙖𝙧𝙖 𝙘𝙤𝙣𝙫𝙚𝙧𝙩𝙞𝙧𝙡𝙖 𝙚𝙣 𝙨𝙩𝙞𝙘𝙠𝙚𝙧.`, m);
   }
 
   await m.react('🧃');
