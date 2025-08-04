@@ -1,42 +1,45 @@
 import { Sticker } from 'wa-sticker-formatter';
 
-let handler = async (m, { conn, usedPrefix, command }) => {
-  const quoted = m.quoted ? m.quoted : m;
+const handler = async (m, { conn }) => {
+  const quoted = m.quoted || m;
   const mime = (quoted.msg || quoted).mimetype || '';
-
-  if (!/image\/(jpe?g|png|webp)/.test(mime)) {
-    throw `🖼️ *Debes responder o etiquetar una imagen para convertirla en sticker!*\n\nEjemplo: *${usedPrefix + command}* (respondiendo a una imagen)`;
+  
+  if (!/image\/(jpe?g|png)/.test(mime)) {
+    throw '📸 Responde a una imagen o etiqueta una imagen para convertirla en sticker.';
   }
 
-  await m.react('🧩');
+  m.react('🧃');
 
   try {
-    const imgBuffer = await quoted.download();
+    const buffer = await quoted.download();
 
-    const sticker = new Sticker(imgBuffer, {
-      pack: `Sticker de ${conn.getName(m.sender)}`,
-      author: 'by ${packname}',
-      type: 'full',             // Usa 'full' para mayor tamaño
-      quality: 100,             // Alta calidad
-      background: null,         // Fondo transparente si es webp
-      categories: ['✨'],        // Categoría opcional
+    const sticker = new Sticker(buffer, {
+      pack: `👤 ${conn.getName(m.sender)}`,
+      author: 'by ruby',
+      type: 'full',
+      quality: 100,
+      categories: ['🤖'],
+      id: `imgsticker-${Date.now()}`
     });
 
+    const stickerBuffer = await sticker.toBuffer();
+
     await conn.sendMessage(m.chat, {
-      sticker: await sticker.toBuffer()
+      sticker: stickerBuffer
     }, { quoted: m });
 
-    await m.react('✅');
+    m.react('✅');
 
-  } catch (e) {
-    console.error(e);
-    throw `❌ *Error al convertir la imagen en sticker.*\nVerifica que estés respondiendo a una imagen válida.`;
+  } catch (err) {
+    console.error(err);
+    m.react('❌');
+    throw '❌ Error al crear el sticker. Asegúrate de que la imagen no esté dañada.';
   }
 };
 
-handler.help = ['sticker'];
+handler.help = ['sticker', '#s'];
 handler.tags = ['sticker'];
-handler.command = ['sticker', 's', '#s'];
+handler.command = ['sticker', 's'];
 handler.register = true;
 handler.limit = true;
 
