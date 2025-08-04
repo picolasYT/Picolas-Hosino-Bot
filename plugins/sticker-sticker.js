@@ -5,9 +5,7 @@ const handler = async (m, { conn, usedPrefix, command }) => {
   const mime = (quoted.msg || quoted).mimetype || '';
 
   if (!/image\/(jpe?g|png)/.test(mime)) {
-    return conn.reply(m.chat, `
-📸 Responde a una imagen o etiqueta una imagen para convertirla en sticker.
-`, m);
+    return conn.reply(m.chat, `📸 Responde a una imagen o etiqueta una imagen para convertirla en sticker.`, m);
   }
 
   await m.react('🧃');
