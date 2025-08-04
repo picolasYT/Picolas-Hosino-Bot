@@ -24,13 +24,11 @@ const handler = async (m, { conn, usedPrefix, command }) => {
     const texto2 = packstickers?.text2 || global.packsticker2;
 
     try {
-      // Crear sticker directamente con buffer y textos personalizados
       stiker = await sticker(img, false, texto1, texto2);
     } catch (e) {
       console.error('⚠️ Error creando con sticker():', e);
     }
 
-    // Si falla el primer intento, subir imagen y crear desde URL
     if (!stiker) {
       let out;
       try {
