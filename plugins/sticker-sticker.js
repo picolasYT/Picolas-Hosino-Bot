@@ -15,7 +15,7 @@ let handler = async (m, { conn, usedPrefix, command }) => {
 
     const sticker = new Sticker(imgBuffer, {
       pack: `Sticker de ${conn.getName(m.sender)}`,
-      author: 'by Ruby',
+      author: 'by ${packname}',
       type: 'full',             // Usa 'full' para mayor tamaño
       quality: 100,             // Alta calidad
       background: null,         // Fondo transparente si es webp
