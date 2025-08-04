@@ -1,66 +1,43 @@
-import { sticker } from '../lib/sticker.js';
-import uploadFile from '../lib/uploadFile.js';
-import uploadImage from '../lib/uploadImage.js';
-import { webp2png } from '../lib/webp2mp4.js';
+import { Sticker } from 'wa-sticker-formatter';
 
-let handler = async (m, { conn, args, usedPrefix, command }) => {
-  let stiker = false;
+let handler = async (m, { conn, usedPrefix, command }) => {
+  const quoted = m.quoted ? m.quoted : m;
+  const mime = (quoted.msg || quoted).mimetype || '';
+
+  if (!/image\/(jpe?g|png|webp)/.test(mime)) {
+    throw `🖼️ *Debes responder o etiquetar una imagen para convertirla en sticker!*\n\nEjemplo: *${usedPrefix + command}* (respondiendo a una imagen)`;
+  }
+
+  await m.react('🧩');
+
   try {
-    let q = m.quoted ? m.quoted : m;
-    let mime = (q.msg || q).mimetype || q.mediaType || '';
-    if (/webp|image|video/g.test(mime)) {
-      if (/video/g.test(mime) && (q.msg || q).seconds > 15) {
-        return m.reply(`${emoji2} ¡El video no puede durar más de 15 segundos!...`);
-      }
-      let img = await q.download?.();
+    const imgBuffer = await quoted.download();
 
-      if (!img) {
-        return conn.reply(m.chat, `${emoji} Por favor, envía una imagen o video para hacer un sticker.`, m);
-      }
+    const sticker = new Sticker(imgBuffer, {
+      pack: `Sticker de ${conn.getName(m.sender)}`,
+      author: 'by Ruby',
+      type: 'full',             // Usa 'full' para mayor tamaño
+      quality: 100,             // Alta calidad
+      background: null,         // Fondo transparente si es webp
+      categories: ['✨'],        // Categoría opcional
+    });
 
-      let out;
-      try {
-        const packstickers = global.db.data.users[m.sender];
-        const texto1 = packstickers?.text1 || `${global.packsticker}`;
-        const texto2 = packstickers?.text2 || `${global.packsticker2}`;
+    await conn.sendMessage(m.chat, {
+      sticker: await sticker.toBuffer()
+    }, { quoted: m });
 
-        stiker = await sticker(img, false, texto1, texto2);
-      } catch (e) {
-        console.error(e);
-      } finally {
-        if (!stiker) {
-          if (/webp/g.test(mime)) out = await webp2png(img);
-          else if (/image/g.test(mime)) out = await uploadImage(img);
-          else if (/video/g.test(mime)) out = await uploadFile(img);
-          if (typeof out !== 'string') out = await uploadImage(img);
-          stiker = await sticker(false, out, global.packsticker, global.packsticker2);
-        }
-      }
-    } else if (args[0]) {
-      if (isUrl(args[0])) {
-        stiker = await sticker(false, args[0], global.packsticker, global.packsticker2);
-      } else {
-        return m.reply(`${msm} El URL es incorrecto...`);
-      }
-    }
+    await m.react('✅');
+
   } catch (e) {
     console.error(e);
-    if (!stiker) stiker = e;
-  } finally {
-    if (stiker) {
-      conn.sendFile(m.chat, stiker, 'sticker.webp', '', m);
-    } else {
-      return conn.reply(m.chat, `${emoji} Por favor, envía una imagen o video para hacer un sticker.`, m);
-    }
+    throw `❌ *Error al convertir la imagen en sticker.*\nVerifica que estés respondiendo a una imagen válida.`;
   }
 };
 
-handler.help = ['stiker <img>', 'sticker <url>'];
+handler.help = ['sticker'];
 handler.tags = ['sticker'];
-handler.command = ['s', 'sticker', 'stiker'];
+handler.command = ['sticker', 's', '#s'];
+handler.register = true;
+handler.limit = true;
 
 export default handler;
-
-const isUrl = (text) => {
-  return text.match(new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)(jpe?g|gif|png)/, 'gi'));
-};
