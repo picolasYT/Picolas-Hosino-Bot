@@ -15,7 +15,7 @@ const handler = async (m, { conn, usedPrefix, command }) => {
 
     const sticker = new Sticker(buffer, {
       pack: `👤 ${conn.getName(m.sender)}`,
-      author: 'by ${packname}',
+      author: 'by RubyBot',
       type: 'full',
       quality: 100,
       categories: ['🤖'],
