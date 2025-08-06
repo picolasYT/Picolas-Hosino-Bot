@@ -50,7 +50,7 @@ ${eps}
 
             let buffer = await (await fetch(cover)).arrayBuffer();
             let sent = await conn.sendMessage(m.chat, { image: Buffer.from(buffer), caption: cap }, m)
-
+            
             conn.anime = conn.anime || {};
             conn.anime[m.sender] = {
                 title,
@@ -71,7 +71,7 @@ ${eps}
                 cap += `\n\`${index + 1}\`\n≡ 🌴 \`Title :\` ${res.title}\n≡ 🌱 \`Link :\` ${res.link}\n`;
             });
 
-            let buffer = 'https://files.cloudmini.net/download/xO27.jpeg'
+            let buffer = await (await fetch(banner)).arrayBuffer();
             conn.relayMessage(m.chat, {
                 extendedTextMessage: {
                     text: cap,
@@ -144,5 +144,6 @@ handler.before = async (m, { conn }) => {
 handler.command = ["anime", "animedl", "animes"];
 handler.tags = ['download'];
 handler.help = ["animedl"];
+handler.premium = true;
 
 export default handler;
