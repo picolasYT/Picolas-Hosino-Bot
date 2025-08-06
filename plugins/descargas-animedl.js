@@ -1,5 +1,8 @@
 import { download, detail, search } from "../lib/anime.js";
 
+let banner = 'https://files.catbox.moe/71e28l.jpg';
+let buffer = await (await fetch(banner)).arrayBuffer();
+
 async function lang(episodes) {
     const list = [];
     for (const ep of episodes) {
