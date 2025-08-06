@@ -1,139 +1,161 @@
-import axios from "axios";
-import *re from "cheerio";
-import { JSDOM } from 'jsdom';
+import { getDownloadLinks, detail, search } from "../lib/anime.js";
 
-/**
- * Obtiene y concatena el contenido de todas las etiquetas <script> de una URL.
- * @param {string} url La URL de la página a analizar.
- * @returns {Promise<string>} El contenido de los scripts.
- */
-async function getScriptContent(url) {
-  try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    const html = await response.text();
-    // JSDOM es pesado, pero necesario si el contenido se genera dinámicamente.
-    const { document } = new JSDOM(html).window;
-    const scripts = document.querySelectorAll('script');
-    return Array.from(scripts).map(script => script.innerHTML).join(' ');
-  } catch (error) {
-    console.error('Error en getScriptContent:', error);
-    // Propagar el error para que la función que llama sepa que algo falló.
-    throw error; 
-  }
-}
+// Ya no necesitamos la función 'lang', era la fuente de la ineficiencia.
 
-/**
- * Extrae los enlaces de descarga de PixelDrain (SUB y DUB) del texto de un script.
- * @param {string} scriptText El contenido del script a analizar.
- * @returns {{sub: string|null, dub: string|null}} Un objeto con los enlaces.
- */
-function extractPixelDrainLinks(scriptText) {
-  // Regex mejorada: busca directamente la clave "SUB" o "DUB" asociada a la URL de PDrain.
-  // Es mucho más robusta que mirar 500 caracteres hacia atrás.
-  const regex = /"(SUB|DUB)":\[{[^}]+?"PDrain",url:"(https:\/\/pixeldrain\.com\/u\/[^"?"]+)/g;
-  const links = {
-    sub: null,
-    dub: null,
-  };
+let handler = async (m, { conn, command, usedPrefix, text, args }) => {
+    if (!text) return m.reply(`🌱 *Ingresa el título de un anime o una URL válida.*\n\n*Ejemplos:*\n• ${usedPrefix + command} Mushoku Tensei\n• ${usedPrefix + command} https://animeav1.com/media/mushoku-tensei`);
 
-  let match;
-  while ((match = regex.exec(scriptText)) !== null) {
-    const lang = match[1].toLowerCase(); // 'sub' o 'dub'
-    const url = match[2];
-    const apiLink = `https://pixeldrain.com/api/file/${url.split('/u/')[1]}`;
-    
-    if (!links[lang]) { // Asigna solo la primera que encuentre para cada idioma
-      links[lang] = apiLink;
+    try {
+        if (text.startsWith('https://animeav1.com/media/')) {
+            await m.react("⌛");
+            const info = await detail(args[0]);
+            if (info.error) return m.reply(`❌ Error al obtener detalles: ${info.error}`);
+            
+            const { title, altTitle, description, cover, votes, rating, total, genres, episodes } = info;
+            
+            // Ya no verificamos los idiomas de antemano. Es mucho más rápido.
+            const eps = episodes.map(e => `• Episodio ${e.ep}`).join('\n');
+            const gen = genres.join(', ');
+
+            const cap = `乂 \`\`\`ANIME - INFO\`\`\`
+
+≡ 🌷 *Título:* ${title} ${altTitle ? `- ${altTitle}` : ''}
+≡ 🌾 *Descripción:* ${description || 'No disponible.'}
+≡ 🌲 *Votos:* ${votes}
+≡ 🍂 *Rating:* ${rating}
+≡ 🍃 *Géneros:* ${gen}
+≡ 🌱 *Episodios totales:* ${total}
+
+${eps}
+
+> *Responde a este mensaje con el número del episodio que quieres descargar. Ejemplo:* \`1\`
+`.trim();
+
+            const sentMsg = await conn.sendMessage(m.chat, {
+                image: { url: cover },
+                caption: cap
+            }, { quoted: m });
+
+            conn.anime = conn.anime || {};
+            conn.anime[m.sender] = {
+                ...info, // Guardamos toda la info del anime
+                key: sentMsg.key,
+                downloading: false,
+                timeout: setTimeout(() => {
+                    if (conn.anime && conn.anime[m.sender]) {
+                        // conn.sendMessage(m.chat, { delete: sentMsg.key }); // Opcional: borrar el mensaje si expira
+                        delete conn.anime[m.sender];
+                    }
+                }, 300_000) // 5 minutos de espera
+            };
+            await m.react("✅");
+
+        } else {
+            await m.react('🔍');
+            const results = await search(text);
+            if (!results.length) return m.reply('❌ No se encontraron resultados para tu búsqueda.');
+
+            let cap = `✅ *Resultados para "${text}":*\n\n`;
+            results.slice(0, 10).forEach((res, index) => {
+                cap += `*${index + 1}. ${res.title}*\n🔗 ${res.link}\n\n`;
+            });
+            cap += `> *Para ver los episodios, usa el comando con el enlace del anime que desees.*`;
+            
+            // Envío de mensaje simple y eficiente
+            await conn.sendMessage(m.chat, { text: cap.trim() }, { quoted: m });
+        }
+    } catch (error) {
+        console.error('Error en handler anime:', error);
+        await m.reply(`❌ Ocurrió un error inesperado: ${error.message}`);
     }
-  }
+};
 
-  return links;
-}
-
-/**
- * Obtiene los enlaces de descarga para un único episodio.
- * @param {string} episodeUrl La URL del episodio en animeav1.com.
- * @returns {Promise<{title: string, dl: {sub: string|null, dub: string|null}}>}
- */
-async function getDownloadLinks(episodeUrl) {
-  try {
-    const scriptContent = await getScriptContent(episodeUrl);
-    const links = extractPixelDrainLinks(scriptContent);
+handler.before = async (m, { conn }) => {
+    conn.anime = conn.anime || {};
+    const session = conn.anime[m.sender];
     
-    // Para obtener el título, podemos hacer una petición ligera en vez de cargar Cheerio
-    const pageResponse = await axios.get(episodeUrl);
-    const $ = cheerio.load(pageResponse.data);
-    const title = $('title').text().trim().replace(/Sub Español - Animes Online en HD \| AnimeAV1/, '').trim();
+    // Validaciones iniciales
+    if (!session || !m.quoted || m.quoted.id !== session.key.id || session.downloading) return;
+    
+    const text = m.text.trim();
+    // Permite responder con "1" o "1 sub" o "1 dub"
+    const [epNumStr, langInput] = text.split(/\s+/);
+    const epNum = parseInt(epNumStr);
 
-    return { title, dl: links };
-  } catch (err) {
-    console.error(`Error obteniendo enlaces de ${episodeUrl}:`, err);
-    // Retorna un objeto de error claro.
-    return { error: 'No se pudieron obtener los enlaces de descarga.', details: err.message };
-  }
-}
+    if (isNaN(epNum)) return; // No es una respuesta para este comando, ignorar.
 
-/**
- * Obtiene los detalles de una serie de anime.
- * @param {string} url La URL de la serie.
- * @returns {Promise<object>}
- */
-async function detail(url) {
-  const base = "https://animeav1.com";
-  try {
-    const { data: html } = await axios.get(url, {
-      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' },
-    });
-    const $ = cheerio.load(html);
+    const episode = session.episodes.find(e => parseInt(e.ep) === epNum);
+    if (!episode) return m.reply(`❌ Episodio *${epNum}* no encontrado en la lista.`);
+    
+    try {
+        session.downloading = true; // Bloquear nuevas descargas hasta que esta termine
+        await m.react("📥");
 
-    const episodes = [];
-    $('article.group\\/item').each((_, el) => {
-      episodes.push({
-        ep: $(el).find('.text-lead').first().text().trim(),
-        img: $(el).find('img').attr('src'),
-        link: base + $(el).find('a').attr('href'),
-      });
-    });
+        // Obtenemos los links solo para el episodio solicitado
+        const linkInfo = await getDownloadLinks(episode.link);
+        if (linkInfo.error || (!linkInfo.dl.sub && !linkInfo.dl.dub)) {
+            return m.reply(`❌ No se encontraron enlaces de descarga para el episodio *${epNum}*.`);
+        }
+        
+        const { sub, dub } = linkInfo.dl;
+        let finalLink;
+        let chosenLang;
 
-    return {
-      title: $('h1').first().text().trim(),
-      altTitle: $('h2').first().text().trim(),
-      description: $('.entry p').text().trim(),
-      rating: $('.ic-star-solid .text-2xl').first().text().trim(),
-      votes: $('.ic-star-solid .text-xs span').first().text().trim(),
-      cover: $('figure img[alt$="Poster"]').attr('src'),
-      genres: $('a.btn[href*="catalogo?genre="]').map((_, el) => $(el).text().trim()).get(),
-      episodes: episodes.reverse(), // Los episodios suelen estar en orden inverso en la web
-      total: episodes.length,
-    };
-  } catch (err) {
-    console.error('Error en detail:', err);
-    return { error: err.message };
-  }
-}
+        if (sub && dub && !langInput) {
+             // Si hay ambos idiomas y el usuario no especificó, le preguntamos.
+            return m.reply(`✅ El episodio *${epNum}* está disponible en SUB y DUB.\n\nResponde de nuevo con:\n• \`${epNum} sub\` para Subtitulado\n• \`${epNum} dub\` para Audio Latino`);
+        }
 
-/**
- * Busca animes por un término de búsqueda.
- * @param {string} query El título del anime a buscar.
- * @returns {Promise<Array<object>>}
- */
-async function search(query) {
-  const base = "https://animeav1.com";
-  try {
-    const res = await fetch(`${base}/catalogo?search=${encodeURIComponent(query)}`);
-    const html = await res.text();
-    const $ = cheerio.load(html);
+        const lang = langInput?.toLowerCase();
+        if (lang === 'sub' && sub) {
+            finalLink = sub;
+            chosenLang = 'Subtitulado';
+        } else if (lang === 'dub' && dub) {
+            finalLink = dub;
+            chosenLang = 'Audio Latino';
+        } else if (sub) { // Si el usuario no especificó o puso algo inválido, tomamos el que esté disponible
+            finalLink = sub;
+            chosenLang = 'Subtitulado';
+        } else {
+            finalLink = dub;
+            chosenLang = 'Audio Latino';
+        }
 
-    return $("article").map((_, el) => ({
-      title: $(el).find("h3").text().trim(),
-      link: base + $(el).find("a").attr("href"),
-      img: $(el).find("img").attr("src"),
-    })).get();
-  } catch (error) {
-    console.error('Error en search:', error);
-    return [];
-  }
-}
+        await m.reply(`⏳ Descargando *${session.title}* - Episodio ${epNum} (${chosenLang})...`);
+        
+        // --- LA CORRECCIÓN MÁS IMPORTANTE ---
+        // Usar .arrayBuffer() en lugar de .buffer()
+        const response = await fetch(finalLink);
+        if (!response.ok) throw new Error(`El servidor de descarga respondió con un error: ${response.statusText}`);
+        
+        const videoBuffer = await response.arrayBuffer();
+        
+        await conn.sendMessage(m.chat, {
+            video: Buffer.from(videoBuffer),
+            mimetype: 'video/mp4',
+            fileName: `${session.title} - Cap ${epNum} [${chosenLang}].mp4`,
+            caption: `✅ ¡Aquí tienes tu episodio!`
+        }, { quoted: m });
 
-export { getDownloadLinks, detail, search };
+        await m.react("✅");
+
+    } catch (err) {
+        console.error('Error al descargar y enviar:', err);
+        await m.reply(`❌ *Error al descargar el episodio ${epNum}:*\n${err.message}`);
+        await m.react("❌");
+    } finally {
+        // Limpiamos la sesión tanto si tuvo éxito como si falló
+        if (conn.anime && conn.anime[m.sender]) {
+            clearTimeout(session.timeout);
+            delete conn.anime[m.sender];
+        }
+    }
+};
+
+
+handler.command = ["anime", "animedl", "animes"];
+handler.tags = ['download'];
+handler.help = ["animedl"];
+handler.premium = true;
+
+export default handler;
