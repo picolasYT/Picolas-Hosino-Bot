@@ -15,8 +15,17 @@ const delay = ms => isNumber(ms) && new Promise(resolve => setTimeout(function (
     resolve()
 }, ms))
 
+// === FUNCIÓN CORREGIDA Y NUEVA FUNCIÓN PARA MANEJAR LIDs ===
+// La función `normalizeJid` original es problemática con LIDs. La dejamos por si otra parte del código la usa, pero no para nuestra lógica.
 const normalizeJid = jid => jid?.replace(/[^0-9]/g, '')
-const cleanJid = jid => jid?.split(':')[0] || '' // <-- Esta es la función que usaremos para la corrección
+const cleanJid = jid => jid?.split(':')[0] || ''
+
+// NUEVA FUNCIÓN ROBUSTA para obtener la base de cualquier JID (número o LID)
+// '12345@lid' -> '12345'
+// '58412...@s.whatsapp.net' -> '58412...'
+// '58412...:15@s.whatsapp.net' -> '58412...'
+const getBaseJid = jid => jid?.split('@')[0].split(':')[0] || ''
+// === FIN DE LAS FUNCIONES ===
 
 export async function handler(chatUpdate) {
     this.msgqueque = this.msgqueque || []
@@ -41,6 +50,7 @@ export async function handler(chatUpdate) {
             if (typeof user !== 'object')
                 global.db.data.users[m.sender] = {}
             if (user) {
+                // ... (sin cambios aquí)
                 if (!isNumber(user.exp)) user.exp = 0
                 if (!isNumber(user.coin)) user.coin = 10
                 if (!isNumber(user.joincount)) user.joincount = 1
@@ -88,6 +98,7 @@ export async function handler(chatUpdate) {
             if (typeof chat !== 'object')
                 global.db.data.chats[m.chat] = {}
             if (chat) {
+                // ... (sin cambios aquí)
                 if (!('isBanned' in chat)) chat.isBanned = false
                 if (!('sAutoresponder' in chat)) chat.sAutoresponder = ''
                 if (!('welcome' in chat)) chat.welcome = true
@@ -118,6 +129,7 @@ export async function handler(chatUpdate) {
             var settings = global.db.data.settings[this.user.jid]
             if (typeof settings !== 'object') global.db.data.settings[this.user.jid] = {}
             if (settings) {
+                // ... (sin cambios aquí)
                 if (!('self' in settings)) settings.self = false
                 if (!('restrict' in settings)) settings.restrict = true
                 if (!('jadibotmd' in settings)) settings.jadibotmd = true
@@ -130,13 +142,13 @@ export async function handler(chatUpdate) {
             console.error(e)
         }
         
-        // ===== NUEVO SISTEMA DE BOT PRIMARIO (LÓGICA PRINCIPAL) =====
+        // ===== SISTEMA BOT PRIMARIO (LÓGICA DEFINITIVA) =====
         const chat = global.db.data.chats[m.chat]
-        // <<< CORRECCIÓN CLAVE AQUÍ: Usamos cleanJid para comparar los JID base y evitar errores de formato.
-        if (chat && chat.botPrimario && cleanJid(chat.botPrimario) !== cleanJid(this.user.jid)) {
-            return; 
+        // <<< CORRECCIÓN DEFINITIVA: Usamos getBaseJid para una comparación a prueba de LIDs y TIDs.
+        if (chat && chat.botPrimario && getBaseJid(chat.botPrimario) !== getBaseJid(this.user.jid)) {
+            return; // Detiene la ejecución si este no es el bot primario designado.
         }
-        // ===== FIN DEL NUEVO SISTEMA =====
+        // ===== FIN DEL SISTEMA =====
 
         if (opts['nyimak']) return
         if (!m.fromMe && opts['self']) return
@@ -149,6 +161,7 @@ export async function handler(chatUpdate) {
         const groupMetadata = (m.isGroup ? ((conn.chats[m.chat] || {}).metadata || await this.groupMetadata(m.chat).catch(_ => null)) : {}) || {}
         const participants = (m.isGroup ? groupMetadata.participants : []) || []
 
+        // La lógica de abajo puede seguir usando normalizeJid, pero para nuestra función específica, era vital no usarla.
         const senderNum = normalizeJid(m.sender)
         const botNums = [this.user.jid, this.user.lid].map(j => normalizeJid(cleanJid(j)))
         const user = m.isGroup ? participants.find(u => normalizeJid(u.id) === senderNum) : {}
