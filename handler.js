@@ -108,11 +108,11 @@ export async function handler(chatUpdate) {
                 if (!isNumber(chat.expired)) chat.expired = 0
                 if (!('antiLag' in chat)) chat.antiLag = false
                 if (!('per' in chat)) chat.per = []
-                if (!('primaryBot' in chat)) chat.primaryBot = null // <-- CAMBIO 1: Aseguramos que la propiedad exista
+                if (!('primaryBot' in chat)) chat.primaryBot = null
             } else
                 global.db.data.chats[m.chat] = {
                     sAutoresponder: '', welcome: true, isBanned: false, autolevelup: false, autoresponder: false, delete: false, autoAceptar: false, autoRechazar: false, detect: true, antiBot: false, antiBot2: false, modoadmin: false, antiLink: true, antifake: false, antiArabe: false, reaction: false, nsfw: false, expired: 0, antiLag: false, per: [],
-                    primaryBot: null, // <-- CAMBIO 1: Añadido aquí también
+                    primaryBot: null,
                 }
             var settings = global.db.data.settings[this.user.jid]
             if (typeof settings !== 'object') global.db.data.settings[this.user.jid] = {}
@@ -129,20 +129,33 @@ export async function handler(chatUpdate) {
             console.error(e)
         }
         
-        // --- INICIO DE LA LÓGICA DEL BOT PRIMARIO (REEMPLAZA A antiLag) --- // <-- CAMBIO 2: Lógica nueva y robusta
-        const chat = global.db.data.chats[m.chat] || {}
-        const primaryBotJid = chat.primaryBot
+        // --- INICIO DEL BLOQUE DE DIAGNÓSTICO DEL BOT PRIMARIO ---
+        try {
+            const chat = global.db.data.chats[m.chat] || {};
+            const primaryBotJid = chat.primaryBot;
 
-        if (primaryBotJid) {
-            // Comparamos solo la parte numérica de los JID para evitar problemas de @s.whatsapp.net vs @lid
-            const currentBotBaseJid = this.user.jid.split('@')[0]
-            const primaryBotBaseJid = primaryBotJid.split('@')[0]
-            
-            if (currentBotBaseJid !== primaryBotBaseJid) {
-                return // Este bot NO es el primario, así que se queda callado.
+            // Solo ejecutar si hay un bot primario configurado
+            if (primaryBotJid && typeof primaryBotJid === 'string') {
+                const currentBotJid = this.user.jid;
+                const isThisBotPrimary = (currentBotJid.split('@')[0] === primaryBotJid.split('@')[0]);
+
+                // Imprimir en consola la información para cada mensaje
+                console.log(`--- [DIAGNÓSTICO BOT PRIMARIO] ---`);
+                console.log(`> Chat: ${m.chat}`);
+                console.log(`> Bot Primario Guardado: ${primaryBotJid}`);
+                console.log(`> Bot Actual (self): ${currentBotJid}`);
+                console.log(`> ¿Este bot es el primario?: ${isThisBotPrimary}`);
+                console.log(`---------------------------------`);
+
+                // Si este bot NO es el primario, detener la ejecución.
+                if (!isThisBotPrimary) {
+                    return;
+                }
             }
+        } catch (e) {
+            console.error('[ERROR EN DIAGNÓSTICO DE BOT PRIMARIO]', e);
         }
-        // --- FIN DE LA LÓGICA DEL BOT PRIMARIO ---
+        // --- FIN DEL BLOQUE DE DIAGNÓSTICO ---
 
         if (opts['nyimak']) return
         if (!m.fromMe && opts['self']) return
