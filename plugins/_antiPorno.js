@@ -1,43 +1,53 @@
-let handler = async (m, { conn, text, usedPrefix, command }) => {
+// plugins/setbot.js
+
+/**
+* @type {import('@whiskeysockets/baileys')}
+*/
+const {
+    proto
+} = (await import('@whiskeysockets/baileys')).default
+
+let handler = async (m, { conn, text, usedPrefix, command, isAdmin }) => {
+    if (!m.isGroup) {
+        return m.reply('Este comando solo se puede usar en grupos.');
+    }
+    if (!isAdmin) {
+        return m.reply('Solo los administradores del grupo pueden usar este comando.');
+    }
+
     let chat = global.db.data.chats[m.chat];
-    
-    if (m.mentionedJid.length === 0) {
-        let reset = text.toLowerCase() === 'reset' || text.toLowerCase() === 'restablecer';
-        if (reset) {
-            if (!chat.botPrimario) return m.reply('《✧》 No hay ningún bot primario establecido en este grupo.');
-            let oldBotName = conn.getName(chat.botPrimario);
-            chat.botPrimario = null;
-            await m.reply(`✐ Se ha restablecido la configuración. Ahora todos los bots responderán nuevamente en este grupo.`);
-            return;
-        }
-        
-        return m.reply(`《✧》 Debes mencionar a un bot del grupo para establecerlo como primario.\n\n> *Ejemplo:* ${usedPrefix + command} @tagdelbot\n\n> ❀ También puedes usar *${usedPrefix + command} reset* para que todos los bots vuelvan a responder.`);
+    if (!chat) {
+        global.db.data.chats[m.chat] = {};
+        chat = global.db.data.chats[m.chat];
     }
 
-    let botJid = m.mentionedJid[0];
-    
-    // Verificación simple para asegurar que el JID es de un bot (opcional pero recomendado)
-    // Esta lista se tomará de las conexiones activas si tu bot principal maneja sub-bots.
-    const allBots = global.conns.map(c => c.user.jid);
-    if (!allBots.includes(botJid)) {
-        // Podrías advertir que el usuario mencionado podría no ser un bot, pero lo estableceremos de todas formas por flexibilidad.
-        // m.reply('ⓘ Advertencia: El usuario mencionado no parece ser uno de los bots activos. Aún así, se establecerá.');
+    let who = m.mentionedJid && m.mentionedJid[0];
+    if (!who) {
+        return m.reply(`《✧》 Debes mencionar a un bot del grupo para establecerlo como primario.\n\n> Ejemplo:\n> *${usedPrefix + command} @tagdelbot*`);
     }
 
-    let botName = conn.getName(botJid);
-    chat.botPrimario = botJid;
+    // Verificamos que el JID mencionado es un participante del grupo
+    const participants = m.isGroup ? (await conn.groupMetadata(m.chat)).participants : [];
+    const botParticipant = participants.find(p => p.id === who);
 
-    let response = `✐ Se ha establecido a *@${botJid.split('@')[0]}* como bot primario de este grupo.\n> A partir de ahora, todos los comandos del grupo serán ejecutados por *@${botJid.split('@')[0]}*.`;
-    
-    await conn.sendMessage(m.chat, { 
-        text: response, 
-        mentions: [botJid] 
-    }, { quoted: m });
+    if (!botParticipant) {
+        return m.reply('El bot que mencionaste no se encuentra en este grupo.');
+    }
+
+    // Guardamos la configuración
+    chat.per = [who]; // Establece al bot mencionado como el ÚNICO permitido
+    chat.antiLag = true; // Activa el modo 'antiLag' que ahora funciona como 'bot primario'
+
+    let botName = conn.getName(who);
+
+    await conn.reply(m.chat, `✐ Se ha establecido a @${who.split('@')[0]} como bot primario de este grupo.\n\nA partir de ahora, todos los comandos del grupo serán ejecutados por @${who.split('@')[0]}.`, m, {
+        mentions: [who]
+    });
 }
 
-handler.help = ['setbotprimario @bot', 'setbot @bot'];
-handler.tags = ['grupo'];
-handler.command = ['setbotprimario', 'botprimario', 'setprimarybot', 'setbot'];
+handler.help = ['setbot @bot'];
+handler.tags = ['group'];
+handler.command = /^(setbot|botprimario)$/i;
 
 handler.group = true;
 handler.admin = true;
