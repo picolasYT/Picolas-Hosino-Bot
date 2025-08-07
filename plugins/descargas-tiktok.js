@@ -17,11 +17,14 @@ var handler = async (m, { conn, args, usedPrefix, command }) => {
             return conn.reply(m.chat, "❌ 𝙴𝚛𝚛𝚘𝚛: 𝙽𝚘 𝚜𝚎 𝚙𝚞𝚍𝚘 𝚘𝚋𝚝𝚎𝚗𝚎𝚛 𝚎𝚕 𝚟𝚒𝚍𝚎𝚘.", m);
         }
 
-        // Datos del video
         const caption = `
-乂  *T I K T O K  -  D O W N L O A D*
 
-✩  *Título* : ${result.title || 'Sin título'}
+`///${result.title || 'Sin título'}`///
+01:43 ━━━━●───── 04:40
+⇆ㅤ ㅤ◁ㅤ ❚❚ ㅤ▷ ㅤㅤ↻﻿
+               ılıılıılıılıılıılı
+ᴠᴏʟᴜᴍᴇ : ▮▮▮▮▮▮▮▮▮▮  
+
 ✩  *Autor* : ${result.author?.nickname || 'Desconocido'}
 ✩  *Duración* : ${result.duration || 0} segundos
 ✩  *Vistas* : ${result.play_count || 0}
