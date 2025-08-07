@@ -1,4 +1,4 @@
-  const avatar = "https://telegra.ph/file/5c558dc4f7aa68c25b193.jpg";
+  const avatar = "https://files.catbox.moe/1k2k6p.jpg";
 
   const text = `✨ *CONFIGURACIÓN DEL GRUPO*  
 
