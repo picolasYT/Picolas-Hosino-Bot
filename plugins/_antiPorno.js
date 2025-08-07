@@ -1,5 +1,6 @@
+// Creado por Gemini - Versión de Diagnóstico
+
 let handler = async (m, { conn, text, usedPrefix, command }) => {
-    // Obtiene los datos del chat actual desde la base de datos.
     let chat = global.db.data.chats[m.chat];
     if (!chat) chat = global.db.data.chats[m.chat] = {};
 
@@ -9,27 +10,28 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
         }
 
         let botJid = m.mentionedJid[0];
-        let botName = conn.getName(botJid);
-
-        // Guardamos el JID del bot elegido en la configuración del chat.
+        
+        // Guardamos el JID
         chat.primaryBot = botJid;
+        
+        // Mensaje de diagnóstico en la consola del bot
+        console.log(`[DIAGNÓSTICO] Bot primario establecido en el chat ${m.chat}: ${botJid}`);
 
-        await conn.reply(m.chat, `✐ Se ha establecido a *@${botJid.split('@')[0]}* como bot primario de este grupo.\n\nA partir de ahora, todos los comandos del grupo serán ejecutados por *@${botJid.split('@')[0]}*.`, m, {
+        await conn.reply(m.chat, `✐ Se ha establecido a *@${botJid.split('@')[0]}* como bot primario de este grupo.\n\nA partir de ahora, solo este bot ejecutará los comandos.`, m, {
             mentions: [botJid]
         });
+
     } else if (command === 'delbot') {
         if (!chat.primaryBot) {
             throw `《✧》 No hay ningún bot primario establecido en este grupo.`;
         }
         
-        let oldBotJid = chat.primaryBot;
-        
-        // Eliminamos la configuración del bot primario.
+        // Mensaje de diagnóstico en la consola del bot
+        console.log(`[DIAGNÓSTICO] Se eliminó el bot primario del chat ${m.chat}.`);
+
         delete chat.primaryBot;
 
-        await conn.reply(m.chat, `✓ Se ha eliminado la configuración de bot primario. Ahora todos los bots responderán en este grupo.`, m, {
-            mentions: [oldBotJid]
-        });
+        await conn.reply(m.chat, `✓ Se ha eliminado la configuración de bot primario. Ahora todos los bots responderán.`, m);
     }
 };
 
@@ -37,6 +39,6 @@ handler.help = ['botprimario @bot', 'delbot'];
 handler.tags = ['group'];
 handler.command = ['botprimario', 'setbot', 'delbot'];
 handler.group = true;
-handler.admin = true; // Solo los admins pueden usar este comando.
+handler.admin = true;
 
 export default handler;
