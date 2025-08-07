@@ -22,7 +22,7 @@ var handler = async (m, { conn, args, usedPrefix, command }) => {
     const caption = `
   *T I K T O K  -  D O W N L O A D*
 
-\`\`\`${result.title || 'Sin título'}\`\`\`
+\`${result.title || 'Sin título'}\`
 
 01:43 ━━━━●───── 04:40
 ⇆ㅤ ◁ㅤ ❚❚ ㅤ▷ ㅤ ↻
