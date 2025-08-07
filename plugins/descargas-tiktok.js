@@ -19,7 +19,7 @@ var handler = async (m, { conn, args, usedPrefix, command }) => {
 
         const caption = `
 
-`///${result.title || 'Sin título'}`///
+`\`\`\`${result.title || 'Sin título'}\`\`\`
 01:43 ━━━━●───── 04:40
 ⇆ㅤ ㅤ◁ㅤ ❚❚ ㅤ▷ ㅤㅤ↻﻿
                ılıılıılıılıılıılı
