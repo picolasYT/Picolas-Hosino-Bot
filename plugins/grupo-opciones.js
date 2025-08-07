@@ -1,8 +1,7 @@
-const handler = async (m, { conn, participants, groupMetadata }) => {
-  const { welcome, autolevelup, antiBot, antiBot2, autoAceptar, autoRechazar, autoresponder, modoadmin, reaction, nsfw, detect, antiLink, antiLink2, antitoxic, antiTraba, antifake } = global.db.data.chats[m.chat];
-  
-  const text = `✨ *CONFIGURACIÓN DEL GRUPO* 
-  
+  const avatar = "https://telegra.ph/file/5c558dc4f7aa68c25b193.jpg";
+
+  const text = `✨ *CONFIGURACIÓN DEL GRUPO*  
+
 ◈ Welcome: \`${welcome ? 'Activado' : 'Desactivado'}\`
 > ➨ *Descripción:* Activa o desactiva el mensaje de bienvenida en el grupo.
 
@@ -10,65 +9,62 @@ const handler = async (m, { conn, participants, groupMetadata }) => {
 > ➨ *Descripción:* Activa o descativa la subida automática de nivel en el Bot.
 
 ◈ Antibot: \`${antiBot ? 'Activado' : 'Desactivado'}\`
-> ➨ *Descripción:* Activa o descativa la expulsión de un grupo. otros bots no autorizados.
-
-◈ antiPorno: \`${antiPorno ? 'Activado' : 'Desactivado'}\`
-> ➨ *Descripción:* Activa o desactiva el bloqueo de enlaces de porno de WhatsApp. 
+> ➨ *Descripción:* Expulsa a otros bots no autorizados.
 
 ◈ Antisubbots: \`${antiBot2 ? 'Activado' : 'Desactivado'}\`
-> ➨ *Descripción:* Activa o descativa la expulsión de un grupo a subbots no autorizados.
+> ➨ *Descripción:* Expulsa a subbots no autorizados.
 
 ◈ Autoaceptar: \`${autoAceptar ? 'Activado' : 'Desactivado'}\`
-> ➨ *Descripción:* Activa o desactiva el autoaceptar que acepta automáticamente la solicitud a los números en el grupo.
+> ➨ *Descripción:* Acepta automáticamente números al grupo.
 
 ◈ Autorechazar: \`${autoRechazar ? 'Activado' : 'Desactivado'}\`
-> ➨ *Descripción:* Activa o desactiva el autorechazar que rechaza automáticamente la solicitud a los números en el grupo.
+> ➨ *Descripción:* Rechaza automáticamente números al grupo.
 
 ◈ Autoresponder: \`${autoresponder ? 'Activado' : 'Desactivado'}\`
-> ➨ *Descripción:* Activa las respuestas automáticas del bot usando la IA de Gemini.
+> ➨ *Descripción:* Responde automáticamente con IA.
 
 ◈ Modoadmin: \`${modoadmin ? 'Activado' : 'Desactivado'}\`
-> ➨ *Descripción:* El bot solo responderá a los administradores del grupo.
+> ➨ *Descripción:* Solo responde a admins.
 
 ◈ Reaction: \`${reaction ? 'Activado' : 'Desactivado'}\`
-> ➨ *Descripción:* Activa o desactiva las reacciones en el Bot.
+> ➨ *Descripción:* Activa las reacciones del bot.
 
-◈ Nsfw: \`${nsfw ? 'Activado' : 'Desactivado'}\` 
-> ➨ *Descripción:* Activa o desactiva los comandos +18 en el grupo y no los envia.
+◈ NSFW: \`${nsfw ? 'Activado' : 'Desactivado'}\`
+> ➨ *Descripción:* Activa comandos +18.
 
-◈ Detect: \`${detect ? 'Activado' : 'Desactivado'}\` 
-> ➨ *Descripción:* Activa o desactiva las notificaciones de cambios en el grupo.
+◈ Detect: \`${detect ? 'Activado' : 'Desactivado'}\`
+> ➨ *Descripción:* Detecta cambios en el grupo.
 
 ◈ Antilink: \`${antiLink ? 'Activado' : 'Desactivado'}\`
-> ➨ *Descripción:* Activa o desactiva el bloqueo de enlaces de WhatsApp. 
+> ➨ *Descripción:* Bloquea links de WhatsApp.
 
 ◈ Antilink2: \`${antiLink2 ? 'Activado' : 'Desactivado'}\`
-> ➨ *Descripción:* Activa o desactiva el bloqueo de enlaces de https. 
+> ➨ *Descripción:* Bloquea enlaces HTTPS.
 
 ◈ Antitoxic: \`${antitoxic ? 'Activado' : 'Desactivado'}\`
-> ➨ *Descripción:* Activa o desactiva el modo anti tóxicos, eliminará mensajes ofensivos.
+> ➨ *Descripción:* Elimina mensajes ofensivos.
 
 ◈ Antitraba: \`${antiTraba ? 'Activado' : 'Desactivado'}\`
-> ➨ *Descripción:* Activa o desactiva el antitraba eliminara cualquier mensaje con demasiados caracteres y evitará trabas.
+> ➨ *Descripción:* Evita mensajes traba (muchos caracteres).
 
-◈ antifake: \`${antifake ? 'Activado' : 'Desactivado'}\`
-> ➨ *Descripción:* Activa o desactiva el bloqueo de enlaces de WhatsApp.  
+◈ Antifake: \`${antifake ? 'Activado' : 'Desactivado'}\`
+> ➨ *Descripción:* Bloquea números falsos.
 
-_*✦ Nota: Puedes activar una de estas opciones de esta manera Ejemplo: #antilink*_`.trim();
+_*✦ Nota: Puedes activar una opción así: Ejemplo: #antilink*_`.trim();
 
-await conn.sendMessage(m.chat, {
-text: text,
-contextInfo: {
-externalAdReply: {
-title: packname,
-body: dev,
-thumbnailUrl: avatar,
-mediaType: 1,
-showAdAttribution: true,
-renderLargerThumbnail: true
-}
-}
-}, { quoted: m });
+  await conn.sendMessage(m.chat, {
+    text,
+    contextInfo: {
+      externalAdReply: {
+        title: packname,
+        body: dev,
+        thumbnailUrl: avatar,
+        mediaType: 1,
+        showAdAttribution: true,
+        renderLargerThumbnail: true
+      }
+    }
+  }, { quoted: m });
 };
 
 handler.help = ['configuraciongrupo'];
