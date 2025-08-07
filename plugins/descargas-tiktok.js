@@ -29,16 +29,14 @@ var handler = async (m, { conn, args, usedPrefix, command }) => {
                ılıılıılıılıılıılı
 𝚅𝙾𝙻𝚄𝙼𝙴 : ▮▮▮▮▮▮▮▮▮▮
 
-✩  *Autor* : ${result.author?.nickname || 'Desconocido'}
-✩  *Duración* : ${result.duration || 0} segundos
-✩  *Vistas* : ${result.play_count || 0}
-✩  *Likes* : ${result.digg_count || 0}
-✩  *Comentarios* : ${result.comment_count || 0}
-✩  *Compartidos* : ${result.share_count || 0}
-✩  *Publicado* : ${formatDate(result.create_time)}
-✩  *Descargas* : ${result.download_count || 0}
-
-> 🚩 *Rem-Chan Bot*
+❐  *Autor* : ${result.author?.nickname || 'Desconocido'}
+❐  *Duración* : ${result.duration || 0} segundos
+❐  *Vistas* : ${result.play_count || 0}
+❐  *Likes* : ${result.digg_count || 0}
+❐  *Comentarios* : ${result.comment_count || 0}
+❐  *Compartidos* : ${result.share_count || 0}
+❐  *Publicado* : ${formatDate(result.create_time)}
+❐  *Descargas* : ${result.download_count || 0}
 `.trim();
 
     await conn.sendFile(m.chat, result.play, 'tiktok.mp4', caption, m);
