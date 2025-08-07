@@ -16,7 +16,7 @@ const delay = ms => isNumber(ms) && new Promise(resolve => setTimeout(function (
 }, ms))
 
 const normalizeJid = jid => jid?.replace(/[^0-9]/g, '')
-const cleanJid = jid => jid?.split(':')[0] || ''
+const cleanJid = jid => jid?.split(':')[0] || '' // <-- Esta es la función que usaremos para la corrección
 
 export async function handler(chatUpdate) {
     this.msgqueque = this.msgqueque || []
@@ -130,10 +130,13 @@ export async function handler(chatUpdate) {
             console.error(e)
         }
         
+        // ===== NUEVO SISTEMA DE BOT PRIMARIO (LÓGICA PRINCIPAL) =====
         const chat = global.db.data.chats[m.chat]
-        if (chat && chat.botPrimario && chat.botPrimario !== this.user.jid) {
-            return;
+        // <<< CORRECCIÓN CLAVE AQUÍ: Usamos cleanJid para comparar los JID base y evitar errores de formato.
+        if (chat && chat.botPrimario && cleanJid(chat.botPrimario) !== cleanJid(this.user.jid)) {
+            return; 
         }
+        // ===== FIN DEL NUEVO SISTEMA =====
 
         if (opts['nyimak']) return
         if (!m.fromMe && opts['self']) return
