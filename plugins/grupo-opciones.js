@@ -1,4 +1,6 @@
-  const avatar = "https://files.catbox.moe/1k2k6p.jpg";
+const handler = async (m, { conn }) => {
+
+const avatar = "https://files.catbox.moe/1k2k6p.jpg";
 
   const text = `✨ *CONFIGURACIÓN DEL GRUPO*  
 
