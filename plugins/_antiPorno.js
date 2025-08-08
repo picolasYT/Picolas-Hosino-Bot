@@ -31,7 +31,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
 
 handler.help = ['setbotprimario @bot', 'setbot @bot'];
 handler.tags = ['grupo'];
-handler.command = ['setbotprimario', 'botprimario', 'setprimarybot', 'setbot'];
+handler.command = ['setprimary', 'botprimario', 'setprimarybot', 'setbot'];
 handler.group = true;
 handler.admin = true;
 
