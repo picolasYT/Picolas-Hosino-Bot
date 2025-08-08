@@ -12,7 +12,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
             return;
         }
         
-        return m.reply(`《✧》 Debes mencionar a un bot del grupo para establecerlo como primario.\n\n> *Ejemplo:* ${usedPrefix + command} @tagdelbot\n\n> ❀ También puedes usar *resetbot* para que todos los bots vuelvan a responder.`);
+        return m.reply(`《✧》 Debes mencionar a un bot del grupo para establecerlo como primario.\n\n> *Ejemplo:* ${usedPrefix + command} @tagdelbot\n\n> ❀ También puedes usar *resetbot* (SIN PREFIJOS) para que todos los bots vuelvan a responder.`);
     }
 
     let botJid = m.mentionedJid[0];
