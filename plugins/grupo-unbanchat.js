@@ -38,7 +38,6 @@ let handler = async (m, { conn, usedPrefix, command, args }) => {
 handler.help = ['bot'];
 handler.tags = ['grupo'];
 handler.command = ['bot'];
-handler.rowner = true;
 handler.admin = true;
 
 export default handler;
