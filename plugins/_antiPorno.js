@@ -21,7 +21,10 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     console.log(`[Bot Primario SET] Chat: ${m.chat} | JID Guardado: ${botJid}`);
 
     let botName = conn.getName(botJid);
-    let response = `✐ Se ha establecido a *@${botJid.split('@')[0]}* como bot primario de este grupo.\n> A partir de ahora, todos los comandos del grupo serán ejecutados por *@${botJid.split('@')[0]}*.`;
+    let response = `✐ Se ha establecido a *@${botJid.split('@')[0]}* como bot primario de este grupo.
+> A partir de ahora, todos los comandos del grupo serán ejecutados por *@${botJid.split('@')[0]}*.
+
+> *Nota:* Si esto fue un error, puedes restablecer la configuración usando el comando \`resetbot\` (sin prefijo). Este es el único comando que no está restringido y será reconocido por cualquier bot en el grupo.`;
     
     await conn.sendMessage(m.chat, { 
         text: response, 
