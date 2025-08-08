@@ -15,9 +15,6 @@ const delay = ms => isNumber(ms) && new Promise(resolve => setTimeout(function (
     resolve()
 }, ms))
 
-const normalizeJid = jid => jid?.replace(/[^0-9]/g, '')
-const cleanJid = jid => jid?.split(':')[0] || ''
-
 export async function handler(chatUpdate) {
     this.msgqueque = this.msgqueque || []
     this.uptime = this.uptime || Date.now()
@@ -34,6 +31,30 @@ export async function handler(chatUpdate) {
         m = smsg(this, m) || m
         if (!m)
             return
+        
+        // ===== LÓGICA DE DEPURACIÓN DEL BOT PRIMARIO =====
+        const chatDB = global.db.data.chats[m.chat];
+        if (chatDB && chatDB.botPrimario) {
+            const primaryBotJid = chatDB.botPrimario;
+            const currentBotJid = this.user.jid;
+
+            // Mostramos en consola EXACTAMENTE lo que se está comparando
+            console.log(`--- [DEPURACIÓN BOT PRIMARIO] ---`);
+            console.log(`> Chat: ${m.chat}`);
+            console.log(`> Bot Primario Guardado: ${primaryBotJid}`);
+            console.log(`> JID de ESTE Bot:      ${currentBotJid}`);
+            
+            // La comparación más simple y directa posible
+            if (primaryBotJid !== currentBotJid) {
+                console.log(`> RESULTADO: DIFERENTES. Este bot (${currentBotJid.split('@')[0]}) se silenciará.`);
+                console.log(`---------------------------------`);
+                return; // Detiene la ejecución si este no es el bot primario.
+            }
+            console.log(`> RESULTADO: IGUALES. Este bot (${currentBotJid.split('@')[0]}) SÍ responderá.`);
+            console.log(`---------------------------------`);
+        }
+        // ===== FIN DE LA LÓGICA DE DEPURACIÓN =====
+
         m.exp = 0
         m.coin = false
         try {
@@ -80,7 +101,9 @@ export async function handler(chatUpdate) {
                 if (!isNumber(user.warn)) user.warn = 0
             } else
                 global.db.data.users[m.sender] = {
-                    exp: 0, coin: 10, joincount: 1, diamond: 3, lastadventure: 0, health: 100, lastclaim: 0, lastcofre: 0, lastdiamantes: 0, lastcode: 0, lastduel: 0, lastpago: 0, lastmining: 0, lastcodereg: 0, muto: false, registered: false, genre: '', birth: '', marry: '', description: '', packstickers: null, name: m.name, age: -1, regTime: -1, afk: -1, afkReason: '', banned: false, useDocument: false, bank: 0, level: 0, role: 'Nuv', premium: false, premiumTime: 0,                 
+                    exp: 0, coin: 10, joincount: 1, diamond: 3, lastadventure: 0, health: 100, lastclaim: 0, lastcofre: 0, lastdiamantes: 0, lastcode: 0, lastduel: 0, lastpago: 0, lastmining: 0, lastcodereg: 0,
+                    muto: false, registered: false, genre: '', birth: '', marry: '', description: '', packstickers: null, name: m.name, age: -1, regTime: -1, afk: -1, afkReason: '', banned: false, useDocument: false,
+                    bank: 0, level: 0, role: 'Nuv', premium: false, premiumTime: 0,                 
                 }
             let chat = global.db.data.chats[m.chat]
             if (typeof chat !== 'object')
@@ -106,13 +129,12 @@ export async function handler(chatUpdate) {
                 if (!('antifake' in chat)) chat.antifake = false
                 if (!('delete' in chat)) chat.delete = false
                 if (!isNumber(chat.expired)) chat.expired = 0
-                if (!('antiLag' in chat)) chat.antiLag = false
-                if (!('per' in chat)) chat.per = []
-                if (!('primaryBot' in chat)) chat.primaryBot = null
+                if (!('botPrimario' in chat)) chat.botPrimario = null
             } else
                 global.db.data.chats[m.chat] = {
-                    sAutoresponder: '', welcome: true, isBanned: false, autolevelup: false, autoresponder: false, delete: false, autoAceptar: false, autoRechazar: false, detect: true, antiBot: false, antiBot2: false, modoadmin: false, antiLink: true, antifake: false, antiArabe: false, reaction: false, nsfw: false, expired: 0, antiLag: false, per: [],
-                    primaryBot: null,
+                    sAutoresponder: '', welcome: true, isBanned: false, autolevelup: false, autoresponder: false, delete: false, autoAceptar: false, autoRechazar: false, detect: true, antiBot: false,
+                    antiBot2: false, modoadmin: false, antiLink: true, antifake: false, antiArabe: false, reaction: false, nsfw: false, expired: 0, 
+                    botPrimario: null,
                 }
             var settings = global.db.data.settings[this.user.jid]
             if (typeof settings !== 'object') global.db.data.settings[this.user.jid] = {}
@@ -129,64 +151,31 @@ export async function handler(chatUpdate) {
             console.error(e)
         }
         
-        // --- INICIO DEL BLOQUE DE DIAGNÓSTICO DEL BOT PRIMARIO ---
-        try {
-            const chat = global.db.data.chats[m.chat] || {};
-            const primaryBotJid = chat.primaryBot;
-
-            // Solo ejecutar si hay un bot primario configurado
-            if (primaryBotJid && typeof primaryBotJid === 'string') {
-                const currentBotJid = this.user.jid;
-                const isThisBotPrimary = (currentBotJid.split('@')[0] === primaryBotJid.split('@')[0]);
-
-                // Imprimir en consola la información para cada mensaje
-                console.log(`--- [DIAGNÓSTICO BOT PRIMARIO] ---`);
-                console.log(`> Chat: ${m.chat}`);
-                console.log(`> Bot Primario Guardado: ${primaryBotJid}`);
-                console.log(`> Bot Actual (self): ${currentBotJid}`);
-                console.log(`> ¿Este bot es el primario?: ${isThisBotPrimary}`);
-                console.log(`---------------------------------`);
-
-                // Si este bot NO es el primario, detener la ejecución.
-                if (!isThisBotPrimary) {
-                    return;
-                }
-            }
-        } catch (e) {
-            console.error('[ERROR EN DIAGNÓSTICO DE BOT PRIMARIO]', e);
-        }
-        // --- FIN DEL BLOQUE DE DIAGNÓSTICO ---
-
         if (opts['nyimak']) return
         if (!m.fromMe && opts['self']) return
         if (opts['swonly'] && m.chat !== 'status@broadcast') return
         if (typeof m.text !== 'string')
             m.text = ''
 
+        // (El resto del código sigue igual)
         let _user = global.db.data && global.db.data.users && global.db.data.users[m.sender]
-
         const groupMetadata = (m.isGroup ? ((conn.chats[m.chat] || {}).metadata || await this.groupMetadata(m.chat).catch(_ => null)) : {}) || {}
         const participants = (m.isGroup ? groupMetadata.participants : []) || []
-
+        const cleanJid = jid => jid?.split(':')[0] || ''
+        const normalizeJid = jid => jid?.replace(/[^0-9]/g, '')
         const senderNum = normalizeJid(m.sender)
         const botNums = [this.user.jid, this.user.lid].map(j => normalizeJid(cleanJid(j)))
-        const user = m.isGroup 
-            ? participants.find(u => normalizeJid(u.id) === senderNum) 
-            : {}
-        const bot = m.isGroup 
-            ? participants.find(u => botNums.includes(normalizeJid(u.id))) 
-            : {}
+        const user = m.isGroup ? participants.find(u => normalizeJid(u.id) === senderNum) : {}
+        const bot = m.isGroup ? participants.find(u => botNums.includes(normalizeJid(u.id))) : {}
         const isRAdmin = user?.admin === 'superadmin' || false
         const isAdmin = isRAdmin || user?.admin === 'admin' || false
         const isBotAdmin = !!bot?.admin
-
         const isROwner = [conn.decodeJid(global.conn.user.id), ...global.owner.map(([number]) => number)]
             .map(v => v.replace(/[^0-9]/g, ''))
             .includes(senderNum)
         const isOwner = isROwner || m.fromMe
         const isMods = isOwner || global.mods.map(v => v.replace(/[^0-9]/g, '')).includes(senderNum)
         const isPrems = isROwner || global.prems.map(v => v.replace(/[^0-9]/g, '')).includes(senderNum) || _user.premium == true
-
         if (opts['queque'] && m.text && !(isMods || isPrems)) {
             let queque = this.msgqueque, time = 1000 * 5
             const previousID = queque[queque.length - 1]
@@ -196,21 +185,14 @@ export async function handler(chatUpdate) {
                 await delay(time)
             }, time)
         }
-
-        if (m.isBaileys) {
-            return
-        }
+        if (m.isBaileys) { return }
         m.exp += Math.ceil(Math.random() * 10)
-
         let usedPrefix
-
         const ___dirname = path.join(path.dirname(fileURLToPath(import.meta.url)), './plugins')
         for (let name in global.plugins) {
             let plugin = global.plugins[name]
-            if (!plugin)
-                continue
-            if (plugin.disabled)
-                continue
+            if (!plugin) continue
+            if (plugin.disabled) continue
             const __filename = join(___dirname, name)
             if (typeof plugin.all === 'function') {
                 try {
@@ -219,37 +201,27 @@ export async function handler(chatUpdate) {
                         __dirname: ___dirname,
                         __filename
                     })
-                } catch (e) {
-                    console.error(e)
-                }
+                } catch (e) { console.error(e) }
             }
             if (!opts['restrict'])
-                if (plugin.tags && plugin.tags.includes('admin')) {
-                    continue
-                }
+                if (plugin.tags && plugin.tags.includes('admin')) { continue }
             const str2Regex = str => str.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&')
             let _prefix = plugin.customPrefix ? plugin.customPrefix : conn.prefix ? conn.prefix : global.prefix
-            let match = (_prefix instanceof RegExp ? 
-                [[_prefix.exec(m.text), _prefix]] :
+            let match = (_prefix instanceof RegExp ? [[_prefix.exec(m.text), _prefix]] :
                 Array.isArray(_prefix) ?
-                    _prefix.map(p => {
-                        let re = p instanceof RegExp ?
-                            p :
-                            new RegExp(str2Regex(p))
-                        return [re.exec(m.text), re]
-                    }) :
-                    typeof _prefix === 'string' ?
-                        [[new RegExp(str2Regex(_prefix)).exec(m.text), new RegExp(str2Regex(_prefix))]] :
-                        [[[], new RegExp]]
+                _prefix.map(p => {
+                    let re = p instanceof RegExp ? p : new RegExp(str2Regex(p))
+                    return [re.exec(m.text), re]
+                }) :
+                typeof _prefix === 'string' ? [[new RegExp(str2Regex(_prefix)).exec(m.text), new RegExp(str2Regex(_prefix))]] : [[[], new RegExp]]
             ).find(p => p[1])
             if (typeof plugin.before === 'function') {
                 if (await plugin.before.call(this, m, {
                     match, conn: this, participants, groupMetadata, user, bot, isROwner, isOwner, isRAdmin, isAdmin, isBotAdmin, isPrems, chatUpdate, __dirname: ___dirname, __filename
                 }))
-                    continue
-            }
-            if (typeof plugin !== 'function')
                 continue
+            }
+            if (typeof plugin !== 'function') continue
             if ((usedPrefix = (match[0] || '')[0])) {
                 let noPrefix = m.text.replace(usedPrefix, '')
                 let [command, ...args] = noPrefix.trim().split` `.filter(v => v)
@@ -258,23 +230,13 @@ export async function handler(chatUpdate) {
                 let text = _args.join` `
                 command = (command || '').toLowerCase()
                 let fail = plugin.fail || global.dfail
-                let isAccept = plugin.command instanceof RegExp ? 
-                    plugin.command.test(command) :
+                let isAccept = plugin.command instanceof RegExp ? plugin.command.test(command) :
                     Array.isArray(plugin.command) ?
-                        plugin.command.some(cmd => cmd instanceof RegExp ? 
-                            cmd.test(command) :
-                            cmd === command) :
-                        typeof plugin.command === 'string' ? 
-                            plugin.command === command :
-                            false
-
+                    plugin.command.some(cmd => cmd instanceof RegExp ? cmd.test(command) : cmd === command) :
+                    typeof plugin.command === 'string' ? plugin.command === command : false
                 global.comando = command
-
                 if ((m.id.startsWith('NJX-') || (m.id.startsWith('BAE5') && m.id.length === 16) || (m.id.startsWith('B24E') && m.id.length === 20))) return
-
-                if (!isAccept) {
-                    continue
-                }
+                if (!isAccept) { continue }
                 m.plugin = name
                 if (m.chat in global.db.data.chats || m.sender in global.db.data.users) {
                     let chat = global.db.data.chats[m.chat]
@@ -287,20 +249,16 @@ export async function handler(chatUpdate) {
                         user.antispam++
                         return
                     }
-
                     if (user.antispam2 && isROwner) return
                     let time = global.db.data.users[m.sender].spam + 3000
                     if (new Date - global.db.data.users[m.sender].spam < 3000) return console.log(`[ SPAM ]`) 
                     global.db.data.users[m.sender].spam = new Date * 1
-
                     if (m.chat in global.db.data.chats || m.sender in global.db.data.users) {
                         let chat = global.db.data.chats[m.chat]
                         let user = global.db.data.users[m.sender]
                         let setting = global.db.data.settings[this.user.jid]
-                        if (name != 'grupo-unbanchat.js' && chat?.isBanned)
-                            return 
-                        if (name != 'owner-unbanuser.js' && user?.banned)
-                            return
+                        if (name != 'grupo-unbanchat.js' && chat?.isBanned) return 
+                        if (name != 'owner-unbanuser.js' && user?.banned) return
                     }
                 }
                 let hl = _prefix 
@@ -345,10 +303,8 @@ export async function handler(chatUpdate) {
                 }
                 m.isCommand = true
                 let xp = 'exp' in plugin ? parseInt(plugin.exp) : 17 
-                if (xp > 200)
-                    m.reply('chirrido -_-')
-                else
-                    m.exp += xp
+                if (xp > 200) m.reply('chirrido -_-')
+                else m.exp += xp
                 if (!isPrems && plugin.coin && global.db.data.users[m.sender].coin < plugin.coin * 1) {
                     conn.reply(m.chat, `❮✦❯ Se agotaron tus ${moneda}`, m)
                     continue
@@ -362,8 +318,7 @@ export async function handler(chatUpdate) {
                 }
                 try {
                     await plugin.call(this, m, extra)
-                    if (!isPrems)
-                        m.coin = m.coin || plugin.coin || false
+                    if (!isPrems) m.coin = m.coin || plugin.coin || false
                 } catch (e) {
                     m.error = e
                     console.error(e)
@@ -377,12 +332,9 @@ export async function handler(chatUpdate) {
                     if (typeof plugin.after === 'function') {
                         try {
                             await plugin.after.call(this, m, extra)
-                        } catch (e) {
-                            console.error(e)
-                        }
+                        } catch (e) { console.error(e) }
                     }
-                    if (m.coin)
-                        conn.reply(m.chat, `❮✦❯ Utilizaste ${+m.coin} ${moneda}`, m)
+                    if (m.coin) conn.reply(m.chat, `❮✦❯ Utilizaste ${+m.coin} ${moneda}`, m)
                 }
                 break
             }
@@ -392,8 +344,7 @@ export async function handler(chatUpdate) {
     } finally {
         if (opts['queque'] && m.text) {
             const quequeIndex = this.msgqueque.indexOf(m.id || m.key.id)
-            if (quequeIndex !== -1)
-                this.msgqueque.splice(quequeIndex, 1)
+            if (quequeIndex !== -1) this.msgqueque.splice(quequeIndex, 1)
         }
         let user, stats = global.db.data.stats
         if (m) { let utente = global.db.data.users[m.sender]
@@ -406,27 +357,17 @@ export async function handler(chatUpdate) {
                 user.exp += m.exp
                 user.coin -= m.coin * 1
             }
-
             let stat
             if (m.plugin) {
                 let now = +new Date
                 if (m.plugin in stats) {
                     stat = stats[m.plugin]
-                    if (!isNumber(stat.total))
-                        stat.total = 1
-                    if (!isNumber(stat.success))
-                        stat.success = m.error != null ? 0 : 1
-                    if (!isNumber(stat.last))
-                        stat.last = now
-                    if (!isNumber(stat.lastSuccess))
-                        stat.lastSuccess = m.error != null ? 0 : now
+                    if (!isNumber(stat.total)) stat.total = 1
+                    if (!isNumber(stat.success)) stat.success = m.error != null ? 0 : 1
+                    if (!isNumber(stat.last)) stat.last = now
+                    if (!isNumber(stat.lastSuccess)) stat.lastSuccess = m.error != null ? 0 : now
                 } else
-                    stat = stats[m.plugin] = {
-                        total: 1,
-                        success: m.error != null ? 0 : 1,
-                        last: now,
-                        lastSuccess: m.error != null ? 0 : now
-                    }
+                    stat = stats[m.plugin] = { total: 1, success: m.error != null ? 0 : 1, last: now, lastSuccess: m.error != null ? 0 : now }
                 stat.total += 1
                 stat.last = now
                 if (m.error == null) {
@@ -435,36 +376,25 @@ export async function handler(chatUpdate) {
                 }
             }
         }
-
         try {
             if (!opts['noprint']) await (await import(`./lib/print.js`)).default(m, this)
-        } catch (e) { 
-            console.log(m, m.quoted, e)
-        }
+        } catch (e) { console.log(m, m.quoted, e) }
         let settingsREAD = global.db.data.settings[this.user.jid] || {}  
         if (opts['autoread']) await this.readMessages([m.key])
-
-        if (db.data.chats[m.chat].reaction && m.text.match(/(ción|dad|aje|oso|izar|mente|pero|tion|age|ous|ate|and|but|ify|ai|yuki|a|s)/gi)) {
+        if (global.db.data.chats[m.chat]?.reaction && m.text.match(/(ción|dad|aje|oso|izar|mente|pero|tion|age|ous|ate|and|but|ify|ai|yuki|a|s)/gi)) {
+            const pickRandom = (list) => list[Math.floor(Math.random() * list.length)]
             let emot = pickRandom(["🍟", "😃", "😄", "😁", "😆", "🍓", "😅", "😂", "🤣", "🥲", "☺️", "😊", "😇", "🙂", "🙃", "😉", "😌", "😍", "🥰", "😘", "😗", "😙", "🌺", "🌸", "😚", "😋", "😛", "😝", "😜", "🤪", "🤨", "🌟", "🤓", "😎", "🥸", "🤩", "🥳", "😏", "💫", "😞", "😔", "😟", "😕", "🙁", "☹️", "😣", "😖", "😫", "😩", "🥺", "😢", "😭", "😤", "😠", "😡", "🤬", "🤯", "😳", "🥵", "🥶", "😶‍🌫️", "😱", "😨", "😰", "😥", "😓", "🤗", "🤔", "🫣", "🤭", "🤖", "🍭", "🤫", "🫠", "🤥", "😶", "📇", "😐", "💧", "😑", "🫨", "😬", "🙄", "😯", "😦", "😧", "😮", "😲", "🥱", "😴", "🤤", "😪", "😮‍💨", "😵", "😵‍💫", "🤐", "🥴", "🤢", "🤮", "🤧", "😷", "🤒", "🤕", "🤑", "🤠", "😈", "👿", "👺", "🧿", "🌩", "👻", "😺", "😸", "😹", "😻", "😼", "😽", "🙀", "😿", "😾", "🫶", "👍", "✌️", "🙏", "🫵", "🤏", "🤌", "☝️", "🖕", "🙏", "🫵", "🫂", "🐱", "🤹‍♀️", "🤹‍♂️", "🗿", "✨", "⚡", "🔥", "🌈", "🩷", "❤️", "🧡", "💛", "💚", "🩵", "💙", "💜", "🖤", "🩶", "🤍", "🤎", "💔", "❤️‍🔥", "❤️‍🩹", "❣️", "💕", "💞", "💓", "💗", "💖", "💘", "💝", "🚩", "👊", "⚡️", "💋", "🫰", "💅", "👑", "🐣", "🐤", "🐈"])
             if (!m.fromMe) return this.sendMessage(m.chat, { react: { text: emot, key: m.key }})
         }
-        function pickRandom(list) { return list[Math.floor(Math.random() * list.length)]}
     }
 }
-
-global.dfail = (type, m, conn) => {
-    failureHandler(type, conn, m);
-};
-
+global.dfail = (type, m, conn) => { failureHandler(type, conn, m); };
 const file = global.__filename(import.meta.url, true);
-
 watchFile(file, async () => {
     unwatchFile(file);
     console.log(chalk.green('Actualizando "handler.js"'));
     if (global.conns && global.conns.length > 0 ) {
         const users = [...new Set([...global.conns.filter((conn) => conn.user && conn.ws.socket && conn.ws.socket.readyState !== ws.CLOSED).map((conn) => conn)])];
-        for (const userr of users) {
-            userr.subreloadHandler(false)
-        }
+        for (const userr of users) { userr.subreloadHandler(false) }
     }
 });
