@@ -32,28 +32,32 @@ export async function handler(chatUpdate) {
         if (!m)
             return
         
-        // ===== LÓGICA DE DEPURACIÓN DEL BOT PRIMARIO =====
+        // --- INICIO DE LA LÓGICA DEL BOT PRIMARIO CON EXCEPCIÓN ---
         const chatDB = global.db.data.chats[m.chat];
-        if (chatDB && chatDB.botPrimario) {
+        // Lista de comandos universales que TODOS los bots deben obedecer
+        const universalCommands = ['resetbot', 'resetprimario', 'botreset'];
+        
+        let isUniversalCommand = false;
+        if (m.text) {
+            let potentialCommand = m.text.trim().split(' ')[0] || '';
+            let prefix = /^[\\/!#.]/.exec(potentialCommand)?.[0];
+            let commandName = prefix ? potentialCommand.slice(prefix.length).toLowerCase() : '';
+            if (universalCommands.includes(commandName)) {
+                isUniversalCommand = true;
+            }
+        }
+
+        // Si hay un bot primario Y el comando NO es universal, aplicamos la regla
+        if (chatDB && chatDB.botPrimario && !isUniversalCommand) {
             const primaryBotJid = chatDB.botPrimario;
             const currentBotJid = this.user.jid;
 
-            // Mostramos en consola EXACTAMENTE lo que se está comparando
-            console.log(`--- [DEPURACIÓN BOT PRIMARIO] ---`);
-            console.log(`> Chat: ${m.chat}`);
-            console.log(`> Bot Primario Guardado: ${primaryBotJid}`);
-            console.log(`> JID de ESTE Bot:      ${currentBotJid}`);
-            
-            // La comparación más simple y directa posible
             if (primaryBotJid !== currentBotJid) {
-                console.log(`> RESULTADO: DIFERENTES. Este bot (${currentBotJid.split('@')[0]}) se silenciará.`);
-                console.log(`---------------------------------`);
-                return; // Detiene la ejecución si este no es el bot primario.
+                // Silenciamos al bot si no es el primario
+                return; 
             }
-            console.log(`> RESULTADO: IGUALES. Este bot (${currentBotJid.split('@')[0]}) SÍ responderá.`);
-            console.log(`---------------------------------`);
         }
-        // ===== FIN DE LA LÓGICA DE DEPURACIÓN =====
+        // --- FIN DE LA LÓGICA DEL BOT PRIMARIO ---
 
         m.exp = 0
         m.coin = false
@@ -157,7 +161,7 @@ export async function handler(chatUpdate) {
         if (typeof m.text !== 'string')
             m.text = ''
 
-        // (El resto del código sigue igual)
+        // (El resto del código sigue igual, no hay más cambios)
         let _user = global.db.data && global.db.data.users && global.db.data.users[m.sender]
         const groupMetadata = (m.isGroup ? ((conn.chats[m.chat] || {}).metadata || await this.groupMetadata(m.chat).catch(_ => null)) : {}) || {}
         const participants = (m.isGroup ? groupMetadata.participants : []) || []
