@@ -39,5 +39,6 @@ handler.help = ['bot'];
 handler.tags = ['grupo'];
 handler.command = ['bot'];
 handler.admin = true;
+handler.rowner = true;
 
 export default handler;
