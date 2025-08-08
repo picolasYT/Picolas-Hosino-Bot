@@ -18,7 +18,6 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     let botJid = m.mentionedJid[0];
     chat.botPrimario = botJid;
 
-    // AÑADIMOS ESTA LÍNEA PARA VER QUÉ SE GUARDA
     console.log(`[Bot Primario SET] Chat: ${m.chat} | JID Guardado: ${botJid}`);
 
     let botName = conn.getName(botJid);
