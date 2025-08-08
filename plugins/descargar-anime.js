@@ -1,4 +1,4 @@
-import { download, detail, search } from "../lib/anime.js";
+import { getDownloadLinks, detail, search } from "../lib/anime.js";
 
 async function lang(episodes) {
     const list = [];
