@@ -2,25 +2,24 @@ let handler = async (m, { conn }) => {
     let chat = global.db.data.chats[m.chat];
 
     if (!chat || !chat.botPrimario) {
-        return m.reply('《✧》 No hay ningún bot primario establecido en este grupo. No hay nada que restablecer.');
+        // No enviamos mensaje de error para no spamear, ya que todos los bots lo ejecutarían.
+        // La confirmación de abajo es suficiente.
+        console.log(`[ResetBot] Intento de reseteo en ${m.chat}, pero no había bot primario.`);
+        return;
     }
 
-    // Guardamos el nombre del bot que estaba como primario para mencionarlo (opcional)
-    let oldBotName = conn.getName(chat.botPrimario);
-
-    // La acción clave: Limpiamos la configuración
+    console.log(`[ResetBot] Reseteando configuración para el chat: ${m.chat}`);
     chat.botPrimario = null;
-
-    // Enviamos un mensaje de confirmación para que el admin sepa que funcionó
+    
+    // Solo un bot (el primero que llegue) enviará el mensaje de confirmación
     await m.reply(`✐ ¡Listo! Se ha restablecido la configuración.\n> A partir de ahora, todos los bots responderán nuevamente en este grupo.`);
 }
 
-handler.help = ['resetbot'];
-handler.tags = ['grupo'];
-// Comandos y alias para el reseteo
-handler.command = ['resetbot', 'resetprimario', 'botreset']; 
+// ESTA ES LA MAGIA: El bot buscará estas palabras exactas, sin prefijo.
+handler.customPrefix = /^(resetbot|resetprimario|botreset)$/i;
+handler.command = new RegExp;
 
 handler.group = true;
-handler.admin = true; // Solo los admins pueden usar este comando
+handler.admin = true;
 
 export default handler;
