@@ -32,21 +32,17 @@ export async function handler(chatUpdate) {
         if (!m)
             return
         
-        // --- INICIO DE LA LÓGICA DEL BOT PRIMARIO (VERSIÓN SIMPLE Y DIRECTA) ---
         const chatDB = global.db.data.chats[m.chat];
         if (chatDB && chatDB.botPrimario) {
-            // Lista de palabras que anulan la regla.
             const universalWords = ['resetbot', 'resetprimario', 'botreset'];
             const firstWord = m.text ? m.text.trim().split(' ')[0].toLowerCase() : '';
 
-            // Si el mensaje NO comienza con una de las palabras universales, aplicamos la regla.
             if (!universalWords.includes(firstWord)) {
                 if (chatDB.botPrimario !== this.user.jid) {
-                    return; // Silencia al bot si no es el primario.
+                    return;
                 }
             }
         }
-        // --- FIN DE LA LÓGICA ---
 
         m.exp = 0
         m.coin = false
