@@ -32,32 +32,21 @@ export async function handler(chatUpdate) {
         if (!m)
             return
         
-        // --- INICIO DE LA LÓGICA DEL BOT PRIMARIO CON EXCEPCIÓN ---
+        // --- INICIO DE LA LÓGICA DEL BOT PRIMARIO (VERSIÓN SIMPLE Y DIRECTA) ---
         const chatDB = global.db.data.chats[m.chat];
-        // Lista de comandos universales que TODOS los bots deben obedecer
-        const universalCommands = ['resetbot', 'resetprimario', 'botreset'];
-        
-        let isUniversalCommand = false;
-        if (m.text) {
-            let potentialCommand = m.text.trim().split(' ')[0] || '';
-            let prefix = /^[\\/!#.]/.exec(potentialCommand)?.[0];
-            let commandName = prefix ? potentialCommand.slice(prefix.length).toLowerCase() : '';
-            if (universalCommands.includes(commandName)) {
-                isUniversalCommand = true;
+        if (chatDB && chatDB.botPrimario) {
+            // Lista de palabras que anulan la regla.
+            const universalWords = ['resetbot', 'resetprimario', 'botreset'];
+            const firstWord = m.text ? m.text.trim().split(' ')[0].toLowerCase() : '';
+
+            // Si el mensaje NO comienza con una de las palabras universales, aplicamos la regla.
+            if (!universalWords.includes(firstWord)) {
+                if (chatDB.botPrimario !== this.user.jid) {
+                    return; // Silencia al bot si no es el primario.
+                }
             }
         }
-
-        // Si hay un bot primario Y el comando NO es universal, aplicamos la regla
-        if (chatDB && chatDB.botPrimario && !isUniversalCommand) {
-            const primaryBotJid = chatDB.botPrimario;
-            const currentBotJid = this.user.jid;
-
-            if (primaryBotJid !== currentBotJid) {
-                // Silenciamos al bot si no es el primario
-                return; 
-            }
-        }
-        // --- FIN DE LA LÓGICA DEL BOT PRIMARIO ---
+        // --- FIN DE LA LÓGICA ---
 
         m.exp = 0
         m.coin = false
@@ -161,7 +150,7 @@ export async function handler(chatUpdate) {
         if (typeof m.text !== 'string')
             m.text = ''
 
-        // (El resto del código sigue igual, no hay más cambios)
+        // (El resto del código sigue igual)
         let _user = global.db.data && global.db.data.users && global.db.data.users[m.sender]
         const groupMetadata = (m.isGroup ? ((conn.chats[m.chat] || {}).metadata || await this.groupMetadata(m.chat).catch(_ => null)) : {}) || {}
         const participants = (m.isGroup ? groupMetadata.participants : []) || []
