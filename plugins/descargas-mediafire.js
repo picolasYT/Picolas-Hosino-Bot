@@ -1,42 +1,42 @@
 import fetch from 'node-fetch';
 
-const handler = async (m, { conn, text }) => {
-  if (!text) throw '🍬 *Por favor, ingresa un enlace válido de MediaFire*';
+const handler = async (m, { conn, args }) => {
+    if (!args[0]) throw '📎 *Por favor, proporciona un enlace válido de MediaFire.*\n\nEjemplo: `.mf https://www.mediafire.com/file/xxxxxx/archivo.apk/file`';
 
-  if (!text.match(/(https?:\/\/(www\.)?mediafire\.com\/[^\s]+)/gi)) {
-    throw '🍬 *El enlace debe ser de MediaFire*';
-  }
+    if (!args[0].includes('mediafire.com')) throw '❌ *Ese enlace no es válido de MediaFire.*';
 
-  try {
-    // Reacción estética
-    await conn.sendMessage(m.chat, { react: { text: '✨', key: m.key } });
+    try {
+        // Reacción estética
+        await conn.sendMessage(m.chat, { react: { text: '✨', key: m.key } });
 
-    const apiKey = 'sylph-30fc019324';
-    const apiUrl = `https://api.sylphy.xyz/download/mediafire?url=${encodeURIComponent(text)}&apikey=${apiKey}`;
+        let apiUrl = `https://api.sylphy.xyz/download/mediafire?url=${encodeURIComponent(args[0])}&apikey=sylph-30fc019324`;
 
-    const res = await fetch(apiUrl);
-    const json = await res.json();
+        let res = await fetch(apiUrl);
+        let json = await res.json();
 
-    if (!json.status || !json.data?.dl_url) throw '🍬 *Error al obtener el archivo de MediaFire*';
+        if (!json.status) throw '⚠️ *No se pudo descargar el archivo, revisa el enlace.*';
 
-    const { filename, filesize, mimetype, dl_url } = json.data;
+        let { filename, filesize, mimetype, dl_url } = json.data;
 
-    await conn.sendMessage(m.chat, {
-      document: { url: dl_url },
-      fileName: filename,
-      mimetype: mimetype,
-      caption: `📦 *Nombre:* ${filename}\n📏 *Tamaño:* ${filesize}`
-    }, { quoted: m });
+        await conn.sendMessage(
+            m.chat,
+            {
+                document: { url: dl_url },
+                mimetype,
+                fileName: filename,
+                caption: `📂 *Nombre:* ${filename}\n📦 *Tamaño:* ${filesize}`
+            },
+            { quoted: m }
+        );
 
-  } catch (err) {
-    console.error(err);
-    throw '🍬 *Ocurrió un error al descargar el archivo*';
-  }
+    } catch (err) {
+        console.error(err);
+        throw '❌ *Ocurrió un error al procesar tu solicitud.*';
+    }
 };
 
-handler.help = ['mediafire <enlace>'];
+handler.command = ['mf', 'mediafire'];
+handler.help = ['mediafire <url>'];
 handler.tags = ['descargas'];
-handler.command = ['mf', 'mediafire']
-handler.register = true;
 
 export default handler;
