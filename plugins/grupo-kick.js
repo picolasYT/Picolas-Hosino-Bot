@@ -1,9 +1,9 @@
-const handler = async (m, { conn, participants, command, text }) => {
-  const kickTarget = m.mentionedJid?.[0];
+const handler = async (m, { conn, participants }) => {
+  const kickTarget = m.mentionedJid?.[0] || (m.quoted && m.quoted.sender);
 
   if (!kickTarget) {
-    return m.reply(`🧷 𝙿𝚘𝚛 𝚏𝚊𝚟𝚘𝚛 𝚎𝚝𝚒𝚚𝚞𝚎𝚝𝚊 𝚊 𝚕𝚊 𝚙𝚎𝚛𝚜𝚘𝚗𝚊 𝚚𝚞𝚎 𝚚𝚞𝚒𝚎𝚛𝚊𝚜 𝚎𝚡𝚙𝚞𝚕𝚜𝚊𝚛
-📌 *Ejemplo:* *@usuario*`);
+    return m.reply(`🧷 𝙿𝚘𝚛 𝚏𝚊𝚟𝚘𝚛 𝚎𝚝𝚒𝚚𝚞𝚎𝚝𝚊 𝚘 𝚛𝚎𝚜𝚙𝚘𝚗𝚍𝚎 𝚊 𝚕𝚊 𝚙𝚎𝚛𝚜𝚘𝚗𝚊 𝚚𝚞𝚎 𝚚𝚞𝚒𝚎𝚛𝚊𝚜 𝚎𝚡𝚙𝚞𝚕𝚜𝚊𝚛
+📌 *Ejemplo:* *kick @usuario* o responde a su mensaje con *kick*`);
   }
 
   const userToKick = participants.find(u => u.id === kickTarget);
