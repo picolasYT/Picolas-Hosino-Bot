@@ -1,63 +1,64 @@
-import { Sticker } from 'wa-sticker-formatter';
-import { sticker } from '../lib/sticker.js';
-import uploadFile from '../lib/uploadFile.js';
-import uploadImage from '../lib/uploadImage.js';
+import { Sticker, StickerTypes } from 'wa-sticker-formatter';
 import { webp2png } from '../lib/webp2mp4.js';
 
-const handler = async (m, { conn, usedPrefix, command }) => {
+const handler = async (m, { conn, args, usedPrefix, command }) => {
   const quoted = m.quoted || m;
   const mime = (quoted.msg || quoted).mimetype || quoted.mediaType || '';
-  let stiker = false;
+  const toimg = /toimg/i.test(args[0]);
 
-  if (!/image|webp|video/g.test(mime)) {
-    return conn.reply(m.chat, `${emoji} 𝙍𝙚𝙨𝙥𝙤𝙣𝙙𝙚 𝙖 𝙪𝙣𝙖 𝙞𝙢𝙖𝙜𝙚𝙣 𝙤 𝙚𝙩𝙞𝙦𝙪𝙚𝙩𝙖 𝙪𝙣𝙖 𝙞𝙢𝙖𝙜𝙚𝙣 𝙥𝙖𝙧𝙖 𝙘𝙤𝙣𝙫𝙚𝙧𝙩𝙞𝙧𝙡𝙖 𝙚𝙣 𝙨𝙩𝙞𝙘𝙠𝙚𝙧.`, m);
+  if (toimg) {
+    if (!/webp/g.test(mime)) {
+      return m.reply(`🚩 Para convertir un sticker en imagen, responde a un sticker y usa el comando *${usedPrefix + command} toimg*`);
+    }
+    await m.react('🖼️');
+    try {
+      const img = await quoted.download();
+      const out = await webp2png(img);
+      await conn.sendFile(m.chat, out, 'image.png', '✅ ¡Listo! Aquí tienes tu imagen.', m);
+    } catch (e) {
+      console.error(e);
+      m.reply('❌ Ocurrió un error al convertir el sticker en imagen.');
+    }
+    return;
   }
 
-  await m.react('🧃');
+  if (!/image|webp|video/g.test(mime)) {
+    return m.reply(`✨ Responde a una imagen, gif o video para crear un sticker.\n\n*Función extra:*\nResponde a un sticker y usa *${usedPrefix + command} toimg* para convertirlo en imagen.`);
+  }
+
+  await m.react('🎨');
 
   try {
-    let img = await quoted.download?.();
-    if (!img) return m.reply('❌ No se pudo obtener la imagen.');
+    const img = await quoted.download();
+    if (!img) throw new Error('No se pudo descargar el archivo.');
 
-    const packstickers = global.db.data.users[m.sender];
-    const texto1 = packstickers?.text1 || global.packsticker;
-    const texto2 = packstickers?.text2 || global.packsticker2;
+    const user = global.db.data.users[m.sender];
+    const packname = user?.text1 || global.packsticker;
+    const author = user?.text2 || global.packsticker2;
 
-    try {
-      stiker = await sticker(img, false, texto1, texto2);
-    } catch (e) {
-      console.error('⚠️ Error creando con sticker():', e);
-    }
+    const sticker = new Sticker(img, {
+      pack: packname,
+      author: author,
+      type: StickerTypes.FULL,
+      quality: 100,
+    });
 
-    if (!stiker) {
-      let out;
-      try {
-        if (/webp/g.test(mime)) out = await webp2png(img);
-        else if (/image/g.test(mime)) out = await uploadImage(img);
-        else if (/video/g.test(mime)) out = await uploadFile(img);
-        if (typeof out !== 'string') out = await uploadImage(img);
+    const stikerBuffer = await sticker.toBuffer();
 
-        stiker = await sticker(false, out, texto1, texto2);
-      } catch (e) {
-        console.error('⚠️ Error creando desde URL:', e);
-      }
-    }
-
-    if (stiker) {
-      await conn.sendFile(m.chat, stiker, 'sticker.webp', '', m);
+    if (stikerBuffer) {
+      await conn.sendFile(m.chat, stikerBuffer, 'sticker.webp', '', m);
       await m.react('✅');
     } else {
-      throw '❌ No se pudo generar el sticker.';
+      throw new Error('No se pudo generar el buffer del sticker.');
     }
-
   } catch (err) {
     console.error(err);
     await m.react('❌');
-    return m.reply('❌ Hubo un error al crear el sticker. Asegúrate de que la imagen no esté dañada o sea compatible.');
+    m.reply(`❌ Hubo un error al crear el sticker. Asegúrate de que el archivo no esté dañado y sea compatible (video de menos de 7 segundos).`);
   }
 };
 
-handler.help = ['sticker', '#s'];
+handler.help = ['sticker', 'sticker toimg'];
 handler.tags = ['sticker'];
 handler.command = ['sticker', 's', '#s'];
 handler.register = true;
