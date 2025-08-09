@@ -43,11 +43,11 @@ const handler = async (m, { conn, text, command }) => {
   const video = search.all[0];
 
   const caption = `
-> 🍓 *Título:* ${video.title}
-> 📏 *Duración:* ${video.duration.timestamp}
-> 👁️ *Vistas:*  ${video.views.toLocaleString()}
-> 🎨 *Autor:* ${video.author.name}
-> 📍 *URL:* ${video.url}`.trim();
+ 🍓 *Título:* ${video.title}
+ 📏 *Duración:* ${video.duration.timestamp}
+ 👁️ *Vistas:*  ${video.views.toLocaleString()}
+ 🎨 *Autor:* ${video.author.name}
+ 📍 *URL:* ${video.url}`.trim();
 
   await conn.sendMessage(m.chat, {
     image: { url: video.thumbnail },
