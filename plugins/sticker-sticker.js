@@ -1,79 +1,70 @@
-import sharp from 'sharp'; // <-- 1. Importamos la nueva librería
 import { Sticker, StickerTypes } from 'wa-sticker-formatter';
-import { webp2png } from '../lib/webp2mp4.js';
+import sharp from 'sharp'; // <-- Importamos la nueva librería
 
-const handler = async (m, { conn, args, usedPrefix, command }) => {
+const handler = async (m, { conn, usedPrefix, command }) => {
   const quoted = m.quoted || m;
   const mime = (quoted.msg || quoted).mimetype || quoted.mediaType || '';
-  const toimg = /toimg/i.test(args[0]);
 
-  // --- MODO: Convertir Sticker a Imagen (se mantiene igual) ---
-  if (toimg) {
-    if (!/webp/g.test(mime)) {
-      return m.reply(`🚩 Para convertir un sticker en imagen, responde a un sticker y usa el comando *${usedPrefix + command} toimg*`);
-    }
-    await m.react('🖼️');
-    try {
-      const img = await quoted.download();
-      const out = await webp2png(img);
-      await conn.sendFile(m.chat, out, 'image.png', '✅ ¡Listo! Aquí tienes tu imagen.', m);
-    } catch (e) {
-      console.error(e);
-      m.reply('❌ Ocurrió un error al convertir el sticker en imagen.');
-    }
-    return;
+  if (!/image|video|webp/.test(mime)) {
+    return conn.reply(m.chat, `✨ Responde a una imagen, video o gif para convertirlo en un sticker épico.`, m);
   }
 
-  // --- MODO: Crear Sticker (con la solución definitiva) ---
-  if (!/image|webp|video/g.test(mime)) {
-    return m.reply(`✨ Responde a una imagen, gif o video para crear un sticker.\n\n*Función extra:*\nResponde a un sticker y usa *${usedPrefix + command} toimg* para convertirlo en imagen.`);
-  }
-
-  await m.react('🎨');
+  await m.react('⚙️');
 
   try {
     const img = await quoted.download();
-    if (!img) throw new Error('No se pudo descargar el archivo.');
+    if (!img) {
+      await m.react('❌');
+      return m.reply('❌ No se pudo descargar el archivo. Inténtalo de nuevo.');
+    }
 
-    // <-- 2. LA SOLUCIÓN DEFINITIVA EMPIEZA AQUÍ -->
-    // Pre-procesamos la imagen con Sharp para forzarla a ser un cuadrado de 512x512
-    const resizedImgBuffer = await sharp(img, { animated: /webp|video|gif/.test(mime) })
-      .resize(512, 512, {
-        fit: 'fill', // La opción 'fill' ignora el aspect ratio y estira la imagen para que llene el espacio.
-        background: { r: 0, g: 0, b: 0, alpha: 0 } // Fondo transparente por si acaso
-      })
-      .webp({ quality: 90 }) // Convertimos a webp con buena calidad
-      .toBuffer();
-    // <-- LA SOLUCIÓN DEFINITIVA TERMINA AQUÍ -->
+    const packstickers = global.db.data.users[m.sender];
+    const author = packstickers?.text2 || global.packsticker2 || 'Bot';
+    const pack = packstickers?.text1 || global.packsticker || 'Stickers';
 
-    const user = global.db.data.users[m.sender];
-    const packname = user?.text1 || global.packsticker;
-    const author = user?.text2 || global.packsticker2;
+    let stickerBuffer;
 
-    // 3. Ahora creamos el sticker desde la imagen YA MODIFICADA
-    const sticker = new Sticker(resizedImgBuffer, {
-      pack: packname,
-      author: author,
-      type: StickerTypes.DEFAULT, // Ya no necesitamos 'full', pues la imagen ya es perfecta
-      quality: 100,
+    if (/image/.test(mime)) {
+      // --- NUEVO PASO CON SHARP PARA IMÁGENES ---
+      // Forzamos la redimensión a 512x512, estirando la imagen si es necesario
+      stickerBuffer = await sharp(img)
+        .resize(512, 512, {
+          fit: 'fill', // La opción 'fill' ignora la proporción y estira para rellenar
+          background: { r: 0, g: 0, b: 0, alpha: 0 } // Asegura fondo transparente
+        })
+        .webp({ quality: 90 }) // Convertimos a webp con buena calidad
+        .toBuffer();
+      // --- FIN DEL NUEVO PASO ---
+    } else {
+      // Para videos y GIFs, usamos el método anterior ya que sharp no los anima.
+      // 'full' funciona mejor para videos.
+      const sticker = new Sticker(img, {
+        pack,
+        author,
+        type: StickerTypes.FULL,
+        quality: 80,
+      });
+      stickerBuffer = await sticker.toBuffer();
+    }
+    
+    // Creamos el sticker final con los metadatos correctos
+    const finalSticker = new Sticker(stickerBuffer, {
+      pack,
+      author,
+      quality: 100 // Aplicamos los metadatos con la máxima calidad
     });
 
-    const stikerBuffer = await sticker.toBuffer();
+    await conn.sendFile(m.chat, await finalSticker.toBuffer(), 'sticker.webp', '', m);
+    await m.react('✅');
 
-    if (stikerBuffer) {
-      await conn.sendFile(m.chat, stikerBuffer, 'sticker.webp', '', m);
-      await m.react('✅');
-    } else {
-      throw new Error('No se pudo generar el buffer del sticker.');
-    }
   } catch (err) {
-    console.error(err);
+    console.error('⚠️ Error al crear el sticker:', err);
     await m.react('❌');
-    m.reply(`❌ Hubo un error al crear el sticker. Asegúrate de que el archivo no esté dañado y sea compatible (video de menos de 7 segundos).`);
+    await conn.reply(m.chat, '❌ Ocurrió un error al crear el sticker. El archivo podría estar dañado o no ser compatible.', m);
   }
 };
 
-handler.help = ['sticker', 'sticker toimg'];
+handler.help = ['sticker', 's'];
 handler.tags = ['sticker'];
 handler.command = ['sticker', 's', '#s'];
 handler.register = true;
