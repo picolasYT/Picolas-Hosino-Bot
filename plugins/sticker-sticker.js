@@ -1,5 +1,5 @@
 import { Sticker, StickerTypes } from 'wa-sticker-formatter';
-import sharp from 'sharp'; // <-- Importamos la nueva librería
+import sharp from 'sharp';
 
 const handler = async (m, { conn, usedPrefix, command }) => {
   const quoted = m.quoted || m;
@@ -25,19 +25,14 @@ const handler = async (m, { conn, usedPrefix, command }) => {
     let stickerBuffer;
 
     if (/image/.test(mime)) {
-      // --- NUEVO PASO CON SHARP PARA IMÁGENES ---
-      // Forzamos la redimensión a 512x512, estirando la imagen si es necesario
       stickerBuffer = await sharp(img)
         .resize(512, 512, {
-          fit: 'fill', // La opción 'fill' ignora la proporción y estira para rellenar
-          background: { r: 0, g: 0, b: 0, alpha: 0 } // Asegura fondo transparente
+          fit: 'fill',
+          background: { r: 0, g: 0, b: 0, alpha: 0 }
         })
-        .webp({ quality: 90 }) // Convertimos a webp con buena calidad
+        .webp({ quality: 90 })
         .toBuffer();
-      // --- FIN DEL NUEVO PASO ---
     } else {
-      // Para videos y GIFs, usamos el método anterior ya que sharp no los anima.
-      // 'full' funciona mejor para videos.
       const sticker = new Sticker(img, {
         pack,
         author,
@@ -47,11 +42,10 @@ const handler = async (m, { conn, usedPrefix, command }) => {
       stickerBuffer = await sticker.toBuffer();
     }
     
-    // Creamos el sticker final con los metadatos correctos
     const finalSticker = new Sticker(stickerBuffer, {
       pack,
       author,
-      quality: 100 // Aplicamos los metadatos con la máxima calidad
+      quality: 100
     });
 
     await conn.sendFile(m.chat, await finalSticker.toBuffer(), 'sticker.webp', '', m);
