@@ -36,7 +36,7 @@ const handler = async (m, { conn, text }) => {
 
 handler.help = ['mediafire <enlace>'];
 handler.tags = ['descargas'];
-handler.command = /^mediafire$/i;
+handler.command = ['mf', 'mediafire']
 handler.register = true;
 
 export default handler;
