@@ -37,6 +37,24 @@ const {CONNECTING} = ws
 const {chain} = lodash
 const PORT = process.env.PORT || process.env.SERVER_PORT || 3000
 
+const logPath = path.join(process.cwd(), 'errores_bot.txt');
+
+function guardarError(tipo, error) {
+    const fecha = new Date().toISOString();
+    const mensaje = `\n[${fecha}] (${tipo})\n${error.stack || error}\n----------------------\n`;
+    fs.appendFileSync(logPath, mensaje, 'utf8');
+}
+
+process.on('uncaughtException', (err) => {
+    console.error('🚨 Error no controlado:', err);
+    guardarError('uncaughtException', err);
+});
+
+process.on('unhandledRejection', (reason) => {
+    console.error('⚠️ Promesa rechazada sin manejar:', reason);
+    guardarError('unhandledRejection', reason);
+});
+
 //const yuw = dirname(fileURLToPath(import.meta.url))
 //let require = createRequire(megu)
 let { say } = cfonts
