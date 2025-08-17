@@ -13,7 +13,7 @@ const handler = async (m, { isOwner, isAdmin, conn, text, participants, args, co
 
   const mensaje = args.join` ` || 'Atención a todos';
 
-  const titulo = `*─ᐅ「 𝗔𝗩𝗜𝗦𝗢 𝗚𝗘𝗡𝗘𝗥𝗔𝗟 」」*`;
+  const titulo = `*─ᐅ「 𝗔𝗩𝗜𝗦𝗢 𝗚𝗘𝗡𝗘𝗥𝗔𝗟 」*`;
 
   let texto = `${titulo}\n\n`;
   texto += `*Mensaje:* \`${mensaje}\`\n\n`;
