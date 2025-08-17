@@ -1,15 +1,19 @@
-let handler = async (m, { conn, text, isRowner }) => {
-  if (!text) return m.reply(`${emoji} Por favor, proporciona una bienvenida para el bot.\n> Ejemplo: #setwelcome Hola user`);
+let handler = async (m, { conn, text, usedPrefix, command }) => {
+  let chat = global.db.data.chats[m.chat];
+  if (!chat) chat = global.db.data.chats[m.chat] = {};
 
-  global.welcom1 = text.trim();
-  
-  m.reply(`${emoji} La bienvenida del bot ha sido cambiado a: ${global.welcom1}`);
+  if (text) {
+    chat.welcomeText = text;
+    m.reply('${emoji2} El mensaje de bienvenida se ha configurado correctamente para este grupo.');
+  } else {
+    let welcome = chat.welcomeText || 'No hay ningún mensaje configurado.';
+    m.reply(`✳️ El mensaje de bienvenida actual de este grupo es:\n\n*${welcome}*\n\nPara cambiarlo, usa: *${usedPrefix + command} <texto>*\n\nPuedes usar las siguientes variables en tu mensaje:\n- *@user*: Menciona al nuevo miembro.\n- *@subject*: Muestra el nombre del grupo.\n- *@desc*: Muestra la descripción del grupo.`);
+  }
 };
 
-handler.help = ['setwelcome'];
-handler.tags = ['tools'];
+handler.help = ['setwelcome <texto>'];
+handler.tags = ['group'];
 handler.command = ['setwelcome'];
-handler.owner = false;
 handler.admin = true;
 
 export default handler;
