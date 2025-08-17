@@ -7,56 +7,62 @@ const handler = async (m, { conn }) => {
   let q = m.quoted ? m.quoted : m;
   let mime = (q.msg || q).mimetype || '';
 
+  // Validación de archivo
   if (!mime || !/image\/(png|jpe?g)/.test(mime)) {
-    return conn.reply(m.chat, `❌ Por favor, responde a una *imagen válida* (jpg o png).`, m);
+    return conn.reply(m.chat, `❌ Por favor, responde a una *imagen válida* (png o jpg).`, m);
   }
 
-  await m.react("⏳");
-  let processingMsg = await conn.reply(m.chat, `✨ Procesando tu imagen...\n\nEsto puede tardar unos segundos ⏱️`, m);
+  await m.react("⏳"); // Espera inicial
 
   try {
+    // Descarga de la imagen
     let media = await q.download();
 
+    if (!media) throw new Error("No se pudo descargar la imagen.");
+
+    // Subida a Catbox
     let link = await catbox(media);
 
-    let apiUrl = `https://api.siputzx.my.id/api/iloveimg/upscale?image=${encodeURIComponent(link)}&scale=2`;
-    let res = await fetch(apiUrl, { method: "GET" });
-    let result = await res.json();
-
-    if (!result.status) {
-      await m.react("❌");
-      return conn.reply(m.chat, `❌ Error al mejorar la imagen:\n\n📋 ${JSON.stringify(result, null, 2)}`, m);
+    if (!link || !link.startsWith("http")) {
+      throw new Error("Error al subir la imagen a Catbox.");
     }
 
-    let upscaleUrl = result.result || result.url || null;
-    if (!upscaleUrl) {
-      await m.react("❌");
-      return conn.reply(m.chat, `❌ La API no devolvió un enlace válido.`, m);
+    // Procesando con API upscale
+    let upscaleApi = `https://api.siputzx.my.id/api/iloveimg/upscale?image=${encodeURIComponent(link)}&scale=2`;
+    let res = await fetch(upscaleApi);
+    let data = await res.json();
+
+    if (!data.status || !data.result) {
+      throw new Error(data.message || "La API de upscale no devolvió un resultado válido.");
     }
 
-    await m.react("✅");
+    // Aviso de procesamiento exitoso
+    await conn.reply(m.chat, `✨ *Procesando tu imagen en HD...*`, m);
+
+    // Envío de imagen mejorada
     await conn.sendMessage(m.chat, {
-      image: { url: upscaleUrl },
-      caption: `✨ Aquí tienes tu imagen mejorada en HD 🖼️\n\n✅ Proceso completado con éxito.`
+      image: { url: data.result },
+      caption: `✅ *Imagen mejorada con éxito* \n\n🔗 *Enlace HD:* ${data.result}`
     }, { quoted: m });
 
-    await conn.sendMessage(m.chat, { delete: processingMsg.key });
+    await m.react("✅"); // Reacción de éxito
 
   } catch (e) {
     console.error(e);
     await m.react("❌");
-    conn.reply(m.chat, `❌ Error inesperado al procesar la imagen:\n\`\`\`${e.message}\`\`\``, m);
+    return conn.reply(m.chat, `❌ *Error al procesar la imagen:*\n\`\`\`${e.message}\`\`\``, m);
   }
 };
 
-handler.help = ["hd", "mejorarimg"];
-handler.tags = ["tools", "ai"];
-handler.command = ["remini", "hd", "enhance"];
-handler.limit = true;
+handler.help = ['hd', 'upscale'];
+handler.tags = ['herramientas'];
+handler.command = ['hd', 'upscale', 'mejorarimagen']; 
 handler.register = true;
+handler.limit = true;
 
 export default handler;
 
+// ─── Funciones auxiliares ───
 async function catbox(content) {
   const { ext, mime } = (await fileTypeFromBuffer(content)) || {};
   const blob = new Blob([content.toArrayBuffer()], { type: mime });
