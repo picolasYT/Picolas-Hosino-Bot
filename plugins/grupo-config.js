@@ -1,5 +1,4 @@
 let handler = async (m, { conn, args, command }) => {
-  // Determina la palabra clave desde el propio comando o desde el primer argumento
   const key = ['open','close','abrir','cerrar','abierto','cerrado'].includes(command)
     ? command
     : (args[0] || '').toLowerCase();
@@ -14,7 +13,7 @@ let handler = async (m, { conn, args, command }) => {
   };
 
   const isClose = map[key];
-  if (isClose === undefined) return; // silencioso si no coincide
+  if (isClose === undefined) return;
 
   await conn.groupSettingUpdate(m.chat, isClose);
 };
