@@ -1,7 +1,6 @@
 const handler = async (m, { isOwner, isAdmin, conn, text, participants, args, command, usedPrefix }) => {
   if (usedPrefix == 'a' || usedPrefix == 'A') return;
 
-  const emoji = '🩵';
   const botname = global.botname || 'Ruby';
   
   m.react('✅');
