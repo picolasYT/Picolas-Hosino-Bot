@@ -101,6 +101,8 @@ export async function handler(chatUpdate) {
                 if (!('isBanned' in chat)) chat.isBanned = false
                 if (!('sAutoresponder' in chat)) chat.sAutoresponder = ''
                 if (!('welcome' in chat)) chat.welcome = true
+                if (!('welcomeText' in chat)) chat.welcomeText = null
+                if (!('byeText' in chat)) chat.byeText = null
                 if (!('autolevelup' in chat)) chat.autolevelup = false
                 if (!('autoAceptar' in chat)) chat.autoAceptar = false
                 if (!('autosticker' in chat)) chat.autosticker = false
@@ -123,6 +125,8 @@ export async function handler(chatUpdate) {
                 global.db.data.chats[m.chat] = {
                     sAutoresponder: '', welcome: true, isBanned: false, autolevelup: false, autoresponder: false, delete: false, autoAceptar: false, autoRechazar: false, detect: true, antiBot: false,
                     antiBot2: false, modoadmin: false, antiLink: true, antifake: false, antiArabe: false, reaction: false, nsfw: false, expired: 0, 
+                    welcomeText: null,
+                    byeText: null,
                     botPrimario: null,
                 }
             var settings = global.db.data.settings[this.user.jid]
