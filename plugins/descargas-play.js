@@ -56,17 +56,17 @@ const handler = async (m, { conn, text, command }) => {
 
   try {
     if (command === "play" || command === "playaudio") {
-      const apiUrl = `https://dark-core-api.vercel.app/api/download/YTMP3?key=api&url=${encodeURIComponent(video.url)}`;
+      const apiUrl = `https://gokublack.xyz/download/ytmp3?url=${encodeURIComponent(video.url)}`;
       const res = await fetch(apiUrl).then(r => r.json());
 
-      if (!res.status) {
-        return conn.reply(m.chat, `❌ Error de audio:\n📋 *Causa:* No se pudo obtener el MP3.`, m, { contextInfo });
+      if (!res.status || !res.data?.result?.download_url) {
+        return conn.reply(m.chat, `❌ Error al obtener audio.`, m, { contextInfo });
       }
 
       await conn.sendMessage(m.chat, {
-        audio: { url: res.download },
+        audio: { url: res.data.result.download_url },
         mimetype: "audio/mpeg",
-        fileName: res.title + ".mp3",
+        fileName: res.data.result.title + ".mp3",
         ptt: true
       }, { quoted: m });
 
@@ -77,7 +77,7 @@ const handler = async (m, { conn, text, command }) => {
       const res = await fetch(apiUrl).then(r => r.json());
 
       if (!res.status || !res.res?.url) {
-        return conn.reply(m.chat, `❌ Error de video:\n📋 *Causa:* No se pudo obtener el MP4.`, m, { contextInfo });
+        return conn.reply(m.chat, `❌ Error al obtener video.`, m, { contextInfo });
       }
 
       const head = await fetch(res.res.url, { method: "HEAD" });
@@ -102,9 +102,9 @@ const handler = async (m, { conn, text, command }) => {
   }
 };
 
-handler.help = ["play", "play2", "playvid", "playvideo", "playaudio"];
+handler.help = ["play", "playaudio", "play2", "playvid", "playvideo"];
 handler.tags = ["descargas"];
-handler.command = ["play", "play2", "playvid", "playvideo", "playaudio"];
+handler.command = ["play", "playaudio", "play2", "playvid", "playvideo"];
 handler.register = true;
 handler.limit = true;
 
