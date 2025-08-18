@@ -49,20 +49,22 @@ let handler = async (m, { conn, participants, text, usedPrefix, command }) => {
     
     // Define la fecha de expiración de la invitación (ej. 3 días)
     const expiration = Math.floor(Date.now() / 1000) + (3 * 24 * 60 * 60);
-
-    // Crea el mensaje de invitación especial
-    const inviteMessage = proto.Message.fromObject({
-      groupInviteMessage: proto.GroupInviteMessage.fromObject({
-        inviteCode: inviteCode,
-        inviteExpiration: expiration,
+    
+    // ⚠️ CAMBIO CRÍTICO: La creación del mensaje de invitación ha sido ajustada
+    // para usar el nuevo método `Message.groupInviteMessage`.
+    const inviteMessage = {
+      groupInviteMessage: {
         groupJid: m.chat,
+        inviteCode: inviteCode,
         groupName: groupMetadata.subject,
         caption: `👋 ¡Hola! Te han invitado a unirte al grupo "${groupMetadata.subject}".\n\nEsta invitación es de un solo uso y expirará pronto.`,
-      })
-    });
+        jpegThumbnail: '', // Puedes agregar una imagen aquí si es necesario
+        inviteExpiration: expiration
+      }
+    };
 
     // Envía el mensaje de invitación al usuario
-    await conn.relayMessage(userJid, inviteMessage, { messageId: conn.generateMessageId() });
+    await conn.sendMessage(userJid, inviteMessage, { ephemeralExpiration: expiration });
 
     // Confirma al admin que la invitación fue enviada
     m.reply(`✅ ¡Listo! Se envió una invitación de un solo uso a @${number}.`, null, { mentions: [userJid] });
