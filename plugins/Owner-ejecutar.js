@@ -2,7 +2,7 @@ import { exec } from 'child_process';
 
 let handler = async (m, { conn, text }) => {
   if (!text) {
-    throw 'Debes ingresar el comando que deseas ejecutar.';
+    throw 'Debes ingresar el comando que deseas ejecutar en el servidor/terminal.';
   }
 
   m.reply('Ejecutando comando...');
