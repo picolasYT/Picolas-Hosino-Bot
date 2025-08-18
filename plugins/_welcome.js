@@ -42,7 +42,25 @@ export async function before(m, { conn, participants, groupMetadata }) {
   }
 
   if (m.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_ADD || m.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_INVITE) {
-    const defaultWelcome = `❀ *¡Bienvenido/a a ${groupMetadata.subject}!* 🎉\n\n✰ Hola, ${mention}. ¡Esperamos que disfrutes tu estadía!\n\n✦ Ahora somos ${memberCount} miembros.`;
+    const defaultWelcome = `
+୨୧ ┈ 🌸 ┈ ୨୧ ┈ 🌸 ┈ ୨୧
+
+        🌸 ¡Holi, holi! 🌸
+
+Un nuevo solecito ha llegado a 
+nuestro jardín: ¡${mention}!
+
+Estás en *${groupMetadata.subject}*, un
+lugar para divertirse y pasarla bien.
+
+¡Yey! Ahora somos *${memberCount}* personitas
+en esta familia. 🥳
+
+Recuerda revisar las reglas en la
+descripción del grupo. ૮₍ ´ ꒳ `₎ა
+
+୨୧ ┈ 🌸 ┈ ୨୧ ┈ 🌸 ┈ ୨୧
+`;
     
     const welcomeText = (chat.welcomeText || defaultWelcome)
       .replace('@user', mention)
