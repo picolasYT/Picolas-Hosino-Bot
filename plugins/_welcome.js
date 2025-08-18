@@ -42,7 +42,7 @@ export async function before(m, { conn, participants, groupMetadata }) {
   }
 
    if (m.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_ADD || m.messageStubType === WAMessageStubType.GROUP_PARTICIPANT_INVITE) {
-    const defaultWelcome = `❀ *¡Bienvenido/a a ${groupMetadata.subject}!* 🎉\n\n✰ Hola, ${mention}. ¡Esperamos que disfrutes tu estadía!\n\n✦ Ahora somos ${memberCount} miembros.`;
+    const defaultWelcome = `❀ *¡Bienvenido/a a ${groupMetadata.subject}!* 🎉\n✰ Hola, ${mention}. ¡Esperamos que disfrutes tu estadía!\n✦ Ahora somos ${memberCount} miembros.\n>${emoji}edita con el comandó #setwelcome`;
     
     const welcomeText = (chat.welcomeText || defaultWelcome)
       .replace('@user', mention)
