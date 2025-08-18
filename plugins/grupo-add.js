@@ -1,4 +1,4 @@
-// Importa el constructor de protocolos de Baileys para crear el mensaje de invitación
+// Importa el constructor de protocolos de Baileys
 const { proto } = (await import('@whiskeysockets/baileys')).default;
 
 let handler = async (m, { conn, participants, text, usedPrefix, command }) => {
@@ -29,7 +29,7 @@ let handler = async (m, { conn, participants, text, usedPrefix, command }) => {
 
   // --- Lógica para Enviar la Invitación ---
   try {
-    // 1. VERIFICACIÓN: Comprueba si el número tiene WhatsApp antes de continuar.
+    // 1. VERIFICACIÓN: Comprueba si el número tiene WhatsApp.
     const [result] = await conn.onWhatsApp(userJid);
     if (!result || !result.exists) {
       return m.reply(`❌ El número *${number}* no es válido o no tiene una cuenta de WhatsApp.`);
@@ -41,37 +41,26 @@ let handler = async (m, { conn, participants, text, usedPrefix, command }) => {
       return m.reply('✅ El usuario que intentas invitar ya se encuentra en el grupo.');
     }
 
-    // Obtiene los metadatos del grupo para usar el nombre
+    // Obtiene los metadatos del grupo para usar el nombre y el código de invitación.
     const groupMetadata = await conn.groupMetadata(m.chat);
-    
-    // Genera el código de invitación del grupo
+    const groupName = groupMetadata.subject;
     const inviteCode = await conn.groupInviteCode(m.chat);
-    
-    // Define la fecha de expiración de la invitación (ej. 3 días)
-    const expiration = Math.floor(Date.now() / 1000) + (3 * 24 * 60 * 60);
-    
-    // ⚠️ CAMBIO CRÍTICO: La creación del mensaje de invitación ha sido ajustada
-    // para usar el nuevo método `Message.groupInviteMessage`.
-    const inviteMessage = {
-      groupInviteMessage: {
-        groupJid: m.chat,
-        inviteCode: inviteCode,
-        groupName: groupMetadata.subject,
-        caption: `👋 ¡Hola! Te han invitado a unirte al grupo "${groupMetadata.subject}".\n\nEsta invitación es de un solo uso y expirará pronto.`,
-        jpegThumbnail: '', // Puedes agregar una imagen aquí si es necesario
-        inviteExpiration: expiration
-      }
-    };
+    const inviteUrl = 'https://chat.whatsapp.com/' + inviteCode;
 
-    // Envía el mensaje de invitación al usuario
-    await conn.sendMessage(userJid, inviteMessage, { ephemeralExpiration: expiration });
+    // Prepara el mensaje de texto con el enlace de invitación.
+    const messageText = `👋 ¡Hola! Te han invitado a unirte al grupo de WhatsApp "${groupName}".\n\nHaz clic en el siguiente enlace para unirte:\n\n${inviteUrl}`;
 
-    // Confirma al admin que la invitación fue enviada
-    m.reply(`✅ ¡Listo! Se envió una invitación de un solo uso a @${number}.`, null, { mentions: [userJid] });
+    // 🔧 **CORRECCIÓN PRINCIPAL:**
+    // Se envía el enlace como un mensaje de texto simple.
+    // WhatsApp generará automáticamente una vista previa interactiva.
+    await conn.sendMessage(userJid, { text: messageText });
+
+    // Confirma al admin que la invitación fue enviada.
+    m.reply(`✅ ¡Listo! Se envió el enlace de invitación a @${number}.`, null, { mentions: [userJid] });
 
   } catch (e) {
-    // 3. MANEJO DE ERRORES DETALLADO: Muestra el error real.
-    console.error("Error al enviar invitación:", e); // Muestra el error completo en la consola para ti
+    // 3. MANEJO DE ERRORES DETALLADO:
+    console.error("Error al enviar invitación:", e);
     m.reply(`❌ Ocurrió un error al enviar la invitación.\n\n*Detalle del error:*\n${e.message || e}`);
   }
 };
@@ -81,7 +70,7 @@ handler.tags = ['group'];
 handler.command = ['add', 'agregar', 'añadir', 'invite', 'invitar'];
 
 handler.group = true;
-handler.admin = true; // Quien usa el comando debe ser admin
-handler.botAdmin = true; // El bot debe ser admin
+handler.admin = true;
+handler.botAdmin = true;
 
 export default handler;
