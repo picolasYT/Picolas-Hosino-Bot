@@ -1,60 +1,66 @@
-let handler = async (m, { conn, args, text, usedPrefix, command }) => {
+const { proto } = (await import('@whiskeysockets/baileys')).default;
 
-  if (!text || !args[0]) throw `✐ Uso:\n${usedPrefix + command} 8291234567`
-  
-  let numero = args[0].replace(/[^0-9]/g, '') // Limpia cualquier símbolo
-  if (numero.length < 8) throw '⚠️ Número no válido.'
+let handler = async (m, { conn, participants, text, usedPrefix, command }) => {
+  if (!m.isGroup) return;
 
-  let id = numero + '@s.whatsapp.net'
 
-  try {
-    await conn.groupParticipantsUpdate(m.chat, [id], 'add')
-    m.reply(`✅ Se intentó agregar a wa.me/${numero}`)
-  } catch (e) {
-    try {
-      let code = await conn.groupInviteCode(m.chat)
-      let groupName = (await conn.groupMetadata(m.chat)).subject
-      let invite = `https://chat.whatsapp.com/${code}`
-
-      // Enviar como contacto con link
-      await conn.sendMessage(m.chat, {
-        contacts: {
-          displayName: `Invitación a ${groupName}`,
-          contacts: [{
-            displayName: numero,
-            vcard: `BEGIN:VCARD\nVERSION:3.0\nFN:${numero}\nTEL;type=CELL;type=VOICE;waid=${numero}:${numero}\nEND:VCARD`
-          }]
-        }
-      }, { quoted: m })
-
-      await conn.sendMessage(id, {
-        text: `✨ 𝙃𝙖𝙨 𝙧𝙚𝙘𝙞𝙗𝙞𝙙𝙤 𝙪𝙣𝙖 𝙞𝙣𝙫𝙞𝙩𝙖𝙘𝙞𝙤́𝙣 𝙙𝙚𝙡 𝙜𝙧𝙪𝙥𝙤 *${groupName}*\n\n📎 𝙐́𝙣𝙚𝙩𝙚 𝙖 𝙩𝙧𝙖𝙫𝙚́𝙨 𝙙𝙚𝙡 𝙨𝙞𝙜𝙪𝙞𝙚𝙣𝙩𝙚 𝙚𝙣𝙡𝙖𝙘𝙚:\n${invite}`,
-        contextInfo: {
-          forwardingScore: 999,
-          isForwarded: true,
-          externalAdReply: {
-            title: "📩 Invitación al grupo",
-            body: groupName,
-            thumbnailUrl: icons,
-            mediaType: 1,
-            renderLargerThumbnail: false,
-            showAdAttribution: true,
-            sourceUrl: invite
-          }
-        }
-      })
-
-      m.reply(`⚠️ *No se pudo añadir directamente.* Se le envió el contacto y el link al usuario.`)
-    } catch (err) {
-      m.reply('❌ Error al invitar o enviar contacto. Verifica que el número esté bien escrito.')
-    }
+  if (!text) {
+    return m.reply(`✳️ Por favor, ingresa el número de la persona a la que quieres invitar.\n\n*Ejemplo:*\n*${usedPrefix + command} 5211234567890*`);
   }
-}
 
-handler.command = /^(agregar|adduser|añadir)$/i
-handler.help = ['agregar 8291234567']
-handler.tags = ['group']
-handler.group = true
-handler.admin = true
-handler.botAdmin = true
-export default handler
+  const number = text.replace(/[^0-9]/g, '');
+  if (isNaN(number)) {
+    return m.reply('❌ El número ingresado no es válido. Asegúrate de incluir el código de país sin el símbolo "+".');
+  }
+  
+  const userJid = `${number}@s.whatsapp.net`;
+
+  // Verifica si el usuario ya está en el grupo
+  const userExists = participants.some(p => p.id === userJid);
+  if (userExists) {
+    return m.reply('✅ El usuario que intentas invitar ya se encuentra en el grupo.');
+  }
+
+  // --- Lógica para Enviar la Invitación ---
+  try {
+    // Obtiene los metadatos del grupo para usar el nombre
+    const groupMetadata = await conn.groupMetadata(m.chat);
+    
+    // Genera el código de invitación del grupo
+    const inviteCode = await conn.groupInviteCode(m.chat);
+    
+    // Define la fecha de expiración de la invitación (ej. 3 días)
+    const expiration = Math.floor(Date.now() / 1000) + (3 * 24 * 60 * 60);
+
+    // Crea el mensaje de invitación especial
+    const inviteMessage = proto.Message.fromObject({
+      groupInviteMessage: proto.GroupInviteMessage.fromObject({
+        inviteCode: inviteCode,
+        inviteExpiration: expiration,
+        groupJid: m.chat,
+        groupName: groupMetadata.subject,
+        caption: `👋 ¡Hola! Te han invitado a unirte al grupo "${groupMetadata.subject}".\n\nEsta invitación es de un solo uso y expirará pronto.`,
+      })
+    });
+
+    // Envía el mensaje de invitación al usuario
+    await conn.relayMessage(userJid, inviteMessage, { messageId: conn.generateMessageId() });
+
+    // Confirma al admin que la invitación fue enviada
+    m.reply(`✅ ¡Listo! Se envió una invitación de un solo uso a @${number}.`, null, { mentions: [userJid] });
+
+  } catch (e) {
+    console.error(e);
+    m.reply('❌ Ocurrió un error al enviar la invitación. Es posible que el número no sea válido o que te haya bloqueado.');
+  }
+};
+
+handler.help = ['invitar <número>', 'add <número>'];
+handler.tags = ['group'];
+handler.command = ['add', 'agregar', 'añadir', 'invite', 'invitar'];
+
+handler.group = true;
+handler.admin = true; // Quien usa el comando debe ser admin
+handler.botAdmin = true; // El bot debe ser admin
+
+export default handler;
