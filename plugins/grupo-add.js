@@ -21,18 +21,13 @@ let handler = async (m, { conn, participants, text, usedPrefix, command }) => {
     return m.reply('✅ El usuario que intentas invitar ya se encuentra en el grupo.');
   }
 
-  // --- Lógica para Enviar la Invitación ---
   try {
-    // Obtiene los metadatos del grupo para usar el nombre
     const groupMetadata = await conn.groupMetadata(m.chat);
     
-    // Genera el código de invitación del grupo
     const inviteCode = await conn.groupInviteCode(m.chat);
     
-    // Define la fecha de expiración de la invitación (ej. 3 días)
     const expiration = Math.floor(Date.now() / 1000) + (3 * 24 * 60 * 60);
 
-    // Crea el mensaje de invitación especial
     const inviteMessage = proto.Message.fromObject({
       groupInviteMessage: proto.GroupInviteMessage.fromObject({
         inviteCode: inviteCode,
@@ -43,10 +38,8 @@ let handler = async (m, { conn, participants, text, usedPrefix, command }) => {
       })
     });
 
-    // Envía el mensaje de invitación al usuario
     await conn.relayMessage(userJid, inviteMessage, { messageId: conn.generateMessageId() });
 
-    // Confirma al admin que la invitación fue enviada
     m.reply(`✅ ¡Listo! Se envió una invitación de un solo uso a @${number}.`, null, { mentions: [userJid] });
 
   } catch (e) {
@@ -60,7 +53,7 @@ handler.tags = ['group'];
 handler.command = ['add', 'agregar', 'añadir', 'invite', 'invitar'];
 
 handler.group = true;
-handler.admin = true; // Quien usa el comando debe ser admin
-handler.botAdmin = true; // El bot debe ser admin
+handler.admin = true;
+handler.botAdmin = true;
 
 export default handler;
