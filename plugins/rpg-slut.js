@@ -1,94 +1,88 @@
-let cooldowns = {}
+let cooldowns = {};
 
-let handler = async (m, { conn }) => {
-  const users = global.db.data.users
-  const senderId = m.sender
-  const senderName = conn.getName(senderId)
+const handler = async (m, { conn }) => {
+    let user = global.db.data.users[m.sender];
+    const premiumBenefit = user.premium ? 1.25 : 1.0;
+    const cooldown = 3 * 60 * 1000;
 
-  const cooldown = 5 * 60 * 1000 // 5 minutos
-  if (cooldowns[senderId] && Date.now() - cooldowns[senderId] < cooldown) {
-    const restante = segundosAHMS(Math.ceil((cooldowns[senderId] + cooldown - Date.now()) / 1000))
-    return m.reply(`💦 Debes esperar *${restante}* para volver a usar *#slut*.`)
-  }
+    if (cooldowns[m.sender] && Date.now() - cooldowns[m.sender] < cooldown) {
+        const remaining = segundosAHMS(Math.ceil((cooldowns[m.sender] + cooldown - Date.now()) / 1000));
+        return conn.reply(m.chat, `${emoji} Tómate un descanso, ya trabajaste mucho. Vuelve en *${remaining}*.`, m);
+    }
 
-  cooldowns[senderId] = Date.now()
+    const winChance = 0.85;
+    const didWin = Math.random() < winChance;
 
-  const senderCoin = users[senderId].coin || 0
-  let targetId = Object.keys(users).filter(u => u !== senderId)[Math.floor(Math.random() * (Object.keys(users).length - 1))]
-  let targetCoin = users[targetId].coin || 0
+    if (didWin) {
+        const amount = Math.floor((Math.random() * 4000 + 1000) * premiumBenefit);
+        user.coin += amount;
+        const work = pickRandom(trabajosBuenos);
+        await conn.reply(m.chat, `✿ ${work} y te llevaste *¥${amount.toLocaleString()} ${moneda}*.`, m);
+    } else {
+        const amount = Math.floor(Math.random() * 3000 + 500);
+        user.coin = Math.max(0, user.coin - amount);
+        const work = pickRandom(trabajosMalos);
+        await conn.reply(m.chat, `🥀 ${work} y perdiste *¥${amount.toLocaleString()} ${moneda}*.`, m);
+    }
 
-  const ganar = Math.random() < 0.7 // 60% de ganar
-  const monto = Math.floor(Math.random() * (10000 - 1000 + 1)) + 1000
+    cooldowns[m.sender] = Date.now();
+};
 
-  const frasesGanancia = [
-    '✿ Te vistieron de maid en público y te dieron *¥{monto}* por ser su juguete.',
-    '✿ Participaste en una orgía oculta y recibiste *¥{monto}* por tus "servicios".',
-    '✿ Le hiciste un show a @usuario y te lanzó *¥{monto}* encima.',
-    '✿ Fuiste grabado en secreto en una película H y te pagaron *¥{monto}*.',
-    '✿ Bailaste en una despedida de soltero y te dieron *¥{monto}*.',
-    '✿ Fuiste tendencia en TikTok y recibiste *¥{monto}* en propinas.',
-    '✿ Te contrataron para una parodia erótica y ganaste *¥{monto}*.',
-    '✿ Te convertiste en VTuber NSFW por un día y te pagaron *¥{monto}*.',
-    '✿ Te hiciste viral en una app adulta y recibiste *¥{monto}*.',
-    '✿ Fuiste modelo para una revista picante y te dieron *¥{monto}*.',
-    '✿ Vendiste tu ropa interior online y te pagaron *¥{monto}*.',
-    '✿ Cobraron por acariciarte las orejitas neko y ganaste *¥{monto}*.',
-    '✿ Fuiste anfitrión en un club nocturno y ganaste *¥{monto}*.',
-    '✿ @usuario te dio una "propina secreta" de *¥{monto}* por tu actitud sumisa.',
-    '✿ Jugaste a ser mascota en público y recibiste *¥{monto}* de premio.'
-  ]
+handler.help = ['chamba', 'trabajar', 'work'];
+handler.tags = ['economy'];
+handler.command = ['chamba', 'trabajar', 'w', 'work', 'chambear'];
+handler.group = true;
+handler.register = true;
 
-  const frasesPerdida = [
-    '✿ Te arrestaron por indecencia pública. Multa: *¥{monto}*.',
-    '✿ Nadie quiso tus servicios hoy. Gastaste *¥{monto}* en trajes.',
-    '✿ Tu cliente se fue sin pagar. Perdiste *¥{monto}*.',
-    '✿ Te fracturaste haciendo una pose. Gastaste *¥{monto}* en la clínica.',
-    '✿ Tu show fue aburrido. Te lanzaron tomates y perdiste *¥{monto}*.',
-    '✿ Llovió en plena calle y tu outfit se arruinó. Perdiste *¥{monto}*.',
-    '✿ Te emborrachaste y pagaste la cuenta. *¥{monto}* menos.',
-    '✿ Te drogaron y despertaste sin cartera. Te robaron *¥{monto}*.',
-    '✿ Te confundieron con un trabajador ilegal. Pagaste *¥{monto}* de soborno.',
-    '✿ Te manosearon sin pagar. Tu pérdida: *¥{monto}*.',
-    '✿ Tu app NSFW se cayó y perdiste donaciones: *¥{monto}*.',
-    '✿ Te equivocaste de cliente. Tuvo consecuencias: *¥{monto}* menos.',
-    '✿ Te vetaron de tu plataforma de contenido. Reembolso: *¥{monto}*.',
-    '✿ Invertiste en cosplay sexy y nadie compró: *¥{monto}* perdido.',
-    '✿ Tu wig se voló en plena grabación. Arreglo costó *¥{monto}*.'
-  ]
-
-  const texto = pickRandom(ganar ? frasesGanancia : frasesPerdida)
-    .replace('{monto}', monto.toLocaleString())
-    .replace('@usuario', `@${targetId.split('@')[0]}`)
-
-  if (ganar) {
-    users[senderId].coin += monto
-    users[targetId].coin -= Math.min(monto, targetCoin)
-    conn.sendMessage(m.chat, {
-      text: texto + `\n> 💸 Ahora tienes *¥${users[senderId].coin.toLocaleString()}*.`,
-      contextInfo: { mentionedJid: [targetId] }
-    }, { quoted: m })
-  } else {
-    users[senderId].coin = Math.max(0, senderCoin - monto)
-    conn.reply(m.chat, texto + `\n> 💔 Tu saldo ahora es *¥${users[senderId].coin.toLocaleString()}*.`, m)
-  }
-
-  global.db.write()
-}
-
-handler.tags = ['rpg']
-handler.help = ['slut']
-handler.command = ['slut', 'protituirse']
-handler.register = true
-handler.group = true
-
-export default handler
+export default handler;
 
 function segundosAHMS(segundos) {
-  const minutos = Math.floor((segundos % 3600) / 60)
-  const segundosRestantes = segundos % 60
-  return `${minutos} minutos y ${segundosRestantes} segundos`
+    let minutos = Math.floor(segundos / 60);
+    let segundosRestantes = segundos % 60;
+    return `${minutos}m ${segundosRestantes}s`;
 }
 
 function pickRandom(list) {
-  return list[Math.floor(Math.random() * list.length)]
+    return list[Math.floor(Math.random() * list.length)];
 }
+
+const trabajosBuenos = [
+    "Le vendiste una PC gamer a un niño rata con la tarjeta de su mamá",
+    "Fuiste mesero en un bar de furros y te dieron buena propina",
+    "Programaste un troyano para un político y te pagó bien",
+    "Vendiste fotos de tus patas en OnlyFans",
+    "Ganaste un torneo local de Street Fighter",
+    "Hiciste de extra en una película porno de bajo presupuesto",
+    "Te contrataron para cuidar el perro de un millonario",
+    "Vendiste agua embotellada del grifo afuera de un concierto",
+    "Hackeaste la red del vecino y le vendiste su propio internet",
+    "Fuiste DJ en una fiesta de XV años",
+    "Le enseñaste a un viejo a usar su celular",
+    "Trabajaste de payaso de crucero y no te fue tan mal",
+    "Editaste un video para un youtuber famoso",
+    "Vendiste un dibujo furro por una cantidad ridícula de dinero",
+    "Hiciste de guardaespaldas en un evento otaku",
+    "Te pagaron por hacer fila para comprar unas zapatillas de edición limitada",
+    "Tradujiste un doujinshi del japonés al español",
+    "Le diste la paliza de su vida a un bully por dinero",
+    "Ganaste una apuesta sobre quién aguantaba más picante",
+    "Creaste un filtro viral de Instagram"
+];
+
+const trabajosMalos = [
+    "Intentaste vender Avon pero terminaste comprando todo tú",
+    "Te pagaron con un billete falso de 500",
+    "Tu jefe te corrió por llegar tarde y oliendo a alcohol",
+    "Te asaltaron mientras hacías una entrega de Rappi",
+    "Le instalaste un virus a tu cliente por accidente y tuviste que pagarle una PC nueva",
+    "Te quedaste dormido en el metro y te robaron la cartera",
+    "Invertiste en una criptomoneda de un perro y se fue a cero",
+    "Te multaron por no recoger la caca de tu perro imaginario",
+    "Compraste un curso para ser millonario y solo te estafaron",
+    "Intentaste revender boletos y te los rompieron en la cara",
+    "El cliente te hizo un reembolso en PayPal y te quedaste sin el producto y sin el dinero",
+    "Te caíste de la bicicleta trabajando y tuviste que pagar los gastos médicos",
+    "Te pagaron con un cheque sin fondos",
+    "Limpiaste la casa equivocada y te demandaron por allanamiento",
+    "Te descontaron el día por ver memes en horario laboral"
+];
