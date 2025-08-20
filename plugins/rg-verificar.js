@@ -62,7 +62,7 @@ let handler = async function (m, { conn, text, usedPrefix, command }) {
 ┃ 🎟️ Tokens: +${recompensa.joincount}
 ┃
 ╰━┄━┄━┄━┄━┄━┄━┄━┄━┄━╮
-     *Usa ${usedPrefix}menu para ver los reflectores*
+     *Usa ${usedPrefix}menu para ver los comandos de ruby*
 ╰━━━━━━━━━━━━━━━━━━━━╯
 `
 
