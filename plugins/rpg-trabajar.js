@@ -1,104 +1,88 @@
-let cooldowns = {}
+let cooldowns = {};
 
-let handler = async (m, { conn }) => {
-  let user = global.db.data.users[m.sender]
-  let tiempo = 1 * 60 // 1 minuto
+const handler = async (m, { conn }) => {
+    let user = global.db.data.users[m.sender];
+    const premiumBenefit = user.premium ? 1.25 : 1.0;
+    const cooldown = 3 * 60 * 1000;
 
-  if (cooldowns[m.sender] && Date.now() - cooldowns[m.sender] < tiempo * 1000) {
-    const tiempo2 = segundosAHMS(Math.ceil((cooldowns[m.sender] + tiempo * 1000 - Date.now()) / 1000))
-    return conn.reply(m.chat, `🤠 Debes esperar *${tiempo2}* para usar *#chamba* de nuevo.`, m)
-  }
+    if (cooldowns[m.sender] && Date.now() - cooldowns[m.sender] < cooldown) {
+        const remaining = segundosAHMS(Math.ceil((cooldowns[m.sender] + cooldown - Date.now()) / 1000));
+        return conn.reply(m.chat, `🥵 Tómate un descanso, ya trabajaste mucho. Vuelve en *${remaining}*.`, m);
+    }
 
-  cooldowns[m.sender] = Date.now()
+    const winChance = 0.85;
+    const didWin = Math.random() < winChance;
 
-  const ganar = Math.random() < 0.70
-  const monto = ganar
-    ? Math.floor(Math.random() * (12000 - 1000 + 1)) + 1000
-    : Math.floor(Math.random() * (6000 - 800 + 1)) + 800
+    if (didWin) {
+        const amount = Math.floor((Math.random() * 4000 + 1000) * premiumBenefit);
+        user.coin += amount;
+        const work = pickRandom(trabajosBuenos);
+        await conn.reply(m.chat, `✿ ${work} y te llevaste *¥${amount.toLocaleString()} ${moneda}*.`, m);
+    } else {
+        const amount = Math.floor(Math.random() * 3000 + 500);
+        user.coin = Math.max(0, user.coin - amount);
+        const work = pickRandom(trabajosMalos);
+        await conn.reply(m.chat, `🥀 ${work} y perdiste *¥${amount.toLocaleString()} ${moneda}*.`, m);
+    }
 
-  let mensaje = ''
-  if (ganar) {
-    user.coin += monto
-    const trabajo = pickRandom(trabajosBuenos)
-    mensaje = `✿ ${trabajo} *¥${monto.toLocaleString()} ${moneda}🌹*`
-  } else {
-    user.coin = Math.max(0, user.coin - monto)
-    const trabajo = pickRandom(trabajosMalos)
-    mensaje = `🥀 ${trabajo} *¥${monto.toLocaleString()} ${moneda}...*`
-  }
+    cooldowns[m.sender] = Date.now();
+};
 
-  await conn.reply(m.chat, mensaje, m)
-}
+handler.help = ['chamba', 'trabajar', 'work'];
+handler.tags = ['economy'];
+handler.command = ['chamba', 'trabajar', 'w', 'work', 'chambear'];
+handler.group = true;
+handler.register = true;
 
-handler.help = ['chamba', 'trabajar', 'work', 'w']
-handler.tags = ['economy']
-handler.command = ['chamba', 'trabajar', 'w', 'work', 'chambear']
-handler.group = true
-handler.register = true
-
-export default handler
+export default handler;
 
 function segundosAHMS(segundos) {
-  let minutos = Math.floor((segundos % 3600) / 60)
-  let segundosRestantes = segundos % 60
-  return `${minutos} minutos y ${segundosRestantes} segundos`
+    let minutos = Math.floor(segundos / 60);
+    let segundosRestantes = segundos % 60;
+    return `${minutos}m ${segundosRestantes}s`;
 }
 
 function pickRandom(list) {
-  return list[Math.floor(Math.random() * list.length)]
+    return list[Math.floor(Math.random() * list.length)];
 }
 
 const trabajosBuenos = [
-  "Vendiste helados en un día soleado y ganaste",
-  "Limpiando ventanas de rascacielos recibiste propina de",
-  "Programaste un bot para una empresa y te dieron",
-  "Le hiciste una ilustración a una VTuber famosa y cobraste",
-  "Fuiste doble de riesgo en una película y ganaste",
-  "Hiciste delivery en bicicleta y te pagaron",
-  "Ganaste un torneo de Genshin Impact y obtuviste",
-  "Tu canal de YouTube se hizo viral y te pagaron",
-  "Vendiste stickers en una convención anime y ganaste",
-  "Condujiste un taxi todo el día y lograste",
-  "Actuaste en un comercial de fideos y te pagaron",
-  "Ganaste un concurso de cocina y recibiste",
-  "Vendiste peluches de waifus y ganaste",
-  "Ayudaste a reparar computadoras y cobraste",
-  "Llevaste delivery en patineta y ganaste",
-  "Hiciste dibujos por comisión y recibiste",
-  "Cuidaste gatos en un café y te dieron",
-  "Fuiste guía de un museo y recibiste",
-  "Repartiste volantes todo el día y ganaste",
-  "Condujiste Uber durante la lluvia y lograste",
-  "Subiste un meme viral y te donaron",
-  "Participaste como actor de doblaje en una serie indie y cobraste",
-  "Vendiste ramen en la calle y tuviste éxito con",
-  "Ganaste un reto de TikTok y recibiste",
-  "Organizaste una rifa y te quedaste con",
-  "Participaste en una banda de covers y ganaste",
-  "Ayudaste a tu vecina a mudarse y te dio",
-  "Fuiste extra en un dorama y cobraste",
-  "Editaste un AMV que se hizo viral y te pagaron"
-]
+    "Le vendiste una PC gamer a un niño rata con la tarjeta de su mamá",
+    "Fuiste mesero en un bar de furros y te dieron buena propina",
+    "Programaste un troyano para un político y te pagó bien",
+    "Vendiste fotos de tus patas en OnlyFans",
+    "Ganaste un torneo local de Street Fighter",
+    "Hiciste de extra en una película porno de bajo presupuesto",
+    "Te contrataron para cuidar el perro de un millonario",
+    "Vendiste agua embotellada del grifo afuera de un concierto",
+    "Hackeaste la red del vecino y le vendiste su propio internet",
+    "Fuiste DJ en una fiesta de XV años",
+    "Le enseñaste a un viejo a usar su celular",
+    "Trabajaste de payaso de crucero y no te fue tan mal",
+    "Editaste un video para un youtuber famoso",
+    "Vendiste un dibujo furro por una cantidad ridícula de dinero",
+    "Hiciste de guardaespaldas en un evento otaku",
+    "Te pagaron por hacer fila para comprar unas zapatillas de edición limitada",
+    "Tradujiste un doujinshi del japonés al español",
+    "Le diste la paliza de su vida a un bully por dinero",
+    "Ganaste una apuesta sobre quién aguantaba más picante",
+    "Creaste un filtro viral de Instagram"
+];
 
 const trabajosMalos = [
-  "Tropezaste y arruinaste todo el pedido, perdiste",
-  "Tu jefe se fue sin pagarte, perdiste",
-  "Compraste mercancía falsa y nadie te compró, perdiste",
-  "Llegaste tarde y te descontaron",
-  "Tuviste que pagar por romper una silla del evento",
-  "Te estafaron con billetes falsos, perdiste",
-  "Tuviste que pagar el delivery por adelantado y no te reembolsaron",
-  "Te confundieron con otro repartidor y perdiste el pedido",
-  "Una tormenta arruinó todo lo que vendías y perdiste",
-  "Un cliente se enojó y no quiso pagarte",
-  "Tu teléfono se mojó y tuviste que repararlo",
-  "La policía te multó por vender en zona prohibida",
-  "Se te cayó el café encima del cosplay de un cliente, perdiste",
-  "Olvidaste el cambio y tuviste que cubrirlo tú",
-  "Rompiste el monitor de un cliente y lo pagaste",
-  "Te robaron tu bicicleta del delivery y perdiste dinero",
-  "La computadora se quemó mientras trabajabas y tuviste que reponerla",
-  "El cliente canceló a último minuto y perdiste inversión",
-  "No entendiste el encargo y tuviste que devolver el dinero",
-  "Te enfermaste en medio del trabajo y no pudiste terminar",
-]
+    "Intentaste vender Avon pero terminaste comprando todo tú",
+    "Te pagaron con un billete falso de 500",
+    "Tu jefe te corrió por llegar tarde y oliendo a alcohol",
+    "Te asaltaron mientras hacías una entrega de Rappi",
+    "Le instalaste un virus a tu cliente por accidente y tuviste que pagarle una PC nueva",
+    "Te quedaste dormido en el metro y te robaron la cartera",
+    "Invertiste en una criptomoneda de un perro y se fue a cero",
+    "Te multaron por no recoger la caca de tu perro imaginario",
+    "Compraste un curso para ser millonario y solo te estafaron",
+    "Intentaste revender boletos y te los rompieron en la cara",
+    "El cliente te hizo un reembolso en PayPal y te quedaste sin el producto y sin el dinero",
+    "Te caíste de la bicicleta trabajando y tuviste que pagar los gastos médicos",
+    "Te pagaron con un cheque sin fondos",
+    "Limpiaste la casa equivocada y te demandaron por allanamiento",
+    "Te descontaron el día por ver memes en horario laboral"
+];
