@@ -33,7 +33,7 @@ await m.react('✖️')
 } finally {
 if (stiker) {
 conn.sendFile(m.chat, stiker, 'sticker.webp', '', m)
-await m.react('✅')
+await m.react('🧃')
 }}}
 
 handler.help = ['sticker']
