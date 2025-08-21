@@ -1,111 +1,94 @@
-import yts from "yt-search";
-import fetch from "node-fetch";
+import fetch from "node-fetch"
+import yts from 'yt-search'
+import axios from "axios"
+const youtubeRegexID = /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([a-zA-Z0-9_-]{11})/
 
-const SIZE_LIMIT_MB = 100;
-const newsletterJid = '120363335626706839@newsletter';
-const newsletterName = '⏤‏⃪ً፝͟͞⁡⁎⊡『 Ruby-Hoshino-Channel 』༿⊡';
-
-const handler = async (m, { conn, text, command }) => {
-  const name = conn.getName(m.sender);
-  const contextInfo = {
-    mentionedJid: [m.sender],
-    isForwarded: true,
-    forwardingScore: 999,
-    forwardedNewsletterMessageInfo: {
-      newsletterJid,
-      newsletterName,
-      serverMessageId: -1
-    },
-    externalAdReply: {
-      title: packname,
-      body: "🎿 Ruby Hoshino Downloader",
-      thumbnail: icons,
-      sourceUrl: redes,
-      mediaType: 1,
-      renderLargerThumbnail: false
-    }
-  };
-
-  if (!text) {
-    return conn.reply(m.chat,
-      `🌸 *Konnichiwa ${name}-chan~!* Necesito que me digas el nombre de un video o me pegues el link de YouTube 💕\n\n✨ *Ejemplos:*\n.play Shinzou wo Sasageyo\n.play https://youtu.be/xxx`,
-      m, { contextInfo });
-  }
-
-  await m.react("🕝");
-
-  const search = await yts(text);
-  if (!search?.all || search.all.length === 0) {
-    return conn.reply(m.chat, `💦 *Gomen ne, no encontré nada con:* "${text}"`, m, { contextInfo });
-  }
-
-  const video = search.all[0];
-
-  const caption = `
- 🍓 *Título:* ${video.title}
- 📏 *Duración:* ${video.duration.timestamp}
- 👁️ *Vistas:*  ${video.views.toLocaleString()}
- 🎨 *Autor:* ${video.author.name}
- 📍 *URL:* ${video.url}`.trim();
-
-  await conn.sendMessage(m.chat, {
-    image: { url: video.thumbnail },
-    caption,
-    contextInfo
-  }, { quoted: m });
-
+const handler = async (m, { conn, text, usedPrefix, command }) => {
   try {
-    if (command === "play" || command === "playaudio") {
-      const apiUrl = `https://dark-core-api.vercel.app/api/download/YTMP3?key=api&url=${encodeURIComponent(video.url)}`;
-      const res = await fetch(apiUrl).then(r => r.json());
-
-      if (!res.status || !res.download) {
-        return conn.reply(m.chat, `❌ Error al obtener audio.`, m, { contextInfo });
-      }
-
-      await conn.sendMessage(m.chat, {
-        audio: { url: res.download },
-        mimetype: "audio/mpeg",
-        fileName: res.title + ".mp3",
-        ptt: true
-      }, { quoted: m });
-
-      await m.react("🎶");
-
-    } else if (command === "play2" || command === "playvid" || command === "playvideo") {
-      const apiUrl = `https://api.sylphy.xyz/download/ytmp4?url=${encodeURIComponent(video.url)}&apikey=sylph-30fc019324`;
-      const res = await fetch(apiUrl).then(r => r.json());
-
-      if (!res.status || !res.res?.url) {
-        return conn.reply(m.chat, `❌ Error al obtener video.`, m, { contextInfo });
-      }
-
-      const head = await fetch(res.res.url, { method: "HEAD" });
-      const sizeMB = parseInt(head.headers.get("content-length") || "0") / (1024 * 1024);
-      const asDocument = sizeMB > SIZE_LIMIT_MB;
-
-      await conn.sendMessage(m.chat, {
-        video: { url: res.res.url },
-        caption: `🎥 *Listo ${name}-chan!* Aquí está tu video~`,
-        fileName: res.res.title + ".mp4",
-        mimetype: "video/mp4"
-      }, {
-        quoted: m,
-        ...(asDocument ? { asDocument: true } : {})
-      });
-
-      await m.react("🎥");
+    if (!text.trim()) {
+      return conn.reply(m.chat, `❀ Por favor, ingresa el nombre de la música a descargar.`, m)
     }
-  } catch (e) {
-    console.error(e);
-    return conn.reply(m.chat, `❌ Error inesperado:\n\`\`\`${e.message}\`\`\``, m, { contextInfo });
+  
+let videoIdToFind = text.match(youtubeRegexID) || null
+let ytplay2 = await yts(videoIdToFind === null ? text : 'https://youtu.be/' + videoIdToFind[1])
+
+if (videoIdToFind) {
+const videoId = videoIdToFind[1]  
+ytplay2 = ytplay2.all.find(item => item.videoId === videoId) || ytplay2.videos.find(item => item.videoId === videoId)
+} 
+ytplay2 = ytplay2.all?.[0] || ytplay2.videos?.[0] || ytplay2  
+if (!ytplay2 || ytplay2.length == 0) {
+return m.reply('✧ No se encontraron resultados para tu búsqueda.')
+}
+let { title, thumbnail, timestamp, views, ago, url, author } = ytplay2
+title = title || 'no encontrado'
+thumbnail = thumbnail || 'no encontrado'
+timestamp = timestamp || 'no encontrado'
+views = views || 'no encontrado'
+ago = ago || 'no encontrado'
+url = url || 'no encontrado'
+author = author || 'no encontrado'
+    const vistas = formatViews(views)
+    const canal = author.name ? author.name : 'Desconocido'
+    const infoMessage = `「✦」Descargando *<${title || 'Desconocido'}>*\n\n> ✧ Canal » *${canal}*\n> ✰ Vistas » *${vistas || 'Desconocido'}*\n> ⴵ Duración » *${timestamp || 'Desconocido'}*\n> ✐ Publicado » *${ago || 'Desconocido'}*\n> 🜸 Link » ${url}`
+    const thumb = (await conn.getFile(thumbnail))?.data
+    const JT = {
+      contextInfo: {
+        externalAdReply: {
+          title: botname,
+          body: dev,
+          mediaType: 1,
+          previewType: 0,
+          mediaUrl: url,
+          sourceUrl: url,
+          thumbnail: thumb,
+          renderLargerThumbnail: true,
+        },
+      },
+    }
+    await conn.reply(m.chat, infoMessage, m, JT)    
+    if (command === 'play' || command === 'yta' || command === 'ytmp3' || command === 'playaudio') {
+      try {
+        const api = await (await fetch(`https://api.vreden.my.id/api/ytmp3?url=${url}`)).json()
+        const resulta = api.result
+        const result = resulta.download.url    
+        if (!result) throw new Error('⚠ El enlace de audio no se generó correctamente.')
+        await conn.sendMessage(m.chat, { audio: { url: result }, fileName: `${api.result.title}.mp3`, mimetype: 'audio/mpeg' }, { quoted: m })
+      } catch (e) {
+        return conn.reply(m.chat, '⚠︎ No se pudo enviar el audio. Esto puede deberse a que el archivo es demasiado pesado o a un error en la generación de la URL. Por favor, intenta nuevamente más tarde.', m)
+      }
+    } else if (command === 'play2' || command === 'ytv' || command === 'ytmp4' || command === 'mp4') {
+      try {
+        const response = await fetch(`https://api.neoxr.eu/api/youtube?url=${url}&type=video&quality=480p&apikey=GataDios`)
+        const json = await response.json()
+        await conn.sendFile(m.chat, json.data.url, json.title + '.mp4', title, m)
+      } catch (e) {
+        return conn.reply(m.chat, '⚠︎ No se pudo enviar el video. Esto puede deberse a que el archivo es demasiado pesado o a un error en la generación de la URL. Por favor, intenta nuevamente más tarde.', m)
+      }
+    } else {
+      return conn.reply(m.chat, '✧︎ Comando no reconocido.', m)
+    }
+  } catch (error) {
+    return m.reply(`⚠︎ Ocurrió un error: ${error}`)
   }
-};
+}
+handler.command = handler.help = ['play', 'yta', 'ytmp3', 'play2', 'ytv', 'ytmp4', 'playaudio', 'mp4']
+handler.tags = ['descargas']
+handler.group = true
 
-handler.help = ["play", "playaudio", "play2", "playvid", "playvideo"];
-handler.tags = ["descargas"];
-handler.command = ["play", "playaudio", "play2", "playvid", "playvideo"];
-handler.register = true;
-handler.limit = true;
+export default handler
 
-export default handler;
+function formatViews(views) {
+  if (views === undefined) {
+    return "No disponible"
+  }
+
+  if (views >= 1_000_000_000) {
+    return `${(views / 1_000_000_000).toFixed(1)}B (${views.toLocaleString()})`
+  } else if (views >= 1_000_000) {
+    return `${(views / 1_000_000).toFixed(1)}M (${views.toLocaleString()})`
+  } else if (views >= 1_000) {
+    return `${(views / 1_000).toFixed(1)}k (${views.toLocaleString()})`
+  }
+  return views.toString()
+}
