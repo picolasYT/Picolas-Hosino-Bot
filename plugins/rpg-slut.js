@@ -1,36 +1,42 @@
 let cooldowns = {};
 
 const handler = async (m, { conn }) => {
-    let user = global.db.data.users[m.sender];
-    const premiumBenefit = user.premium ? 1.25 : 1.0;
-    const cooldown = 3 * 60 * 1000;
+    const users = global.db.data.users;
+    const senderId = m.sender;
+    const premiumBenefit = users[senderId].premium ? 1.30 : 1.0;
+    const cooldown = 5 * 60 * 1000;
 
-    if (cooldowns[m.sender] && Date.now() - cooldowns[m.sender] < cooldown) {
-        const remaining = segundosAHMS(Math.ceil((cooldowns[m.sender] + cooldown - Date.now()) / 1000));
-        return conn.reply(m.chat, `${emoji} Tómate un descanso, ya trabajaste mucho. Vuelve en *${remaining}*.`, m);
+    if (cooldowns[senderId] && Date.now() - cooldowns[senderId] < cooldown) {
+        const remaining = segundosAHMS(Math.ceil((cooldowns[senderId] + cooldown - Date.now()) / 1000));
+        return m.reply(`🥵 Necesitas recuperar el aliento. Vuelve a la esquina en *${remaining}*.`);
     }
 
-    const winChance = 0.85;
+    const winChance = 0.65;
     const didWin = Math.random() < winChance;
+    
+    let targetId = Object.keys(users).filter(u => u !== senderId && !users[u].banned)[Math.floor(Math.random() * (Object.keys(users).length - 1))];
 
     if (didWin) {
-        const amount = Math.floor((Math.random() * 4000 + 1000) * premiumBenefit);
-        user.coin += amount;
-        const work = pickRandom(trabajosBuenos);
-        await conn.reply(m.chat, `✿ ${work} y te llevaste *¥${amount.toLocaleString()} ${moneda}*.`, m);
+        const amount = Math.floor((Math.random() * 10000 + 4000) * premiumBenefit);
+        users[senderId].coin += amount;
+        const phrase = pickRandom(frasesGanancia).replace('@usuario', `@${targetId.split('@')[0]}`);
+        await conn.sendMessage(m.chat, {
+            text: `✨ ${phrase} y ganaste *¥${amount.toLocaleString()} ${moneda}*.\n> Tu nuevo saldo es *¥${users[senderId].coin.toLocaleString()}*`,
+            contextInfo: { mentionedJid: [targetId] }
+        }, { quoted: m });
     } else {
-        const amount = Math.floor(Math.random() * 3000 + 500);
-        user.coin = Math.max(0, user.coin - amount);
-        const work = pickRandom(trabajosMalos);
-        await conn.reply(m.chat, `🥀 ${work} y perdiste *¥${amount.toLocaleString()} ${moneda}*.`, m);
+        const amount = Math.floor(Math.random() * 18000 + 8000); // Pérdidas altas
+        users[senderId].coin = Math.max(0, users[senderId].coin - amount);
+        const phrase = pickRandom(frasesPerdida);
+        await conn.reply(m.chat, `💔 ${phrase} y perdiste la terrible suma de *¥${amount.toLocaleString()} ${moneda}*.\n> Te quedaste con *¥${users[senderId].coin.toLocaleString()}*.`, m);
     }
 
-    cooldowns[m.sender] = Date.now();
+    cooldowns[senderId] = Date.now();
 };
 
-handler.help = ['chamba', 'trabajar', 'work'];
+handler.help = ['slut'];
 handler.tags = ['economy'];
-handler.command = ['chamba', 'trabajar', 'w', 'work', 'chambear'];
+handler.command = ['slut', 'prostituirse'];
 handler.group = true;
 handler.register = true;
 
@@ -46,43 +52,38 @@ function pickRandom(list) {
     return list[Math.floor(Math.random() * list.length)];
 }
 
-const trabajosBuenos = [
-    "Le vendiste una PC gamer a un niño rata con la tarjeta de su mamá",
-    "Fuiste mesero en un bar de furros y te dieron buena propina",
-    "Programaste un troyano para un político y te pagó bien",
-    "Vendiste fotos de tus patas en OnlyFans",
-    "Ganaste un torneo local de Street Fighter",
-    "Hiciste de extra en una película porno de bajo presupuesto",
-    "Te contrataron para cuidar el perro de un millonario",
-    "Vendiste agua embotellada del grifo afuera de un concierto",
-    "Hackeaste la red del vecino y le vendiste su propio internet",
-    "Fuiste DJ en una fiesta de XV años",
-    "Le enseñaste a un viejo a usar su celular",
-    "Trabajaste de payaso de crucero y no te fue tan mal",
-    "Editaste un video para un youtuber famoso",
-    "Vendiste un dibujo furro por una cantidad ridícula de dinero",
-    "Hiciste de guardaespaldas en un evento otaku",
-    "Te pagaron por hacer fila para comprar unas zapatillas de edición limitada",
-    "Tradujiste un doujinshi del japonés al español",
-    "Le diste la paliza de su vida a un bully por dinero",
-    "Ganaste una apuesta sobre quién aguantaba más picante",
-    "Creaste un filtro viral de Instagram"
+const frasesGanancia = [
+    "Le hiciste un baile erótico a @usuario en Discord",
+    "Un viejo millonario te pagó solo por escuchar sus historias tristes",
+    "Te contrataron para una fiesta swinger y fuiste la estrella de la noche",
+    "Le sobaste el pito a un cliente habitual",
+    "Vendiste un frasco con el agua de tu baño",
+    "Fuiste el sumiso personal de @usuario por una noche",
+    "Te pagaron por gemir como personaje de anime en un audio de WhatsApp",
+    "Un grupo de empresarios te usó como cenicero humano",
+    "Te vistieron de colegiala y te llevaron a un restaurante de lujo",
+    "Grabaste un ASMR lamiendo un micrófono",
+    "Hiciste un cosplay de Astolfo y los simps te llenaron de dinero",
+    "Te pagaron extra por dejar que te olieran los pies",
+    "Participaste en una orgía con temática de superhéroes",
+    "Un programador te pagó para que le pisaras los huevos mientras codificaba",
+    "Fuiste a una convención y cobraste por abrazos 'con sorpresa'"
 ];
 
-const trabajosMalos = [
-    "Intentaste vender Avon pero terminaste comprando todo tú",
-    "Te pagaron con un billete falso de 500",
-    "Tu jefe te corrió por llegar tarde y oliendo a alcohol",
-    "Te asaltaron mientras hacías una entrega de Rappi",
-    "Le instalaste un virus a tu cliente por accidente y tuviste que pagarle una PC nueva",
-    "Te quedaste dormido en el metro y te robaron la cartera",
-    "Invertiste en una criptomoneda de un perro y se fue a cero",
-    "Te multaron por no recoger la caca de tu perro imaginario",
-    "Compraste un curso para ser millonario y solo te estafaron",
-    "Intentaste revender boletos y te los rompieron en la cara",
-    "El cliente te hizo un reembolso en PayPal y te quedaste sin el producto y sin el dinero",
-    "Te caíste de la bicicleta trabajando y tuviste que pagar los gastos médicos",
-    "Te pagaron con un cheque sin fondos",
-    "Limpiaste la casa equivocada y te demandaron por allanamiento",
-    "Te descontaron el día por ver memes en horario laboral"
+const frasesPerdida = [
+    "Un negro te la metió tan fuerte que tuviste que pagar una reconstrucción anal",
+    "Te contagiaste de herpes y gastaste todo en medicamentos",
+    "El cliente se fue sin pagar y además te robó el celular",
+    "Te arrestaron en una redada y tuviste que pagar una fianza carísima",
+    "Te enamoraste del cliente y terminaste pagándole tú a él",
+    "Te confundieron con un travesti de la competencia y te dieron una paliza",
+    "El cliente resultó ser tu tío y te desheredó",
+    "Te quedaste atorado en una posición y tuvieron que llamar a los bomberos; la multa fue enorme",
+    "Rompiste la cama del motel y te la cobraron al triple",
+    "El cliente te pagó con criptomonedas que se desplomaron al instante",
+    "Te dio una reacción alérgica al lubricante barato",
+    "Te grabaron sin tu consentimiento y ahora eres un meme en internet; perdiste toda dignidad",
+    "Intentaste hacer una pose exótica y te desgarraste un músculo",
+    "Te robaron los riñones después de una cita a ciegas",
+    "El cliente murió de un infarto en pleno acto y su familia te demandó"
 ];
