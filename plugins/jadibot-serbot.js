@@ -75,7 +75,6 @@ global.db.data.users[m.sender].Subs = new Date * 1
 } 
 handler.help = ['qr', 'code']
 handler.tags = ['serbot']
-handler.private = true
 handler.command = ['qr', 'code']
 export default handler 
 
