@@ -56,17 +56,17 @@ const handler = async (m, { conn, text, command }) => {
 
   try {
     if (command === "play" || command === "playaudio") {
-      const apiUrl = `https://gokublack.xyz/download/ytmp3?url=${encodeURIComponent(video.url)}`;
+      const apiUrl = `https://dark-core-api.vercel.app/api/download/YTMP3?key=api&url=${encodeURIComponent(video.url)}`;
       const res = await fetch(apiUrl).then(r => r.json());
 
-      if (!res.status || !res.data?.result?.download_url) {
+      if (!res.status || !res.download) {
         return conn.reply(m.chat, `❌ Error al obtener audio.`, m, { contextInfo });
       }
 
       await conn.sendMessage(m.chat, {
-        audio: { url: res.data.result.download_url },
+        audio: { url: res.download },
         mimetype: "audio/mpeg",
-        fileName: res.data.result.title + ".mp3",
+        fileName: res.title + ".mp3",
         ptt: true
       }, { quoted: m });
 
