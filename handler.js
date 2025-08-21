@@ -162,9 +162,13 @@ export async function handler(chatUpdate) {
         const isRAdmin = user?.admin === 'superadmin' || false
         const isAdmin = isRAdmin || user?.admin === 'admin' || false
         const isBotAdmin = !!bot?.admin
-        const isROwner = [conn.decodeJid(global.conn.user.id), ...global.owner.map(([number]) => number)]
+        
+        const myJid = this.user?.id ? conn.decodeJid(this.user.id) : '';
+        const isROwner = [myJid, ...global.owner.map(([number]) => number)]
+            .filter(Boolean)
             .map(v => v.replace(/[^0-9]/g, ''))
-            .includes(senderNum)
+            .includes(senderNum);
+            
         const isOwner = isROwner || m.fromMe
         const isMods = isOwner || global.mods.map(v => v.replace(/[^0-9]/g, '')).includes(senderNum)
         const isPrems = isROwner || global.prems.map(v => v.replace(/[^0-9]/g, '')).includes(senderNum) || _user.premium == true
