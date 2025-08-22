@@ -8,25 +8,24 @@ let Reg = /\|?(.*)([.|] *?)([0-9]*)$/i
 
 let handler = async function (m, { conn, text, usedPrefix, command }) {
   let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender
-  let mentionedJid = [who]
   let pp = await conn.profilePictureUrl(who, 'image').catch((_) => 'https://files.catbox.moe/xr2m6u.jpg')
   let user = global.db.data.users[m.sender]
   let name2 = conn.getName(m.sender)
 
   if (user.registered === true) 
-    return m.reply(`『✦』Ya estás registrado.\n\n*¿Quieres volver a registrarte?*\n\nUsa este comando para eliminar tu registro:\n*${usedPrefix}unreg*`)
+    return m.reply(`『✦』Ya estás registrado.\n\n*¿Quieres volver a registrarte?*\n\nUsa este comando para borrar tu registro:\n*${usedPrefix}unreg*`)
 
   if (!Reg.test(text)) 
-    return m.reply(`『✦』Formato incorrecto.\n\nUso: *${usedPrefix + command} nombre.edad*\nEjemplo: *${usedPrefix + command} ${name2}.18*`)
+    return m.reply(`『✦』Formato incorrecto.\n\nUso: *${usedPrefix + command} nombre.edad*\nEjemplo : *${usedPrefix + command} ${name2}.18*`)
 
   let [_, name, splitter, age] = text.match(Reg)
   if (!name) return m.reply(`『✦』El nombre no puede estar vacío.`)
   if (!age) return m.reply(`『✦』La edad no puede estar vacía.`)
   if (name.length >= 100) return m.reply(`『✦』El nombre es demasiado largo.`)
-
+  
   age = parseInt(age)
-  if (age > 1000) return m.reply(`『✦』Wow, el abuelo quiere jugar con el bot.`)
-  if (age < 5) return m.reply(`『✦』Hay un bebé queriendo usar el bot jsjs.`)
+  if (age > 1000) return m.reply(`『✦』Wow, el abuelo quiere usar el bot 👴`)
+  if (age < 5) return m.reply(`『✦』Un bebé usando el bot jsjs 🍼`)
 
   user.name = name + '✓'.trim()
   user.age = age
@@ -35,23 +34,26 @@ let handler = async function (m, { conn, text, usedPrefix, command }) {
 
   let recompensa = {
     money: 40,
-    estrellas: 10,
+    estrellas: 5,
     exp: 300,
     joincount: 20
   }
-  user.coin += recompensa.money
-  user.exp += recompensa.exp
-  user.joincount += recompensa.joincount
 
-  let sn = createHash('md5').update(m.sender).digest('hex').slice(0, 20)
+  global.db.data.users[m.sender].coin += recompensa.money
+  global.db.data.users[m.sender].estrellas = (global.db.data.users[m.sender].estrellas || 0) + recompensa.estrellas
+  global.db.data.users[m.sender].exp += recompensa.exp
+  global.db.data.users[m.sender].joincount += recompensa.joincount
+
+  let nombre = name
+  let edad = age
 
   let regbot = `
 ꒰͡ ׄ𖹭⃨᤻ ͡꒱ֽ𖹭⃨᤻ ͡꒱ֽ ׄ  𝙍𝙀𝙂𝙄𝙎𝙏𝙍𝙊 𝙀𝙓𝙄𝙏𝙊𝙎𝙊! ꒰͡ ׄ𖹭⃨᤻ ͡꒱ֽ𖹭⃨᤻ ͡꒱ֽ ׄ
          ◟︶࿙𝆊࿚ׁׁׂׂׂׂׂ𝆊࣪࣪࿙࿚ׂ︶◞ 𖣁  ◟︶࿙𝆊࿚ׁׁׂׂׂׂׂ𝆊࣪࣪࿙࿚ׂ︶◞
 
 ╭─┄• ⋆˚ᨶ႒ᩚ ᴛᴜs ᴅᴀᴛᴏs ᴅᴇ ᴜsᴜᴀʀɪᴏ ᨶ႒ᩚ˚⋆ •··•┄─╮
-│✐ *𝑵𝑶𝑴𝑩𝑹𝑬:* ${name} 
-│✐ *𝑬𝑫𝑨𝑫:* ${age} años
+│✐ *𝑵𝑶𝑴𝑩𝑹𝑬:* ${nombre} 
+│✐ *𝑬𝑫𝑨𝑫:* ${edad} años
 ╰─┄•·.·꒷︶꒷꒥꒷‧₊˚૮꒰˵•ᵜ•˵꒱ა‧₊˚꒷︶꒷꒥꒷·.·•┄─╯
  
  ·˚ ༘₊· ͟͟͞͞꒰➳ ࣪ ˖ ࣪ rᥱᥴ᥆m⍴ᥱᥒsᥲs ძᥱ ᑲіᥱᥒ᥎ᥱᥒіძᥲ! ᰔ ִ ׄ
@@ -60,7 +62,7 @@ let handler = async function (m, { conn, text, usedPrefix, command }) {
 > ❛  📈 ── *EXP:* +${recompensa.exp}
 > ❛  🎟️ ── *Tokens:* +${recompensa.joincount}
 
-> ¡Gracias por unirte! Ahora estás list@ para brillar.  
+> ¡Gracias por unirte! Ahora estás list@ para brillar ✨
 > Usa *${usedPrefix}menu* para descubrir todos mis comandos.
 `.trim()
 
@@ -71,9 +73,11 @@ let handler = async function (m, { conn, text, usedPrefix, command }) {
     contextInfo: {
       externalAdReply: {
         title: '✧ Usuario Verificado ✧',
-        body: 'Registro completado',
+        body: "Bienvenido al sistema",
         thumbnailUrl: pp,
+        sourceUrl: channel,
         mediaType: 1,
+        showAdAttribution: true,
         renderLargerThumbnail: true
       }
     }
