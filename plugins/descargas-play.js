@@ -9,6 +9,8 @@ const handler = async (m, { conn, text, command }) => {
       return conn.reply(m.chat, `✧ 𝙃𝙚𝙮! Debes escribir *el nombre o link* del video/audio para descargar.`, m)
     }
 
+    await conn.sendMessage(m.chat, { react: { text: "⏳", key: m.key }})
+
     let videoIdToFind = text.match(youtubeRegexID) || null
     let ytplay2 = await yts(videoIdToFind ? "https://youtu.be/" + videoIdToFind[1] : text)
 
@@ -18,21 +20,28 @@ const handler = async (m, { conn, text, command }) => {
     }
 
     ytplay2 = ytplay2.all?.[0] || ytplay2.videos?.[0] || ytplay2
-    if (!ytplay2) return m.reply("⚠︎ No encontré resultados, intenta con otro nombre o link.")
+    if (!ytplay2) {
+      await conn.sendMessage(m.chat, { react: { text: "❌", key: m.key }})
+      return m.reply("⚠︎ No encontré resultados, intenta con otro nombre o link.")
+    }
 
     let { title, thumbnail, timestamp, views, ago, url, author } = ytplay2
     const vistas = formatViews(views)
     const canal = author?.name || "Desconocido"
 
     const infoMessage = `
-ㅤ۫ ㅤ  🦭 ୧   ˚ 𝒅𝒆𝒔𝒄𝒂𝒓𝒈𝒂 𝒆𝒏 𝒄𝒂𝒎𝒊𝒏𝒐 !  ୨ 𖹭  ִֶָ  
+ㅤ۫ ㅤ  🦭 ୧   ˚ \`𝒅𝒆𝒔𝒄𝒂𝒓𝒈𝒂 𝒆𝒏 𝒄𝒂𝒎𝒊𝒏𝒐\` !  ୨ 𖹭  ִֶָ  
 
-✧ 𝗧𝗶́𝘁𝘂𝗹𝗼 » *${title}*  
-✧ 𝗖𝗮𝗻𝗮𝗹 » *${canal}*  
-✧ 𝗗𝘂𝗿𝗮𝗰𝗶𝗼́𝗻 » *${timestamp}*  
-✧ 𝗩𝗶𝘀𝘁𝗮𝘀 » *${vistas}*  
-✧ 𝗣𝘂𝗯𝗹𝗶𝗰𝗮𝗱𝗼 » *${ago}*  
-✧ 𝗟𝗶𝗻𝗸 » ${url}  
+᮫ؙܹ  ᳘︵᮫ּܹ࡛〫ࣥܳ⌒ؙ۫ ᮫ּ۪֯⏝ֺ࣯࠭۟ ᮫ּ〪࣭︶᮫ܹ᳟〫࠭߳፝֟᷼⏜᮫᮫ּ〪࣭࠭〬︵᮫ּ᳝̼࣪ 🍚⃘ᩚּ̟߲ ּ〪࣪︵᮫࣭࣪࠭ᰯּ〪࣪࠭⏜ְ࣮〫߳ ᮫ּׅ࣪۟︶᮫ܹׅ࠭〬 ᮫ּּ࣭᷼⏝ᩥ᮫〪ܹ۟࠭۟۟ ᮫ּؙ⌒᮫ܹ۫︵ᩝּּ۟࠭ ࣭۪۟
+
+> 🧊✿⃘࣪◌ ֪ `𝗧𝗶́𝘁𝘂𝗹𝗼` » *${title}*  
+> 🧊✿⃘࣪◌ ֪ `𝗖𝗮𝗻𝗮𝗹` » *${canal}*  
+> 🧊✿⃘࣪◌ ֪ `𝗗𝘂𝗿𝗮𝗰𝗶𝗼́𝗻` » *${timestamp}*  
+> 🧊✿⃘࣪◌ ֪ `𝗩𝗶𝘀𝘁𝗮𝘀` » *${vistas}*  
+> 🧊✿⃘࣪◌ ֪ `𝗣𝘂𝗯𝗹𝗶𝗰𝗮𝗱𝗼` » *${ago}*  
+> 🧊✿⃘࣪◌ ֪ `𝗟𝗶𝗻𝗸` » ${url}  
+
+ᓭ݄︢݃ୄᰰ𐨎 𝐢︩۪𝆬͡ꗜ፝֟͜͡ꗜ︪۪𝆬͡ 𝐢   ᅟᨳᩘ🧁ଓ   ᅟ 𝐢︩۪𝆬͡ꗜ፝֟͜͡ꗜ︪۪𝆬͡ 𝐢ୄᰰ𐨎ᓯ︢
 
 > 𐙚 🪵 ｡ Preparando tu descarga... ˙𐙚
     `.trim()
@@ -73,7 +82,10 @@ const handler = async (m, { conn, text, command }) => {
         try { audioData = await api(); if (audioData) break } catch { }
       }
 
-      if (!audioData) return conn.reply(m.chat, "✦ Ninguna API respondió para el audio. Intenta más tarde.", m)
+      if (!audioData) {
+        await conn.sendMessage(m.chat, { react: { text: "❌", key: m.key }})
+        return conn.reply(m.chat, "✦ Ninguna API respondió para el audio. Intenta más tarde.", m)
+      }
 
       await conn.sendMessage(m.chat, {
         audio: { url: audioData.link },
@@ -81,6 +93,8 @@ const handler = async (m, { conn, text, command }) => {
         mimetype: "audio/mpeg",
         ptt: true
       }, { quoted: m })
+
+      await conn.sendMessage(m.chat, { react: { text: "✅", key: m.key }})
     }
 
     else if (["play2", "ytv", "ytmp4", "mp4"].includes(command)) {
@@ -112,9 +126,13 @@ const handler = async (m, { conn, text, command }) => {
         try { videoData = await api(); if (videoData) break } catch { }
       }
 
-      if (!videoData) return conn.reply(m.chat, "✦ Ninguna API respondió para el video. Intenta más tarde.", m)
+      if (!videoData) {
+        await conn.sendMessage(m.chat, { react: { text: "❌", key: m.key }})
+        return conn.reply(m.chat, "✦ Ninguna API respondió para el video. Intenta más tarde.", m)
+      }
 
       await conn.sendFile(m.chat, videoData.link, (videoData.title || "video") + ".mp4", `✧ 𝗧𝗶́𝘁𝘂𝗹𝗼 » ${title}`, m)
+      await conn.sendMessage(m.chat, { react: { text: "✅", key: m.key }})
     }
 
     else {
@@ -122,6 +140,7 @@ const handler = async (m, { conn, text, command }) => {
     }
 
   } catch (error) {
+    await conn.sendMessage(m.chat, { react: { text: "❌", key: m.key }})
     return m.reply(`⚠︎ Error inesperado:\n\n${error}`)
   }
 }
