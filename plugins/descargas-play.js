@@ -1,17 +1,16 @@
 import fetch from "node-fetch"
 import yts from "yt-search"
-import axios from "axios"
 
 const youtubeRegexID = /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([a-zA-Z0-9_-]{11})/
 
-const handler = async (m, { conn, text, usedPrefix, command }) => {
+const handler = async (m, { conn, text, command }) => {
   try {
     if (!text.trim()) {
-      return conn.reply(m.chat, `❀ Por favor, ingresa el nombre de la música a descargar.`, m)
+      return conn.reply(m.chat, `✧ 𝙃𝙚𝙮! Debes escribir *el nombre o link* del video/audio para descargar.`, m)
     }
 
     let videoIdToFind = text.match(youtubeRegexID) || null
-    let ytplay2 = await yts(videoIdToFind === null ? text : "https://youtu.be/" + videoIdToFind[1])
+    let ytplay2 = await yts(videoIdToFind ? "https://youtu.be/" + videoIdToFind[1] : text)
 
     if (videoIdToFind) {
       const videoId = videoIdToFind[1]
@@ -19,78 +18,71 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
     }
 
     ytplay2 = ytplay2.all?.[0] || ytplay2.videos?.[0] || ytplay2
-
-    if (!ytplay2 || ytplay2.length == 0) {
-      return m.reply("✧ No se encontraron resultados para tu búsqueda.")
-    }
+    if (!ytplay2) return m.reply("⚠︎ No encontré resultados, intenta con otro nombre o link.")
 
     let { title, thumbnail, timestamp, views, ago, url, author } = ytplay2
-    title = title || "no encontrado"
-    thumbnail = thumbnail || "no encontrado"
-    timestamp = timestamp || "no encontrado"
-    views = views || "no encontrado"
-    ago = ago || "no encontrado"
-    url = url || "no encontrado"
-    author = author || "no encontrado"
-
     const vistas = formatViews(views)
-    const canal = author.name ? author.name : "Desconocido"
-    const infoMessage = `「✦」Descargando *<${title}>*\n\n> ✧ Canal » *${canal}*\n> ✰ Vistas » *${vistas}*\n> ⴵ Duración » *${timestamp}*\n> ✐ Publicado » *${ago}*\n> 🜸 Link » ${url}`
-    const thumb = (await conn.getFile(thumbnail))?.data
+    const canal = author?.name || "Desconocido"
 
-    const JT = {
+    const infoMessage = `
+ㅤ۫ ㅤ  🦭 ୧   ˚ 𝒅𝒆𝒔𝒄𝒂𝒓𝒈𝒂 𝒆𝒏 𝒄𝒂𝒎𝒊𝒏𝒐 !  ୨ 𖹭  ִֶָ  
+
+✧ 𝗧𝗶́𝘁𝘂𝗹𝗼 » *${title}*  
+✧ 𝗖𝗮𝗻𝗮𝗹 » *${canal}*  
+✧ 𝗗𝘂𝗿𝗮𝗰𝗶𝗼́𝗻 » *${timestamp}*  
+✧ 𝗩𝗶𝘀𝘁𝗮𝘀 » *${vistas}*  
+✧ 𝗣𝘂𝗯𝗹𝗶𝗰𝗮𝗱𝗼 » *${ago}*  
+✧ 𝗟𝗶𝗻𝗸 » ${url}  
+
+> 𐙚 🪵 ｡ Preparando tu descarga... ˙𐙚
+    `.trim()
+
+    const thumb = (await conn.getFile(thumbnail))?.data
+    await conn.reply(m.chat, infoMessage, m, {
       contextInfo: {
         externalAdReply: {
           title: botname,
           body: dev,
           mediaType: 1,
-          previewType: 0,
-          mediaUrl: url,
-          sourceUrl: url,
           thumbnail: thumb,
           renderLargerThumbnail: true,
-        },
-      },
-    }
+          mediaUrl: url,
+          sourceUrl: url
+        }
+      }
+    })
 
-    await conn.reply(m.chat, infoMessage, m, JT)
-
-    // --- Descarga de Audio ---
     if (["play", "yta", "ytmp3", "playaudio"].includes(command)) {
       const audioApis = [
         async () => {
           const r = await (await fetch(`https://api.vreden.my.id/api/ytmp3?url=${url}`)).json()
-          return r?.result?.download?.url ? { link: r.result.download.url, title: r.result.metadata?.title || "audio" } : null
+          return r?.result?.download?.url ? { link: r.result.download.url, title: r.result.metadata?.title } : null
         },
         async () => {
           const r = await (await fetch(`https://dark-core-api.vercel.app/api/download/YTMP3?key=api&url=${url}`)).json()
-          return r?.status && r?.download ? { link: r.download, title: r.title || "audio" } : null
+          return r?.status && r?.download ? { link: r.download, title: r.title } : null
         },
         async () => {
           const r = await (await fetch(`https://api.stellarwa.xyz/dow/ytmp3?url=${url}&apikey=stellar-bFA8UWSA`)).json()
-          return r?.status && r?.data?.dl ? { link: r.data.dl, title: r.data.title || "audio" } : null
+          return r?.status && r?.data?.dl ? { link: r.data.dl, title: r.data.title } : null
         }
       ]
 
       let audioData = null
       for (const api of audioApis) {
-        try {
-          audioData = await api()
-          if (audioData) break
-        } catch { }
+        try { audioData = await api(); if (audioData) break } catch { }
       }
 
-      if (!audioData) return conn.reply(m.chat, "⚠︎ No se pudo obtener el audio de ninguna API.", m)
+      if (!audioData) return conn.reply(m.chat, "✦ Ninguna API respondió para el audio. Intenta más tarde.", m)
 
       await conn.sendMessage(m.chat, {
         audio: { url: audioData.link },
-        fileName: audioData.title + ".mp3",
+        fileName: `${audioData.title || "music"}.mp3`,
         mimetype: "audio/mpeg",
         ptt: true
       }, { quoted: m })
     }
 
-    // --- Descarga de Video ---
     else if (["play2", "ytv", "ytmp4", "mp4"].includes(command)) {
       const videoApis = [
         async () => {
@@ -117,23 +109,20 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
 
       let videoData = null
       for (const api of videoApis) {
-        try {
-          videoData = await api()
-          if (videoData) break
-        } catch { }
+        try { videoData = await api(); if (videoData) break } catch { }
       }
 
-      if (!videoData) return conn.reply(m.chat, "⚠︎ No se pudo obtener el video de ninguna API.", m)
+      if (!videoData) return conn.reply(m.chat, "✦ Ninguna API respondió para el video. Intenta más tarde.", m)
 
-      await conn.sendFile(m.chat, videoData.link, videoData.title + ".mp4", title, m)
+      await conn.sendFile(m.chat, videoData.link, (videoData.title || "video") + ".mp4", `✧ 𝗧𝗶́𝘁𝘂𝗹𝗼 » ${title}`, m)
     }
 
     else {
-      return conn.reply(m.chat, "✧︎ Comando no reconocido.", m)
+      return conn.reply(m.chat, "✧︎ Comando no válido, revisa el menú.", m)
     }
 
   } catch (error) {
-    return m.reply(`⚠︎ Ocurrió un error: ${error}`)
+    return m.reply(`⚠︎ Error inesperado:\n\n${error}`)
   }
 }
 
@@ -144,9 +133,9 @@ handler.group = true
 export default handler
 
 function formatViews(views) {
-  if (views === undefined) return "No disponible"
-  if (views >= 1_000_000_000) return `${(views / 1_000_000_000).toFixed(1)}B (${views.toLocaleString()})`
-  else if (views >= 1_000_000) return `${(views / 1_000_000).toFixed(1)}M (${views.toLocaleString()})`
-  else if (views >= 1_000) return `${(views / 1_000).toFixed(1)}k (${views.toLocaleString()})`
+  if (!views) return "No disponible"
+  if (views >= 1_000_000_000) return `${(views / 1_000_000_000).toFixed(1)}B`
+  if (views >= 1_000_000) return `${(views / 1_000_000).toFixed(1)}M`
+  if (views >= 1_000) return `${(views / 1_000).toFixed(1)}k`
   return views.toString()
 }
