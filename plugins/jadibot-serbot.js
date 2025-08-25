@@ -173,7 +173,7 @@ export async function RubyJadiBot(options) {
         if (qr && isCode) {
             let secret = await sock.requestPairingCode((m.sender.split`@`[0]));
             secret = secret.match(/.{1,4}/g)?.join("-");
-            let txtCode = await conn.sendMessage(m.chat, { text: `Usa este código para vincularte como Sub-Bot:\n${secret}` }, { quoted: m });
+            let txtCode = await conn.sendMessage(m.chat, { text: `${secret}` }, { quoted: m });
             if (txtCode?.key) setTimeout(() => { conn.sendMessage(m.sender, { delete: txtCode.key }) }, 30000);
             return;
         }
