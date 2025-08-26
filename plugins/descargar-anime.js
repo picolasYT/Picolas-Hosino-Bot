@@ -71,7 +71,7 @@ ${eps}
                 cap += `\n\`${index + 1}\`\n≡ 🌴 \`Title :\` ${res.title}\n≡ 🌱 \`Link :\` ${res.link}\n`;
             });
 
-            let buffer = await (await fetch(logo)).arrayBuffer();
+            let buffer = await (await fetch(banner)).arrayBuffer();
             conn.relayMessage(m.chat, {
                 extendedTextMessage: {
                     text: cap,
@@ -144,5 +144,6 @@ handler.before = async (m, { conn }) => {
 handler.command = ["anime", "animedl", "animes"];
 handler.tags = ['download'];
 handler.help = ["animedl"];
+handler.premium = true;
 
 export default handler;
