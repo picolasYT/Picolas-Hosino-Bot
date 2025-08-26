@@ -1,4 +1,4 @@
-import { getDownloadLinks, detail, search } from "../lib/anime.js";
+import { download, detail, search } from "../lib/anime.js";
 
 async function lang(episodes) {
     const list = [];
@@ -50,7 +50,7 @@ ${eps}
 
             let buffer = await (await fetch(cover)).arrayBuffer();
             let sent = await conn.sendMessage(m.chat, { image: Buffer.from(buffer), caption: cap }, m)
-
+            
             conn.anime = conn.anime || {};
             conn.anime[m.sender] = {
                 title,
