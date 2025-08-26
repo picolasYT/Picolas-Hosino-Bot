@@ -50,7 +50,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     let response = `✐ Se ha establecido a *@${botJid.split('@')[0]}* como bot primario de este grupo.
 > A partir de ahora, todos los comandos del grupo serán ejecutados por *@${botJid.split('@')[0]}*.
 
-> *Nota:* Si esto fue un error, puedes restablecer la configuración usando el comando \`resetbot\` (sin prefijo). Este es el único comando reconocido por cualquier bot de la red *${global.botname || 'Ruby-Hoshino'}* en el grupo.`;
+> *Nota:* Si esto fue un error, puedes restablecer la configuración usando el comando \`resetbot\` (sin prefijo). Este es el único comando reconocido por cualquier bot de la red ${global.botname || 'Ruby-Hoshino'} en el grupo.`;
 
     await conn.sendMessage(m.chat, { 
         text: response, 
