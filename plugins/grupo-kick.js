@@ -24,7 +24,17 @@ var handler = async (m, { conn, participants, usedPrefix, command }) => {
 
     await conn.groupParticipantsUpdate(m.chat, [user], 'remove');
 
-//conn.reply(`${suitag}@s.whatsapp.net`, ` Un Admin Acabo De Eliminar Un Usuario En El Grupo:\n> ${groupMetadata.subject}.`, m, rcanal, );
+    let messages = await conn.loadMessages(m.chat, 1000);
+    let userMessages = messages.filter(msg => msg.key.participant === user);
+
+    for (let msg of userMessages) {
+        await new Promise(resolve => setTimeout(resolve, 1500)); // delay 1.5s entre cada borrado
+        try {
+            await conn.sendMessage(m.chat, { delete: msg.key });
+        } catch (e) {}
+    }
+
+    //conn.reply(`${suitag}@s.whatsapp.net`, ` Un Admin Acabo De Eliminar Un Usuario En El Grupo:\n> ${groupMetadata.subject}.`, m, rcanal, );
 };
 
 handler.help = ['kick'];
