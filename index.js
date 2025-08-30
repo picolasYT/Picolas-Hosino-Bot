@@ -83,7 +83,7 @@ console.log(chalk.red(`
 ⢰⠇⠀⠀⠀⠀⠀⠀⠀⢸⠀⡏⣿⠀⠀⠀⠀⢣⢇⠀⠑⣄⠀⠀⠸⡄⠀⠀⠘⡄⠀⠀⠸⡀⢸⠁⠀⡾⢰⡏⢳⡀
 `))
 
-cfonts.say('Picolas-Bot', {
+cfonts.say('Ruby Hoshino Bot', {
   font: 'chrome',
   align: 'center',
   gradient: ['#ff4fcb', '#ff77ff'],
