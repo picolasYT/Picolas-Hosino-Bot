@@ -93,6 +93,5 @@ handler.tags = ['descargas'];
 handler.command = ['ytmp3', 'ytaudio', 'mp3'];
 handler.register = true;
 handler.limit = true;
-handler.coin = 2;
 
 export default handler;
