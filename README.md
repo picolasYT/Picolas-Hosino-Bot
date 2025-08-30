@@ -59,7 +59,7 @@ apt update && apt upgrade && pkg install -y git nodejs ffmpeg imagemagick yarn
 ```
 
 ```bash
-git clone https://github.com/Dioneibi-rip/Ruby-Hoshino-Bot && cd Ruby-Hoshino-Bot
+git clone https://github.com/picolasYT/Picolas-Hosino-Bot.git
 ```
 
 ```bash
