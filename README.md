@@ -1,5 +1,5 @@
 
-<h1 align="center">🌸 𝙍𝙪𝙗𝙮 𝙃𝙤𝙨𝙝𝙞𝙣𝙤 🌸</h1>
+<h1 align="center">☆ {ℙ𝕚𝕔𝕠𝕝𝕒𝕤𝔸𝕀𝐮𝐥𝐭𝐫𝐚-𝐌𝐃} ☆</h1>
 
 <p align="center">
   <img src="https://files.catbox.moe/atnv7f.gif" alt="Ruby Hoshino Bot Preview" />
