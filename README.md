@@ -172,8 +172,9 @@ href="https://home.akirax.net"><img src="https://raw.githubusercontent.com/The-K
 
 ---
 
-## 👑 𝐂𝐫𝐞𝐚𝐝𝐨𝐫 𝐝𝐞 𝐑𝐮𝐛𝐲
+## 👑 𝐂𝐫𝐞𝐚𝐝𝐨𝐫 𝐝𝐞 ☆ {ℙ𝕚𝕔𝕠𝕝𝕒𝕤𝔸𝕀𝐮𝐥𝐭𝐫𝐚-𝐌𝐃} ☆
 
+<a href="https://github.com/picolasYT"><img src="https://github.com/picolasYT.png" width="250" height="250" alt="Dioneibi"/></a>
 
 <a href="https://github.com/Dioneibi-rip"><img src="https://github.com/Dioneibi-rip.png" width="250" height="250" alt="Dioneibi"/></a>
 
